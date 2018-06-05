@@ -13,6 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddFarmerFragment;
+import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddMultipleFarmersFragment;
+import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.EditFarmerFragment;
+import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.QuestionFragment;
+import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.ReportsFragment;
+import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.UpdateQuestionsFragment;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,6 +47,11 @@ public class HomeActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        if(savedInstanceState == null){
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
+            navigationView.setCheckedItem(R.id.Questions);
+        }
     }
 
     @Override
@@ -80,18 +92,18 @@ public class HomeActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.AddFarmer) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new AddFarmerFragment()).commit();
+        } else if (id == R.id.AddMulFarmers) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new AddMultipleFarmersFragment()).commit();
+        } else if (id == R.id.EditFarmer) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new EditFarmerFragment()).commit();
+        } else if (id == R.id.Questions) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
+        } else if (id == R.id.Reports) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new ReportsFragment()).commit();
+        } else if (id == R.id.UpdateQuestions) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new UpdateQuestionsFragment()).commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

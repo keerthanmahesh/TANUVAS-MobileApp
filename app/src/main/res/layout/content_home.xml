@@ -8,4 +8,12 @@
     tools:context="com.mahesh.keerthan.tanvasfarmerapp.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/mainFragment">
+
+    </FrameLayout>
+
 </android.support.constraint.ConstraintLayout>

@@ -16,8 +16,8 @@ public class VillageSelect extends AppCompatActivity {
         View.OnClickListener goButtonPressed = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* Intent villageSelected = new Intent(VillageSelect.this,HomeActivity.class);
-                startActivity(villageSelected); */
+               Intent villageSelected = new Intent(VillageSelect.this,HomeActivity.class);
+                startActivity(villageSelected);
             }
         };
         goButton.setOnClickListener(goButtonPressed);
