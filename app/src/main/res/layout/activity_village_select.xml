@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/villageselect_page2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="1">
+    
+    <Button
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:background="@drawable/oval_shape"
+        android:text=">"
+        android:textSize="19dp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="350dp"
+        android:layout_centerHorizontal="true"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please Select Village"
+        android:textSize="30dp"
+        android:textAlignment="center"
+        android:layout_marginTop="100dp"
+        android:textColor="@color/colorPrimary"
+        android:fontFamily="@font/opensans_light"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Welcome to the App"
+        android:textColor="@color/colorPrimary"
+        android:textSize="40dp"
+        android:textAlignment="center"
+        android:layout_marginTop="25dp"
+        android:fontFamily="@font/opensans_regular"
+        />
+
+    <Spinner
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        >
+
+    </Spinner>
+
+</RelativeLayout>
