@@ -16,6 +16,7 @@
         android:textColor="@android:color/white"
         android:layout_marginTop="350dp"
         android:layout_centerHorizontal="true"
+        android:id="@+id/goButton"
         />
     <TextView
         android:layout_width="match_parent"
