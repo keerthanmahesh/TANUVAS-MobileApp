@@ -1,92 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_main"
-    android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="1">
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-    <RelativeLayout
+    <com.jgabrielfreitas.core.BlurImageView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_alignParentTop="true">
-
-        <com.jgabrielfreitas.core.BlurImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:scaleType="fitXY"
-            android:src="@drawable/unnamed"
-            app:radius="10"/>
-
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="220dp"
-        android:id="@+id/relativeLayout">
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-
-            android:hint="Email"
-            android:background="@drawable/edittext_border"
-            android:padding="10dp"
-            android:id="@+id/emailusernameedittext"
-            />
+        android:layout_height="match_parent"
+        android:layout_above="@+id/cardViewLayout"
+        android:layout_marginBottom="-55dp"
+        android:src="@drawable/unnamed"
+        android:scaleType="centerCrop"
+        app:radius="20"
+        />
 
 
 
-    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="Farmer Data Analysis App"
+        android:textColor="@android:color/white"
+        android:textSize="25dp"
+        android:layout_marginHorizontal="55dp"
+        android:textAlignment="center"
+        android:layout_above="@id/cardViewLayout"
+
+        />
 
     <RelativeLayout
-        android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="270dp"
-        android:id="@+id/relativeLayout2">
+        android:background="@android:color/transparent">
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Password"
-            android:background="@drawable/edittext_border"
-            android:padding="10dp"
-            android:id="@+id/passusernameedittext"
-            />
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/logo"
 
-    </RelativeLayout>
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/logo"
+            android:layout_marginTop="60dp"
+            android:layout_marginLeft="30dp"/>
 
-    <Button
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="320dp"
-        android:text="Sign In"
-        android:textAllCaps="false"
-        android:background="@drawable/rounded_button"
-        android:textColor="@android:color/white" />
-
-        <Button
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Forgot Password?"
-            android:textAllCaps="false"
-            android:textColor="@android:color/holo_red_light"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/transparent">
+            android:textColor="@android:color/white"
+            android:text="Tamil Nadu Veterinary and Animal Sciences University"
+            android:textSize="18dp"
+            android:textAllCaps="true"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/logo"
+            android:layout_marginLeft="30dp"
+            android:textAlignment="center"
 
-        </Button>
+            />
 
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="150dp"
+        android:id="@+id/cardViewLayout"
+        android:padding="5dp"
+        >
 
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:padding="5dp"
+            >
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/edittext_border"
+                android:hint="Email"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
 
+                />
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@android:color/white"
+                android:hint="Password"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:layout_marginTop="50dp"
+                android:inputType="textPassword"
+
+                />
+
+        </android.support.v7.widget.CardView>
+    </RelativeLayout>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/cardViewLayout"
+        android:layout_marginHorizontal="55dp"
+        android:background="@drawable/rounded_button"
+        android:layout_marginTop="-120dp"
+        android:text="Sign In"
+        android:fontFamily="@font/opensans_regular"
+        android:textColor="@android:color/white"
+        android:textAllCaps="false"
+        android:id="@+id/signInButton"
+        />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+
+        android:background="@android:color/transparent"
+        android:text="Forgot Password? Click Here"
+        android:fontFamily="@font/opensans_regular"
+        android:textAllCaps="false"
+        android:layout_centerInParent="true"
+        android:textColor="@color/colorAccent"/>
+
+</RelativeLayout>
