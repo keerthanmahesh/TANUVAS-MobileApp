@@ -41,6 +41,12 @@
     <Spinner
         android:layout_width="300dp"
         android:layout_height="40dp"
+        android:id="@+id/spinner1"
+        android:spinnerMode="dropdown"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        android:background="@drawable/dropdown_menuroundedbutton"
+
         >
 
     </Spinner>
