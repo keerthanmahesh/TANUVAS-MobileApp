@@ -18,4 +18,5 @@ public class AddFarmerFragment extends Fragment {
         return inflater.inflate(R.layout.add_farmer_fragment,container,false);
 
     }
+
 }
