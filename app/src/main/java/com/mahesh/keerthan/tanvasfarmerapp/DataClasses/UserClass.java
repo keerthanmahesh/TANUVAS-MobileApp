@@ -1,6 +1,8 @@
 package com.mahesh.keerthan.tanvasfarmerapp.DataClasses;
 
-public class UserClass {
+import java.io.Serializable;
+
+public class UserClass implements Serializable {
 
     private int u_id;
     private String username;

@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Object doInBackground(Object[] objects) {
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("http://192.168.1.45/~vandit/username.php?username=" + username).build();
+                Request request = new Request.Builder().url("http://192.168.0.103/~vandit/username.php?username=" + username).build();
 
                 try{
                     Response response = client.newCall(request).execute();
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onPostExecute(o);
                 if(user.getPassword().equals(password)){
                     Intent signInSuccess = new Intent(MainActivity.this, VillageSelect.class);
+                    signInSuccess.putExtra("user",user);
                     startActivity(signInSuccess);
                 }
                 else{
