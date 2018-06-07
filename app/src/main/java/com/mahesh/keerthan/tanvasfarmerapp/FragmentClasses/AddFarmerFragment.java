@@ -36,7 +36,7 @@ public class AddFarmerFragment extends Fragment implements CalendarDatePickerDia
 
     @Override
     public void onClick(View v) {
-        
+
     }
 }
 

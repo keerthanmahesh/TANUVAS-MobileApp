@@ -23,6 +23,8 @@ import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.UpdateQuestionsFragme
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private  NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +47,7 @@ public class HomeActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         if(savedInstanceState == null){
@@ -94,16 +96,22 @@ public class HomeActivity extends AppCompatActivity
 
         if (id == R.id.AddFarmer) {
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new AddFarmerFragment()).commit();
+            //navigationView.setCheckedItem(R.id.AddFarmer);
         } else if (id == R.id.AddMulFarmers) {
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new AddMultipleFarmersFragment()).commit();
+            //navigationView.setCheckedItem(R.id.AddMulFarmers);
         } else if (id == R.id.EditFarmer) {
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new EditFarmerFragment()).commit();
+           // navigationView.setCheckedItem(R.id.EditFarmer);
         } else if (id == R.id.Questions) {
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
+            //navigationView.setCheckedItem(R.id.Questions);
         } else if (id == R.id.Reports) {
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new ReportsFragment()).commit();
+            //navigationView.setCheckedItem(R.id.Reports);
         } else if (id == R.id.UpdateQuestions) {
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new UpdateQuestionsFragment()).commit();
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
