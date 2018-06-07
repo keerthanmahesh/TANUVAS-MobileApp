@@ -2,11 +2,165 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Frag1"
-        android:textSize="30dp"
-        android:layout_centerInParent="true"/>
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:scrollbarStyle="insideOverlay">
+        
+
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent" android:layout_height="match_parent">
+
+            <ImageButton
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginHorizontal="25dp"
+                android:src="@drawable/profpic1"
+                android:background="@drawable/circularbuttonprofpic"
+                android:scaleType="fitXY"
+                android:id="@+id/profPicImageButton"
+                />
+
+            <EditText
+                android:layout_width="500dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="350dp"
+                android:layout_marginTop="50dp"
+                android:hint="First Name"
+                android:paddingLeft="10dp"
+                android:textColorHint="@android:color/darker_gray"
+                android:id="@+id/firstName"/>
+
+            <EditText
+                android:layout_width="500dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="350dp"
+                android:layout_marginTop="120dp"
+                android:hint="Last Name"
+                android:paddingLeft="10dp"
+                android:textColorHint="@android:color/darker_gray"
+                android:id="@+id/lastName"
+                />
+
+            <EditText
+                android:layout_width="500dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="350dp"
+                android:layout_marginTop="190dp"
+                android:hint="Mobile Number"
+                android:paddingLeft="10dp"
+                android:textColorHint="@android:color/darker_gray"
+                android:id="@+id/mobileNumber"
+                />
+
+            <EditText
+                android:layout_width="500dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="350dp"
+                android:layout_marginTop="260dp"
+                android:hint="Adhaar Number"
+                android:paddingLeft="10dp"
+                android:textColorHint="@android:color/darker_gray"
+                android:id="@+id/adhaarNumber"
+                />
+
+            <EditText
+                android:layout_width="500dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="350dp"
+                android:layout_marginTop="330dp"
+                android:hint="Address 1"
+                android:paddingLeft="10dp"
+                android:textColorHint="@android:color/darker_gray"
+                android:id="@+id/address1"
+                />
+
+            <EditText
+                android:layout_width="500dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="350dp"
+                android:layout_marginTop="400dp"
+                android:hint="Address 2"
+                android:paddingLeft="10dp"
+                android:textColorHint="@android:color/darker_gray"
+                android:id="@+id/address2"
+                />
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="Gender:"
+                android:textSize="20dp"
+                android:layout_marginTop="470dp"
+                android:layout_marginLeft="350dp"
+                />
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Male"
+                    android:layout_marginLeft="480dp"
+                    android:layout_marginTop="470dp"
+                    android:id="@+id/radiobuttonMale"/>
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Female"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="470dp"
+                    android:id="@+id/radiobuttonFemale"/>
+
+                <RadioButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Others"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="470dp"
+                    android:id="@+id/radiobuttonOthers"/>
+
+            </RadioGroup>
+
+            <Button
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="540dp"
+                android:layout_marginLeft="350dp"
+                android:background="@drawable/ic_date_range_black_24dp"
+                android:id="@+id/DOBbuttonAddfarmer"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/DOBbuttonAddfarmer"
+                android:layout_alignBaseline="@+id/DOBbuttonAddfarmer"
+                android:layout_marginLeft="40dp"
+                android:text="Date Of Birth"
+                android:textAlignment="center"
+                android:id="@+id/DOBtextView"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/DOBtextView"
+                android:layout_alignBaseline="@+id/DOBtextView"
+                android:text="Age"
+                android:layout_marginLeft="40dp"/>
+
+
+
+        </RelativeLayout>
+    </ScrollView>
+
+    
 </RelativeLayout>
