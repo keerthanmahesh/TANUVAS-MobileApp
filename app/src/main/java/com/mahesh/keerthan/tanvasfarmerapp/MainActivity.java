@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Object doInBackground(Object[] objects) {
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("http://192.168.0.103/~vandit/username.php?username=" + username).build();
+                Request request = new Request.Builder().url("http://192.168.1.45/~vandit/username.php?username=" + username).build();
 
                 try{
                     Response response = client.newCall(request).execute();

@@ -61,7 +61,7 @@ public class VillageSelect extends AppCompatActivity {
             @Override
             protected Object doInBackground(Object[] objects) {
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("http://192.168.0.103/~vandit/justtesting.php?u_id=" + u_id).build();
+                Request request = new Request.Builder().url("http://192.168.1.45/~vandit/justtesting.php?u_id=" + u_id).build();
 
                 try{
                     Response response = client.newCall(request).execute();
@@ -96,7 +96,7 @@ public class VillageSelect extends AppCompatActivity {
             @Override
             protected Object doInBackground(Object[] objects) {
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("http://192.168.0.103/~vandit/justtesting.php?village_u_id=" + village_u_id).build();
+                Request request = new Request.Builder().url("http://192.168.1.45/~vandit/justtesting.php?village_u_id=" + village_u_id).build();
 
                 try{
                     Response response = client.newCall(request).execute();
@@ -128,7 +128,7 @@ public class VillageSelect extends AppCompatActivity {
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(instance,android.R.layout.simple_spinner_dropdown_item,items);
                 dropdown.setAdapter(adapter);
-                
+
 
             }
         };
