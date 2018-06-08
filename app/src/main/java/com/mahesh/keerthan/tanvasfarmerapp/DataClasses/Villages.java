@@ -1,6 +1,8 @@
 package com.mahesh.keerthan.tanvasfarmerapp.DataClasses;
 
-public class Villages {
+import java.io.Serializable;
+
+public class Villages implements Serializable {
     private int village_id;
     private int district_id;
     private String en_village_name;

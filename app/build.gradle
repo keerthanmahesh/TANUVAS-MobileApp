@@ -27,7 +27,8 @@ android {
                             'src/main/res/layout',
                             'src/main/res'
                     ]
-        } }
+        }
+    }
 }
 
 dependencies {

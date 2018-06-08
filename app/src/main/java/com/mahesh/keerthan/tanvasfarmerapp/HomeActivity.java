@@ -1,8 +1,12 @@
 package com.mahesh.keerthan.tanvasfarmerapp;
 
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,6 +17,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddFarmerFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddMultipleFarmersFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.EditFarmerFragment;
@@ -20,10 +27,23 @@ import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.QuestionFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.ReportsFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.UpdateQuestionsFragment;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private  NavigationView navigationView;
+    private UserClass user;
+    private Villages villageSelected;
+    private District districtSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +52,9 @@ public class HomeActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        Intent incomingIntent = getIntent();
+        user = (UserClass) incomingIntent.getExtras().getSerializable("user");
+        villageSelected = (Villages) incomingIntent.getExtras().getSerializable("village");
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +63,7 @@ public class HomeActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -54,6 +78,7 @@ public class HomeActivity extends AppCompatActivity
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
             navigationView.setCheckedItem(R.id.Questions);
         }
+        getUserDistrict(villageSelected.getDistrict_id());
     }
 
     @Override
@@ -97,7 +122,9 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.AddFarmer) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new AddFarmerFragment()).commit();
+            android.support.v4.app.FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+            Fragment newFarmer = AddFarmerFragment.newInstance(villageSelected,districtSelected);
+            ft1.replace(R.id.mainFragment,newFarmer).commit();
             //navigationView.setCheckedItem(R.id.AddFarmer);
         } else if (id == R.id.AddMulFarmers) {
             getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new AddMultipleFarmersFragment()).commit();
@@ -119,5 +146,28 @@ public class HomeActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void getUserDistrict(final int district_id){
+        AsyncTask<Integer,Void,JSONObject> asyncTask = new AsyncTask<Integer, Void, JSONObject>() {
+            @Override
+            protected JSONObject doInBackground(Integer... integers) {
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder().url("http://192.168.1.45/~vandit/justtesting.php?district_id=" + district_id).build();
+                try{
+                    Response response = client.newCall(request).execute();
+
+                    JSONArray array = new JSONArray(response.body().string());
+                    JSONObject object = array.getJSONObject(0);
+                    districtSelected = new District(object.getInt("district_id"), object.getString("en_district_name"));
+                }catch( IOException e){
+                    e.printStackTrace();
+                }catch( JSONException e){
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+        asyncTask.execute(district_id);
     }
 }
