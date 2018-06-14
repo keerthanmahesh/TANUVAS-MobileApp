@@ -27,7 +27,9 @@
             android:name=".HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".EditFarmerDetailsActivity"></activity>
+        <activity android:name=".EditFarmerDetailsActivity"
+            android:parentActivityName = ".HomeActivity">
+        </activity>
     </application>
 
 </manifest>

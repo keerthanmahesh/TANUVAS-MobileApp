@@ -46,7 +46,7 @@ import okhttp3.Response;
 
 public class AddFarmerFragment extends Fragment implements View.OnClickListener{
 
-    private DatePicker datePicker;
+
     private Calendar calendar;
     private TextView dateView;
     private int year, month, day;

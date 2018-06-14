@@ -1,12 +1,12 @@
 package com.mahesh.keerthan.tanvasfarmerapp;
 
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -23,6 +23,7 @@ import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddFarmerFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddMultipleFarmersFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.EditFarmerFragment;
+import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.InputFarmersDialog;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.QuestionFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.ReportsFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.UpdateQuestionsFragment;
@@ -44,14 +45,17 @@ public class HomeActivity extends AppCompatActivity
     private UserClass user;
     private Villages villageSelected;
     private District districtSelected;
+    public static HomeActivity instance;
+    private FragmentManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        manager = getSupportFragmentManager();
         Intent incomingIntent = getIntent();
         user = (UserClass) incomingIntent.getExtras().getSerializable("user");
         villageSelected = (Villages) incomingIntent.getExtras().getSerializable("village");
@@ -75,7 +79,7 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if(savedInstanceState == null){
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
+            manager.beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
             navigationView.setCheckedItem(R.id.Questions);
         }
         getUserDistrict(villageSelected.getDistrict_id());
@@ -122,24 +126,28 @@ public class HomeActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.AddFarmer) {
-            android.support.v4.app.FragmentTransaction ft1 = getSupportFragmentManager().beginTransaction();
+            android.support.v4.app.FragmentTransaction ft1 = manager.beginTransaction();
             Fragment newFarmer = AddFarmerFragment.newInstance(villageSelected,districtSelected);
             ft1.replace(R.id.mainFragment,newFarmer).commit();
             //navigationView.setCheckedItem(R.id.AddFarmer);
         } else if (id == R.id.AddMulFarmers) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new AddMultipleFarmersFragment()).commit();
+            android.support.v4.app.FragmentTransaction ft = manager.beginTransaction();
+            Fragment newFarmers = AddMultipleFarmersFragment.newInstance(villageSelected,districtSelected);
+            ft.replace(R.id.mainFragment,newFarmers).commit();
             //navigationView.setCheckedItem(R.id.AddMulFarmers);
         } else if (id == R.id.EditFarmer) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new EditFarmerFragment()).commit();
+            android.support.v4.app.FragmentTransaction newTransaction = manager.beginTransaction();
+            Fragment editFarmer = EditFarmerFragment.newInstance(villageSelected,districtSelected);
+            newTransaction.replace(R.id.mainFragment,editFarmer).commit();
            // navigationView.setCheckedItem(R.id.EditFarmer);
         } else if (id == R.id.Questions) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
+            manager.beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
             //navigationView.setCheckedItem(R.id.Questions);
         } else if (id == R.id.Reports) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new ReportsFragment()).commit();
+            manager.beginTransaction().replace(R.id.mainFragment,new ReportsFragment()).commit();
             //navigationView.setCheckedItem(R.id.Reports);
         } else if (id == R.id.UpdateQuestions) {
-            getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new UpdateQuestionsFragment()).commit();
+            manager.beginTransaction().replace(R.id.mainFragment,new UpdateQuestionsFragment()).commit();
 
         }
 
