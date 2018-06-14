@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -21,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class VillageSelect extends AppCompatActivity {
     private  JSONArray array;
     private  JSONArray array1;
     private static VillageSelect instance = null;
+    private Villages selectedVillage = new Villages(0,0,null,0,0);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +50,10 @@ public class VillageSelect extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                Intent villageSelected = new Intent(VillageSelect.this,HomeActivity.class);
+               Bundle bundle = new Bundle();
+               bundle.putSerializable("user",user);
+               bundle.putSerializable("village",selectedVillage);
+               villageSelected.putExtras(bundle);
                 startActivity(villageSelected);
             }
         };
@@ -121,13 +128,24 @@ public class VillageSelect extends AppCompatActivity {
             protected void onPostExecute(Object o) {
                 super.onPostExecute(o);
                 Spinner dropdown = findViewById(R.id.spinner1);
-                List<String> items = new ArrayList<>();
+                final List<String> items = new ArrayList<>();
                 for (int i =0;i<array1.length();i++){
                     String village = villages.get(i).getEn_village_name();
                     items.add(village);
                 }
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(instance,android.R.layout.simple_spinner_dropdown_item,items);
                 dropdown.setAdapter(adapter);
+                dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        selectedVillage = villages.get(position);
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        selectedVillage = villages.get(0);
+                    }
+                });
 
 
             }
