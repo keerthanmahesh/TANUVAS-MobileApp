@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,6 +33,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.sql.SQLClientInfoException;
+import java.sql.SQLException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -55,6 +58,8 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
     private static int id1;
     private Villages village_selected;
     private District district_selected;
+    private TextView aadharTV,phoneTV;
+    private String phone_number,aadhar_number;
     @Nullable
     @Override
         public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -106,14 +111,37 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
             String first_name = firstNameTV.getText().toString();
             EditText lastNameTV = (EditText) view.findViewById(R.id.lastName);
             String last_name = lastNameTV.getText().toString();
-            EditText aadharTV = (EditText) view.findViewById(R.id.adhaarNumber);
-            String aadhar_number = aadharTV.getText().toString();
-            EditText phoneTV = (EditText) view.findViewById(R.id.mobileNumber);
-            String phone_number = phoneTV.getText().toString();
+            aadharTV = (EditText) view.findViewById(R.id.adhaarNumber);
+            aadhar_number = aadharTV.getText().toString();
+            phoneTV = (EditText) view.findViewById(R.id.mobileNumber);
+            phone_number = phoneTV.getText().toString();
             EditText address1TV = (EditText) view.findViewById(R.id.address1);
             String address_1 = address1TV.getText().toString();
             EditText address2TV = (EditText) view.findViewById(R.id.address2);
             String address_2 = address2TV.getText().toString();
+            TextView dobTV = view.findViewById(R.id.DOBtextView);
+            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+            String dob = dobTV.getText().toString();
+            if(TextUtils.isEmpty(first_name)){
+                firstNameTV.setError("Please Enter The First Name");
+                return super.onOptionsItemSelected(item);
+            }
+            if(TextUtils.isEmpty(last_name)){
+                lastNameTV.setError("Please Enter The Second Name");
+                return super.onOptionsItemSelected(item);
+            } if(phone_number.length() != 10){
+                phoneTV.setError("Invalid Phone");
+                return super.onOptionsItemSelected(item);
+            } if(aadhar_number.length() != 12){
+                aadharTV.setError("Invalid Aadhar Number");
+                return super.onOptionsItemSelected(item);
+            } if(TextUtils.isEmpty(address_1)){
+                address1TV.setError("Please Enter an Address");
+                return super.onOptionsItemSelected(item);
+            } if(TextUtils.isEmpty(address_2)){
+                address2TV.setError("Please Enter an Address");
+                return super.onOptionsItemSelected(item);
+            }
             RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
             int selectedId = radioGroup.getCheckedRadioButtonId();
             String gender = "Others";
@@ -129,10 +157,16 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
                 case R.id.radiobuttonOthers:
                     gender = "Others" ;
                     break;
+                default: Snackbar.make(view, "Please Enter The Gender", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                    return super.onOptionsItemSelected(item);
             }
-            TextView dobTV = view.findViewById(R.id.DOBtextView);
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            String dob = dobTV.getText().toString();
+
+            if(dob.equals("Date Of Birth")){
+                Snackbar.make(view, "Please Enter The Date", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                return super.onOptionsItemSelected(item);
+            }
             Date inputDate = formatter.parse(dob, new ParsePosition(0));
             formatter = new SimpleDateFormat("yyyy-MM-dd");
             String outputDate = formatter.format(inputDate);
@@ -184,6 +218,11 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
                     NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
                     navigationView.setCheckedItem(R.id.Questions);
+                }else if(s.contains("Duplicate entry")){
+                    if(s.contains("aadhar_number"))
+                        aadharTV.setError("Aadhar Number Already Exists");
+                    else if(s.contains("phone_number"))
+                        phoneTV.setError("Mobile Already Exists");
                 }
             }
         };
