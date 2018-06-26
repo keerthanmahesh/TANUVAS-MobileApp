@@ -1,5 +1,6 @@
 package com.mahesh.keerthan.tanvasfarmerapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
@@ -27,23 +28,27 @@ public class MainActivity extends AppCompatActivity {
 
 
     private UserClass user;
+    private EditText username;
+    private EditText password;
+    private String passwordText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button SignInButton = findViewById(R.id.signInButton);
-        final EditText username = findViewById(R.id.username);
-        final EditText password = findViewById(R.id.password);
+        username = findViewById(R.id.username);
+        password = findViewById(R.id.password);
         View.OnClickListener SignInPressed = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login(username.getText().toString(),password.getText().toString(),v);
+                passwordText = password.getText().toString();
+                new login().execute(username.getText().toString());
             }
         };
         SignInButton.setOnClickListener(SignInPressed);
     }
 
-    private void login(final String username, final String password,final View v){
+   /* private void login(final String username, final String password,final View v){
 
         AsyncTask<String,Void,JSONObject> asyncTask = new AsyncTask() {
             @Override
@@ -81,8 +86,52 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         asyncTask.execute(username);
-    }
+    }*/
 
+    public class login extends AsyncTask<String,Void,JSONObject>{
+
+        private ProgressDialog loading;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            loading = ProgressDialog.show(MainActivity.this,"Loading....",null,true,true);
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... strings) {
+            String username = strings[0];
+            OkHttpClient client = new OkHttpClient();
+            try {
+                JSONObject array = new JSONObject(APICall.GET(client,RequestBuilder.buildURL("username.php", new String[]{"username"},new String[]{username})));
+                return array;
+            }catch (JSONException e){
+                e.printStackTrace();
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject object) {
+            super.onPostExecute(object);
+            loading.dismiss();
+            try {
+                user = new UserClass(object.getInt("u_id"), object.getString("username"), object.getString("password"), object.getString("fullname"), object.getInt("district_id"), object.getString("phone_number"));
+            }catch (JSONException e){
+                username.setError("Invalid Username");
+            }
+            if (user.getPassword().equals(passwordText)){
+                Intent signInSuccess = new Intent(MainActivity.this, VillageSelect.class);
+                signInSuccess.putExtra("user",user);
+                startActivity(signInSuccess);
+            }else{
+                password.setError("Incorrect Password");
+            }
+
+        }
+    }
 }
 
 

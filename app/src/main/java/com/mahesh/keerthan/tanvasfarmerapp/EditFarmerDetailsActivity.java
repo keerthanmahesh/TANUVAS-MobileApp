@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toolbar;
 import android.support.v4.app.FragmentManager;
@@ -113,6 +114,23 @@ public class EditFarmerDetailsActivity extends AppCompatActivity {
 
         TextView district_name = findViewById(R.id.districtName);
         district_name.setText(district.getEn_district_name());
+
+       RadioGroup radioGroup = findViewById(R.id.radioGroup);
+       radioGroup.getChildAt(0).setEnabled(false);
+       radioGroup.getChildAt(1).setEnabled(false);
+       radioGroup.getChildAt(2).setEnabled(false);
+
+        switch(farmer.getGender()){
+            case "Male":
+                radioGroup.check(R.id.radiobuttonMale);
+                break;
+            case "Female":
+                radioGroup.check(R.id.radiobuttonFemale);
+                break;
+            case "Others":
+                radioGroup.check(R.id.radiobuttonOthers);
+                break;
+        }
 
     }
 
