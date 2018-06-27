@@ -1,252 +1,436 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-
-
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:scrollbarStyle="insideOverlay">
-        
 
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent" android:layout_height="match_parent">
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <com.ramotion.foldingcell.FoldingCell
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/folding_cell"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:id="@+id/topLayout">
 
+                >
 
-
-                <ImageButton
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:src="@drawable/profpic1"
-                    android:background="@drawable/circularbuttonprofpic"
-                    android:scaleType="fitXY"
-                    android:id="@+id/profPicImageButton"
-                    />
-
-                <EditText
-                    android:layout_width="1080dp"
-                    android:layout_height="40dp"
-                    android:layout_toRightOf="@+id/profPicImageButton"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginHorizontal="30dp"
-                    android:maxLength="50"
-                    android:hint="First Name"
-                    android:paddingLeft="10dp"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:id="@+id/firstName"
-                    android:inputType="textCapWords"/>
-
-                <EditText
-                    android:layout_width="1080dp"
-                    android:layout_height="40dp"
-                    android:layout_marginHorizontal="30dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_below="@+id/firstName"
-                    android:layout_toRightOf="@+id/profPicImageButton"
-                    android:hint="Last Name"
-                    android:paddingLeft="10dp"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:id="@+id/lastName"
-                    android:maxLength="50"
-                    android:inputType="textCapWords"
-                    />
-
-                <EditText
-                    android:layout_width="1080dp"
-                    android:layout_height="40dp"
-                    android:layout_toRightOf="@+id/profPicImageButton"
-                    android:layout_below="@+id/lastName"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="30dp"
-                    android:inputType="number"
-                    android:hint="Mobile Number"
-                    android:paddingLeft="10dp"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:id="@+id/mobileNumber"
-                    android:maxLength="10"
-                    />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@+id/topLayout">
-
-                <EditText
-                    android:layout_width="1080dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginHorizontal="30dp"
-                    android:hint="Adhaar Number"
-                    android:paddingLeft="10dp"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:id="@+id/adhaarNumber"
-                    android:inputType="number"
-                    android:maxLength="12"
-                    />
-                <EditText
-                    android:layout_width="1080dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="30dp"
-                    android:layout_below="@+id/adhaarNumber"
-                    android:hint="Address 1"
-                    android:paddingLeft="10dp"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:id="@+id/address1"
-                    android:maxLength="50"
-                    android:inputType="textCapSentences"
-                    />
-
-                <EditText
-                    android:layout_width="1080dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="30dp"
-                    android:layout_below="@+id/address1"
-                    android:hint="Address 2"
-                    android:paddingLeft="10dp"
-                    android:textColorHint="@android:color/darker_gray"
-                    android:id="@+id/address2"
-                    android:maxLength="50"
-                    android:inputType="textCapSentences"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginHorizontal="30dp"
-                    android:text="Gender:"
-                    android:textSize="20dp"
-                    android:padding="5dp"
-                    android:layout_below="@id/villageName"
-                    android:id="@+id/label1"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Village Name"
-                    android:textSize="15dp"
-                    android:layout_below="@id/address2"
-                    android:layout_marginHorizontal="30dp"
-                    android:padding="5dp"
-                    android:layout_marginTop="15dp"
-                    android:id="@+id/villageName"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="District Name"
-                    android:textSize="15dp"
-                    android:layout_toRightOf="@+id/villageName"
-                    android:layout_below="@id/address2"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginLeft="5dp"
-                    android:padding="5dp"
-                    android:layout_marginTop="15dp"
-                    android:id="@+id/districtName"/>
-                <RadioGroup
+                <FrameLayout
+                    android:id="@+id/cell_content_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_below="@id/villageName"
-                    android:layout_toRightOf="@+id/label1"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginRight="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:id="@+id/radioGroup">
+                    android:background="@color/colorPrimary"
+                    android:visibility="gone">
 
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Male"
-                        android:id="@+id/radiobuttonMale"/>
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="600dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:scrollbarStyle="insideOverlay">
 
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Female"
-                        android:id="@+id/radiobuttonFemale"
-                        android:layout_marginHorizontal="5dp"/>
 
-                    <RadioButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Others"
-                        android:id="@+id/radiobuttonOthers"
-                        android:layout_marginRight="0dp"/>
+                        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                            android:layout_width="match_parent" android:layout_height="match_parent"
+                            android:background="@android:color/white">
 
-                </RadioGroup>
-                <Button
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginLeft="30dp"
-                    android:layout_below="@id/label1"
-                    android:id="@+id/DOBbuttonAddfarmer"
-                    android:background="@android:drawable/ic_menu_my_calendar"/>
-                <TextView
-                    android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:id="@+id/topLayout">
+
+
+
+                                <ImageButton
+                                    android:layout_width="100dp"
+                                    android:layout_height="100dp"
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginLeft="15dp"
+                                    android:src="@drawable/profpic1"
+                                    android:background="@drawable/circularbuttonprofpic"
+                                    android:scaleType="fitXY"
+                                    android:id="@+id/profPicImageButton"
+                                    />
+
+                                <EditText
+                                    android:layout_width="1080dp"
+                                    android:layout_height="40dp"
+                                    android:layout_toRightOf="@+id/profPicImageButton"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginHorizontal="30dp"
+                                    android:maxLength="50"
+                                    android:hint="First Name"
+                                    android:paddingLeft="10dp"
+                                    android:textColorHint="@android:color/darker_gray"
+                                    android:id="@+id/firstName"
+                                    android:inputType="textCapWords"
+                                    android:backgroundTint="#3497FD"
+                                    android:foregroundTint="#888888"/>
+
+                                <EditText
+                                    android:layout_width="1080dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginHorizontal="30dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_below="@+id/firstName"
+                                    android:layout_toRightOf="@+id/profPicImageButton"
+                                    android:hint="Last Name"
+                                    android:paddingLeft="10dp"
+                                    android:textColorHint="@android:color/darker_gray"
+                                    android:id="@+id/lastName"
+                                    android:maxLength="50"
+                                    android:inputType="textCapWords"
+                                    />
+
+                                <EditText
+                                    android:layout_width="1080dp"
+                                    android:layout_height="40dp"
+                                    android:layout_toRightOf="@+id/profPicImageButton"
+                                    android:layout_below="@+id/lastName"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginHorizontal="30dp"
+                                    android:inputType="number"
+                                    android:hint="Mobile Number"
+                                    android:paddingLeft="10dp"
+                                    android:textColorHint="@android:color/darker_gray"
+                                    android:id="@+id/mobileNumber"
+                                    android:maxLength="10"
+                                    />
+                            </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_below="@+id/topLayout">
+
+                                <EditText
+                                    android:layout_width="1080dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginLeft="15dp"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginHorizontal="30dp"
+                                    android:hint="Adhaar Number"
+                                    android:paddingLeft="10dp"
+                                    android:textColorHint="@android:color/darker_gray"
+                                    android:id="@+id/adhaarNumber"
+                                    android:inputType="number"
+                                    android:maxLength="12"
+                                    />
+                                <EditText
+                                    android:layout_width="1080dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginLeft="15dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginHorizontal="30dp"
+                                    android:layout_below="@+id/adhaarNumber"
+                                    android:hint="Address 1"
+                                    android:paddingLeft="10dp"
+                                    android:textColorHint="@android:color/darker_gray"
+                                    android:id="@+id/address1"
+                                    android:maxLength="50"
+                                    android:inputType="textCapSentences"
+                                    />
+
+                                <EditText
+                                    android:layout_width="1080dp"
+                                    android:layout_height="40dp"
+                                    android:layout_marginLeft="15dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginHorizontal="30dp"
+                                    android:layout_below="@+id/address1"
+                                    android:hint="Address 2"
+                                    android:paddingLeft="10dp"
+                                    android:textColorHint="@android:color/darker_gray"
+                                    android:id="@+id/address2"
+                                    android:maxLength="50"
+                                    android:inputType="textCapSentences"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:layout_marginLeft="15dp"
+                                    android:layout_marginTop="10dp"
+                                    android:layout_marginHorizontal="30dp"
+                                    android:text="Gender:"
+                                    android:textSize="20dp"
+                                    android:padding="5dp"
+                                    android:layout_below="@id/villageName"
+                                    android:id="@+id/label1"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Village Name"
+                                    android:textSize="15dp"
+                                    android:layout_below="@id/address2"
+                                    android:layout_marginHorizontal="30dp"
+                                    android:padding="5dp"
+                                    android:layout_marginTop="15dp"
+                                    android:id="@+id/villageName"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="District Name"
+                                    android:textSize="15dp"
+                                    android:layout_toRightOf="@+id/villageName"
+                                    android:layout_below="@id/address2"
+                                    android:layout_marginRight="30dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:padding="5dp"
+                                    android:layout_marginTop="15dp"
+                                    android:id="@+id/districtName"/>
+                                <RadioGroup
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:layout_below="@id/villageName"
+                                    android:layout_toRightOf="@+id/label1"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginRight="30dp"
+                                    android:layout_marginLeft="10dp"
+                                    android:id="@+id/radioGroup">
+
+                                    <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Male"
+                                        android:id="@+id/radiobuttonMale"/>
+
+                                    <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Female"
+                                        android:id="@+id/radiobuttonFemale"
+                                        android:layout_marginHorizontal="5dp"/>
+
+                                    <RadioButton
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Others"
+                                        android:id="@+id/radiobuttonOthers"
+                                        android:layout_marginRight="0dp"/>
+
+                                </RadioGroup>
+                                <Button
+                                    android:layout_width="50dp"
+                                    android:layout_height="50dp"
+                                    android:layout_marginTop="15dp"
+                                    android:layout_marginLeft="30dp"
+                                    android:layout_below="@id/label1"
+                                    android:id="@+id/DOBbuttonAddfarmer"
+                                    android:background="@android:drawable/ic_menu_my_calendar"/>
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toRightOf="@+id/DOBbuttonAddfarmer"
+                                    android:layout_alignBaseline="@+id/DOBbuttonAddfarmer"
+                                    android:layout_marginLeft="30dp"
+                                    android:text="Date Of Birth"
+                                    android:textAlignment="center"
+                                    android:id="@+id/DOBtextView"
+                                    android:textSize="20dp"
+                                    />
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_toRightOf="@+id/DOBtextView"
+                                    android:layout_alignBaseline="@+id/DOBtextView"
+                                    android:text="Age"
+                                    android:layout_marginLeft="30dp"
+                                    android:textSize="20dp"
+                                    android:id="@+id/ageTextView"
+
+                                    />
+                            </RelativeLayout>
+
+                        </RelativeLayout>
+                    </ScrollView>
+
+
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/cell_title_view"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/DOBbuttonAddfarmer"
-                    android:layout_alignBaseline="@+id/DOBbuttonAddfarmer"
-                    android:layout_marginLeft="30dp"
-                    android:text="Date Of Birth"
-                    android:textAlignment="center"
-                    android:id="@+id/DOBtextView"
-                    android:textSize="20dp"
-                    />
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@drawable/cardview_1"
+                    >
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_downarrow"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="12dp"
+                            android:layout_marginTop="12dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Profile"
+                            android:layout_marginLeft="24dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="35dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="50dp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPrimary" />
+                    </RelativeLayout>
+
+                </FrameLayout>
+
+            </com.ramotion.foldingcell.FoldingCell>
+
+            <com.ramotion.foldingcell.FoldingCell
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/folding_cell1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/folding_cell"
+                android:layout_marginTop="10dp"
+
+                >
+
+                <FrameLayout
+                    android:id="@+id/cell_content_view1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@+id/DOBtextView"
-                    android:layout_alignBaseline="@+id/DOBtextView"
-                    android:text="Age"
-                    android:layout_marginLeft="30dp"
-                    android:textSize="20dp"
-                    android:id="@+id/ageTextView"
+                    android:background="@color/colorPrimary"
+                    android:visibility="gone">
 
-                    />
-            </RelativeLayout>
-
-
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="600dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:scrollbarStyle="insideOverlay">
 
 
+                    </ScrollView>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/cell_title_view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@drawable/cardview_2"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_downarrow"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="12dp"
+                            android:layout_marginTop="12dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Land Holding"
+                            android:layout_marginLeft="24dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="35dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="50dp"/>
 
 
-            
+                    </RelativeLayout>
+                </FrameLayout>
+
+            </com.ramotion.foldingcell.FoldingCell>
+
+            <com.ramotion.foldingcell.FoldingCell
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/folding_cell2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/folding_cell1"
+                android:layout_marginTop="10dp"
+
+                >
+
+                <FrameLayout
+                    android:id="@+id/cell_content_view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary"
+                    android:visibility="gone">
+
+                    <ScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="600dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:scrollbarStyle="insideOverlay">
 
 
+                    </ScrollView>
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:id="@+id/cell_title_view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="10dp"
+                    android:background="@drawable/cardview_3"
+                    >
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_downarrow"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="12dp"
+                            android:layout_marginTop="12dp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Others"
+                            android:layout_marginLeft="24dp"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="35dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="50dp"/>
 
 
+                    </RelativeLayout>
+                </FrameLayout>
 
-
-
-
-
-
-
+            </com.ramotion.foldingcell.FoldingCell>
 
         </RelativeLayout>
-    </ScrollView>
 
-    
+    </ScrollView>
 </RelativeLayout>

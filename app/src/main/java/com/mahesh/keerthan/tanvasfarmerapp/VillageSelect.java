@@ -1,6 +1,7 @@
 package com.mahesh.keerthan.tanvasfarmerapp;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
@@ -36,10 +37,11 @@ public class VillageSelect extends AppCompatActivity {
     private List<UserVillagesClass> villagesClass = new ArrayList<>();
     private List<Villages> villages = new ArrayList<>();
 
-    private  JSONArray array;
-    private  JSONArray array1;
+    //private  JSONArray array;
+    //private  JSONArray array1;
     private static VillageSelect instance = null;
     private Villages selectedVillage = new Villages(0,0,null,0,0);
+    private ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,10 +62,10 @@ public class VillageSelect extends AppCompatActivity {
         goButton.setOnClickListener(goButtonPressed);
         Intent intent = getIntent();
         user = (UserClass) intent.getSerializableExtra("user");
-        getUserVillages(user.getU_id());
+        new getUserVillages().execute(user.getU_id());
 
     }
-    private void getUserVillages(final int u_id){
+    /*private void getUserVillages(final int u_id){
         AsyncTask<Integer,Void,JSONArray> asyncTask = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
@@ -96,14 +98,54 @@ public class VillageSelect extends AppCompatActivity {
             }
         };
         asyncTask.execute(u_id);
+    }*/
+
+    private class getUserVillages extends AsyncTask<Integer,Void,JSONArray>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = ProgressDialog.show(VillageSelect.this,"Loading....","We appreciate your patience",true,false);
+        }
+
+        @Override
+        protected JSONArray doInBackground(Integer... integers) {
+            String u_id = integers[0].toString();
+            OkHttpClient client = new OkHttpClient();
+            try{
+                JSONArray array = new JSONArray(APICall.GET(client,RequestBuilder.buildURL("justtesting.php",new String[]{"u_id"},new String[]{u_id})));
+                for(int i=0;i<array.length();i++){
+                    JSONObject object = array.getJSONObject(i);
+                    UserVillagesClass uservillagesClass = new UserVillagesClass(object.getInt("s_no"), object.getInt("u_id"), object.getInt("district_id"), object.getInt("village_id"));
+                    VillageSelect.this.villagesClass.add(uservillagesClass);
+                }
+                return array;
+            }catch (IOException e){
+                e.printStackTrace();
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray jsonArray) {
+            super.onPostExecute(jsonArray);
+            if(jsonArray!=null){
+                new getVillages().execute(user.getU_id());
+            }
+            else {
+                dialog.dismiss();
+            }
+        }
     }
 
-    private void getVillages(final int village_u_id){
+    /*private void getVillages(final int village_u_id){
         AsyncTask<Integer,Void,JSONObject> asyncTask = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("http://192.168.1.45/~vandit/justtesting.php?village_u_id=" + village_u_id).build();
+                Request request = new Request.Builder().url("http://192.168.0.102/~vandit/justtesting.php?village_u_id=" + village_u_id).build();
 
                 try{
                     Response response = client.newCall(request).execute();
@@ -151,5 +193,52 @@ public class VillageSelect extends AppCompatActivity {
             }
         };
         asyncTask.execute(village_u_id);
+    }*/
+
+    private class getVillages extends AsyncTask<Integer,Void,JSONArray>{
+        @Override
+        protected void onPostExecute(JSONArray jsonArray) {
+            super.onPostExecute(jsonArray);
+            dialog.dismiss();
+            Spinner dropdown = findViewById(R.id.spinner1);
+            final List<String> items = new ArrayList<>();
+            for (int i =0;i<jsonArray.length();i++){
+                String village = villages.get(i).getEn_village_name();
+                items.add(village);
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(instance,android.R.layout.simple_spinner_dropdown_item,items);
+            dropdown.setAdapter(adapter);
+            dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    selectedVillage = villages.get(position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    selectedVillage = villages.get(0);
+                }
+            });
+        }
+
+        @Override
+        protected JSONArray doInBackground(Integer... integers) {
+            String village_u_id = integers[0].toString();
+            OkHttpClient client = new OkHttpClient();
+            try{
+                JSONArray array = new JSONArray(APICall.GET(client,RequestBuilder.buildURL("justtesting.php",new String[]{"village_u_id"}, new String[]{village_u_id})));
+                for(int i = 0; i<array.length();i++){
+                    JSONObject object = array.getJSONObject(i);
+                    Villages village = new Villages(object.getInt("village_id"), object.getInt("district_id"), object.getString("en_village_name"), object.getInt("allocated"),object.getInt("u_id"));
+                    VillageSelect.this.villages.add(village);
+                }
+                return array;
+            }catch (IOException e){
+                e.printStackTrace();
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }
