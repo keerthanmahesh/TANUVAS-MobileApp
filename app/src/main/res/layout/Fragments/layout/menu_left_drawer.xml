@@ -5,13 +5,9 @@
     android:background="@color/Back"
     android:orientation="vertical">
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="90dp" />
 
 
-
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:baselineAligned="false"
@@ -19,12 +15,44 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:id="@+id/profilePic"
+            android:layout_marginTop="34dp"
+            android:src="@drawable/jainvandit"
+            android:layout_marginLeft="10dp"/>
 
-    </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Full Name"
+            android:layout_below="@+id/profilePic"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="17dp"
+            android:textColor="@color/colorPrimary"
+            android:fontFamily="@font/opensans_regular"
+            android:textSize="18dp"
+            android:id="@+id/fullname"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="username"
+            android:layout_below="@+id/fullname"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="17dp"
+            android:textColor="@color/colorPrimary"
+            android:fontFamily="@font/opensans_regular"
+            android:textSize="14dp"
+            android:id="@+id/username"/>
+
+
+    </RelativeLayout>
 
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="56dp" />
+        android:layout_height="24dp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/list"

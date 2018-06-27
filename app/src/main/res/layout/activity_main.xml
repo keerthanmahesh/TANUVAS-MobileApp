@@ -6,14 +6,12 @@
     xmlns:float="http://schemas.android.com/tools">
 
 
-    <com.jgabrielfreitas.core.BlurImageView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/cardViewLayout"
         android:layout_marginBottom="-65dp"
-        android:src="@drawable/unnamed"
-        android:scaleType="centerCrop"
-        app:radius="20"
+        android:background="@drawable/gradient_home"
         />
 
 
@@ -36,8 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="50dp"
-        android:layout_centerHorizontal="true"
-        android:background="@android:color/transparent">
+        android:layout_centerHorizontal="true">
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -149,6 +146,6 @@
         android:fontFamily="@font/opensans_regular"
         android:textAllCaps="false"
         android:layout_centerInParent="true"
-        android:textColor="@color/colorAccent"/>
+        android:textColor="@color/grayBlue"/>
 
 </RelativeLayout>

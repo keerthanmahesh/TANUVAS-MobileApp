@@ -50,6 +50,7 @@ import com.mahesh.keerthan.tanvasfarmerapp.HomeActivity;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 import com.mahesh.keerthan.tanvasfarmerapp.RealPathUtil;
 import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
+import com.yarolegovich.slidingrootnav.SlidingRootNav;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -382,8 +383,8 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
                 Snackbar.make(view, "New Farmer Added Successfully", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
-                NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
-                navigationView.setCheckedItem(R.id.Questions);
+                //NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+                //navigationView.setCheckedItem(R.id.Questions);
             }else if(s.contains("Duplicate entry")){
                 if(s.contains("aadhar_number"))
                     aadharTV.setError("Aadhar Number Already Exists");

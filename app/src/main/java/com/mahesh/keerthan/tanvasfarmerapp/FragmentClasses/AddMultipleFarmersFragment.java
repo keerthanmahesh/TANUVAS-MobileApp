@@ -443,8 +443,8 @@ public class AddMultipleFarmersFragment extends Fragment implements InputFarmers
                         .setAction("Action", null).show();
                 if(saveornext.equals("0")){
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
-                    NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
-                    navigationView.setCheckedItem(R.id.Questions);
+                    //NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+                    //navigationView.setCheckedItem(R.id.Questions);
                 }
                 else{
                     firstNameTV.setText("");

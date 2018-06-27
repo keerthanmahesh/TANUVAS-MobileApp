@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -23,6 +24,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
@@ -37,6 +40,7 @@ import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.ReportsFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.UpdateQuestionsFragment;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
+import com.yarolegovich.slidingrootnav.SlidingRootNavLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +54,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,drawerAdapter.OnItemSelectedListener {
+        implements drawerAdapter.OnItemSelectedListener {
 
     private  NavigationView navigationView;
     private UserClass user;
@@ -71,7 +75,7 @@ public class HomeActivity extends AppCompatActivity
 
     private String[] screenTitles;
     private Drawable[] screenIcons;
-    private  SlidingRootNav slidingRootNav;
+    public   SlidingRootNav slidingRootNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,52 +91,14 @@ public class HomeActivity extends AppCompatActivity
         Intent incomingIntent = getIntent();
         user = (UserClass) incomingIntent.getExtras().getSerializable("user");
         villageSelected = (Villages) incomingIntent.getExtras().getSerializable("village");
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
-
-        //trial(savedInstanceState);
-
-
-        /*final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        Window window = this.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.setStatusBarColor(ContextCompat.getColor(this, R.color.Back));
         Drawable dr = getResources().getDrawable(R.drawable.hamburger_icon);
         Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
-
-        Drawable d = new BitmapDrawable(getResources(),Bitmap.createScaledBitmap(bitmap,80,80,true));
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-
-        toggle.setDrawerIndicatorEnabled(false);
-        toggle.setToolbarNavigationClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                drawer.openDrawer(GravityCompat.START);
-            }
-        });
-        toggle.setHomeAsUpIndicator(d);
-
-
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View header = navigationView.getHeaderView(0);
-        TextView name = header.findViewById(R.id.Name);
-        TextView username = header.findViewById(R.id.username);
-        name.setText(user.getFullname());
-        username.setText(user.getUsername());
-
-        if(savedInstanceState == null){
-            manager.beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
-            navigationView.setCheckedItem(R.id.Questions);
-        }*/
+        final Drawable d = new BitmapDrawable(getResources(),Bitmap.createScaledBitmap(bitmap,80,80,true));
         getUserDistrict(villageSelected.getDistrict_id());
 
 
@@ -143,8 +109,16 @@ public class HomeActivity extends AppCompatActivity
                 .withContentClickableWhenMenuOpened(false)
                 .withSavedState(savedInstanceState)
                 .withMenuLayout(R.layout.menu_left_drawer)
+               //.withDragDistance(220) //Horizontal translation of a view. Default == 180dp
+               //.withRootViewScale(0.9f) //Content view's scale will be interpolated between 1f and 0.7f. Default == 0.65f;
+               //.withRootViewElevation(0) //Content view's elevation will be interpolated between 0 and 10dp. Default == 8.
+               //.withRootViewYTranslation(4)
                 .inject();
 
+        TextView name = slidingRootNav.getLayout().findViewById(R.id.fullname);
+        TextView username = slidingRootNav.getLayout().findViewById(R.id.username);
+        name.setText(user.getFullname());
+        username.setText(user.getUsername());
         screenIcons = loadScreenIcons();
         screenTitles = loadScreenTitles();
 
@@ -163,19 +137,19 @@ public class HomeActivity extends AppCompatActivity
         list.setAdapter(adapter);
 
         adapter.setSelected(POS_QUESTIONNAIRE);
+        toolbar.post(new Runnable() {
+            @Override
+            public void run() {
+                toolbar.setNavigationIcon(d);
+            }
+        });
     }
 
 
 
     @Override
     public void onBackPressed() {
-        /*DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }*/
-        slidingRootNav.closeMenu();
+        slidingRootNav.closeMenu(true);
     }
 
     @Override
@@ -202,43 +176,6 @@ public class HomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.AddFarmer) {
-            toolbar.setTitle("NEW FARMER");
-            android.support.v4.app.FragmentTransaction ft1 = manager.beginTransaction();
-            Fragment newFarmer = AddFarmerFragment.newInstance(villageSelected,districtSelected);
-            ft1.replace(R.id.mainFragment,newFarmer).commit();
-            //navigationView.setCheckedItem(R.id.AddFarmer);
-        } else if (id == R.id.AddMulFarmers) {
-            android.support.v4.app.FragmentTransaction ft = manager.beginTransaction();
-            Fragment newFarmers = AddMultipleFarmersFragment.newInstance(villageSelected,districtSelected);
-            ft.replace(R.id.mainFragment,newFarmers).commit();
-            //navigationView.setCheckedItem(R.id.AddMulFarmers);
-        } else if (id == R.id.EditFarmer) {
-            android.support.v4.app.FragmentTransaction newTransaction = manager.beginTransaction();
-            Fragment editFarmer = EditFarmerFragment.newInstance(villageSelected,districtSelected);
-            newTransaction.replace(R.id.mainFragment,editFarmer).commit();
-           // navigationView.setCheckedItem(R.id.EditFarmer);
-        } else if (id == R.id.Questions) {
-            manager.beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
-            //navigationView.setCheckedItem(R.id.Questions);
-        } else if (id == R.id.Reports) {
-            manager.beginTransaction().replace(R.id.mainFragment,new ReportsFragment()).commit();
-            //navigationView.setCheckedItem(R.id.Reports);
-        } else if (id == R.id.UpdateQuestions) {
-            manager.beginTransaction().replace(R.id.mainFragment,new UpdateQuestionsFragment()).commit();
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     private void getUserDistrict(final int district_id){
         AsyncTask<Integer,Void,JSONObject> asyncTask = new AsyncTask<Integer, Void, JSONObject>() {
@@ -262,6 +199,39 @@ public class HomeActivity extends AppCompatActivity
         };
         asyncTask.execute(district_id);
     }
+
+    private class getUserDistrict extends AsyncTask<Integer,Void,JSONObject>{
+
+        @Override
+        protected JSONObject doInBackground(Integer... integers) {
+            String district_id = integers[0].toString();
+            OkHttpClient client = new OkHttpClient();
+            try{
+                JSONObject object = new JSONObject(APICall.GET(client,RequestBuilder.buildURL("justtesting.php",new String[]{"district_id"},new String[]{district_id})));
+                return object;
+            }catch (IOException e){
+                e.printStackTrace();
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject jsonObject) {
+            super.onPostExecute(jsonObject);
+            if(jsonObject!=null){
+                try {
+                    districtSelected = new District(jsonObject.getInt("district_id"), jsonObject.getString("en_district_name"));
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }else{
+            }
+        }
+    }
+
 
 
     private String[] loadScreenTitles() {
@@ -287,40 +257,33 @@ public class HomeActivity extends AppCompatActivity
     public void onItemSelected(int position) {
 
         if (position == POS_ADDNNEWFARMER) {
-            slidingRootNav.closeMenu();
             toolbar.setTitle("NEW FARMER");
             android.support.v4.app.FragmentTransaction ft1 = manager.beginTransaction();
             Fragment newFarmer = AddFarmerFragment.newInstance(villageSelected,districtSelected);
             ft1.replace(R.id.mainFragment,newFarmer).commit();
-            //navigationView.setCheckedItem(R.id.AddFarmer);
         } else if (position == POS_ADDMULTIPLEFARMERS) {
-            slidingRootNav.closeMenu();
+            toolbar.setTitle("NEW FARMER");
             android.support.v4.app.FragmentTransaction ft = manager.beginTransaction();
             Fragment newFarmers = AddMultipleFarmersFragment.newInstance(villageSelected,districtSelected);
             ft.replace(R.id.mainFragment,newFarmers).commit();
-            //navigationView.setCheckedItem(R.id.AddMulFarmers);
         } else if (position == POS_EDITFARMERDETAILS) {
-            slidingRootNav.closeMenu();
+            toolbar.setTitle("EDIT FARMER");
             android.support.v4.app.FragmentTransaction newTransaction = manager.beginTransaction();
             Fragment editFarmer = EditFarmerFragment.newInstance(villageSelected,districtSelected);
             newTransaction.replace(R.id.mainFragment,editFarmer).commit();
-            // navigationView.setCheckedItem(R.id.EditFarmer);
         } else if (position == POS_QUESTIONNAIRE) {
-            slidingRootNav.closeMenu();
+            toolbar.setTitle("TANUVAS");
             manager.beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
-            //navigationView.setCheckedItem(R.id.Questions);
         } else if (position == POS_REPORTS) {
-            slidingRootNav.closeMenu();
+            toolbar.setTitle("REPORTS");
             manager.beginTransaction().replace(R.id.mainFragment,new ReportsFragment()).commit();
-            //navigationView.setCheckedItem(R.id.Reports);
         } else if (position == POS_UPDATEQUESTIONS) {
-            slidingRootNav.closeMenu();
+            toolbar.setTitle("UPDATE QUESTIONS");
             manager.beginTransaction().replace(R.id.mainFragment,new UpdateQuestionsFragment()).commit();
 
         }
 
         slidingRootNav.closeMenu(true);
-        slidingRootNav.closeMenu();
 
 
     }

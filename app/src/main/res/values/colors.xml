@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#FFFFFF</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDark">#2A2E43</color>
     <color name="colorAccent">#3497FD</color>
     <color name="colorSecondary">#FFA84C</color>
     <color name="Black">#000000</color>
     <color name="Back">#2A2E43</color>
+    <color name="buttoColor1">#24C6DC</color>
+    <color name="grayBlue">#78849E</color>
 </resources>

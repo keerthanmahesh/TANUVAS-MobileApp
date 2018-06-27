@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            loading = ProgressDialog.show(MainActivity.this,"Loading....",null,true,true);
+            loading = ProgressDialog.show(MainActivity.this,"Loading....","We appreciate your patience",true,false);
         }
 
         @Override
