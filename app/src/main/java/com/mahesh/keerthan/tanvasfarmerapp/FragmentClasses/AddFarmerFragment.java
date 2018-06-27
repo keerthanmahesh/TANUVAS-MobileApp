@@ -27,6 +27,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,6 +51,7 @@ import com.mahesh.keerthan.tanvasfarmerapp.HomeActivity;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 import com.mahesh.keerthan.tanvasfarmerapp.RealPathUtil;
 import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
+import com.ramotion.foldingcell.FoldingCell;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 
 import org.json.JSONArray;
@@ -103,27 +105,28 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
     private ImageButton imageButton;
     public static final int PICK_IMAGE = 1;
     private String realPath;
+    private FoldingCell fc,fc1,fc2;
     @Nullable
     @Override
-        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-            setHasOptionsMenu(true);
-            view = inflater.inflate(R.layout.add_farmer_fragment,container,false);
-            calender_button = (Button) view.findViewById(R.id.DOBbuttonAddfarmer);
-            calender_button.setOnClickListener(this);
-            dateView = view.findViewById(R.id.DOBtextView);
-            calendar = Calendar.getInstance();
-            year = calendar.get(Calendar.YEAR);
-             month = calendar.get(Calendar.MONTH);
-            day = calendar.get(Calendar.DAY_OF_MONTH);
-            getActivity().invalidateOptionsMenu();
-            village_selected = (Villages) getArguments().getSerializable("village");
-            imageButton = view.findViewById(R.id.profPicImageButton);
-            district_selected = (District) getArguments().getSerializable("district");
-            TextView village_name = view.findViewById(R.id.villageName);
-            TextView district_name = view.findViewById(R.id.districtName);
-            village_name.setText("Village: "+village_selected.getEn_village_name());
-            district_name.setText("District: " + district_selected.getEn_district_name());
+        setHasOptionsMenu(true);
+        view = inflater.inflate(R.layout.add_farmer_fragment,container,false);
+        calender_button = (Button) view.findViewById(R.id.DOBbuttonAddfarmer);
+        calender_button.setOnClickListener(this);
+        dateView = view.findViewById(R.id.DOBtextView);
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        getActivity().invalidateOptionsMenu();
+        village_selected = (Villages) getArguments().getSerializable("village");
+        imageButton = view.findViewById(R.id.profPicImageButton);
+        district_selected = (District) getArguments().getSerializable("district");
+        TextView village_name = view.findViewById(R.id.villageName);
+        TextView district_name = view.findViewById(R.id.districtName);
+        village_name.setText("Village: "+village_selected.getEn_village_name());
+        district_name.setText("District: " + district_selected.getEn_district_name());
         View.OnClickListener pickImageListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,10 +134,57 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
             }
         };
         imageButton.setOnClickListener(pickImageListener);
-            return view;
-        }
+        fc = (FoldingCell) view.findViewById(R.id.folding_cell);
+        fc1 = (FoldingCell) view.findViewById(R.id.folding_cell1);
+        fc2 = (FoldingCell) view.findViewById(R.id.folding_cell2);
+        fc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fc.toggle(false);
+            }
+        });
+        fc1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fc1.toggle(false);
+            }
+        });
+        fc2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fc2.toggle(false);
+            }
+        });
 
 
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.getView().setFocusableInTouchMode(true);
+        this.getView().requestFocus();
+        this.getView().setOnKeyListener( new View.OnKeyListener()
+        {
+            @Override
+            public boolean onKey( View v, int keyCode, KeyEvent event )
+            {
+                if( keyCode == KeyEvent.KEYCODE_BACK )
+                {
+                    if(fc.isUnfolded())
+                        fc.fold(false);
+                    if(fc1.isUnfolded())
+                        fc1.fold(false);
+                    if(fc2.isUnfolded())
+                        fc2.fold(false);
+
+                    return true;
+                }
+                return false;
+            }
+        } );
+    }
 
     @Override
     public void onClick(View v) {
@@ -223,6 +273,7 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
             int village_id = village_selected.getVillage_id(),district_id = village_selected.getDistrict_id();
 
             new updateFarmer().execute(UUID.randomUUID().toString(),first_name,last_name,aadhar_number,phone_number,address_1,address_2,gender,outputDate,Integer.toString(village_id),Integer.toString(district_id),realPath);
+
         }
         return super.onOptionsItemSelected(item);
 
@@ -394,6 +445,7 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
 
         }
     }
+
 }
 
 

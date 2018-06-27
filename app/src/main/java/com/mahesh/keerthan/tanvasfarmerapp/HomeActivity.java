@@ -28,10 +28,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.github.ppamorim.PrismPosition;
+import com.github.ppamorim.creator.FragmentViewItemAdapter;
+import com.github.ppamorim.creator.FragmentViewItems;
+import com.github.ppamorim.prismview.PrismActivity;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddFarmerFragment;
+import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddFarmerFragment2;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddMultipleFarmersFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.EditFarmerFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.InputFarmersDialog;
@@ -182,7 +187,7 @@ public class HomeActivity extends AppCompatActivity
             @Override
             protected JSONObject doInBackground(Integer... integers) {
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("http://192.168.1.45/~vandit/justtesting.php?district_id=" + district_id).build();
+                Request request = new Request.Builder().url("http://192.168.43.17/~vandit/justtesting.php?district_id=" + district_id).build();
                 try{
                     Response response = client.newCall(request).execute();
 
@@ -260,7 +265,7 @@ public class HomeActivity extends AppCompatActivity
             toolbar.setTitle("NEW FARMER");
             android.support.v4.app.FragmentTransaction ft1 = manager.beginTransaction();
             Fragment newFarmer = AddFarmerFragment.newInstance(villageSelected,districtSelected);
-            ft1.replace(R.id.mainFragment,newFarmer).commit();
+            ft1.replace(R.id.mainFragment,newFarmer).addToBackStack( "tag" ).commit();
         } else if (position == POS_ADDMULTIPLEFARMERS) {
             toolbar.setTitle("NEW FARMER");
             android.support.v4.app.FragmentTransaction ft = manager.beginTransaction();
