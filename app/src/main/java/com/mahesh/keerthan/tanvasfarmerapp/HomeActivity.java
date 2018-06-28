@@ -104,7 +104,7 @@ public class HomeActivity extends AppCompatActivity
         Drawable dr = getResources().getDrawable(R.drawable.hamburger_icon);
         Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
         final Drawable d = new BitmapDrawable(getResources(),Bitmap.createScaledBitmap(bitmap,80,80,true));
-        getUserDistrict(villageSelected.getDistrict_id());
+        new getUserDistrict().execute(villageSelected.getDistrict_id());
 
 
 
@@ -182,12 +182,12 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
-    private void getUserDistrict(final int district_id){
+    /*private void getUserDistrict(final int district_id){
         AsyncTask<Integer,Void,JSONObject> asyncTask = new AsyncTask<Integer, Void, JSONObject>() {
             @Override
             protected JSONObject doInBackground(Integer... integers) {
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("http://192.168.43.17/~vandit/justtesting.php?district_id=" + district_id).build();
+                Request request = new Request.Builder().url("http://192.168.0.103/~vandit/justtesting.php?district_id=" + district_id).build();
                 try{
                     Response response = client.newCall(request).execute();
 
@@ -203,7 +203,7 @@ public class HomeActivity extends AppCompatActivity
             }
         };
         asyncTask.execute(district_id);
-    }
+    }*/
 
     private class getUserDistrict extends AsyncTask<Integer,Void,JSONObject>{
 
@@ -212,7 +212,8 @@ public class HomeActivity extends AppCompatActivity
             String district_id = integers[0].toString();
             OkHttpClient client = new OkHttpClient();
             try{
-                JSONObject object = new JSONObject(APICall.GET(client,RequestBuilder.buildURL("justtesting.php",new String[]{"district_id"},new String[]{district_id})));
+                JSONArray array = new JSONArray(APICall.GET(client,RequestBuilder.buildURL("justtesting.php",new String[]{"district_id"},new String[]{district_id})));
+                JSONObject object = array.getJSONObject(0);
                 return object;
             }catch (IOException e){
                 e.printStackTrace();
