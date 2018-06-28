@@ -20,16 +20,18 @@
         android:scaleType="centerCrop"
         app:radius="20"
         />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/logo"
         android:layout_centerHorizontal="true"
-        android:text="Welcome to Tanuvas App for Farmers!"
+        android:layout_marginBottom="15dp"
+        android:fontFamily="@font/gibson_regular"
+        android:text="Hey, Welcome!"
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        android:layout_above="@+id/logo"
-        android:layout_marginBottom="15dp"
-        android:textSize="30dp"/>
+        android:textSize="30dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -41,14 +43,15 @@
         android:layout_alignParentEnd="true">
 
         <TextView
+            android:id="@+id/selectVillageDialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Please Select Village"
-            android:id="@+id/selectVillageDialog"
-            android:textAlignment="center"
-            android:textSize="25dp"
             android:layout_above="@+id/spinner1"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/gibson_regular"
+            android:text="Please Select Village"
+            android:textAlignment="center"
+            android:textSize="25dp" />
         <Spinner
             android:id="@+id/spinner1"
             android:layout_centerHorizontal="true"
