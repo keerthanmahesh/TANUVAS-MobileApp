@@ -8,4 +8,6 @@
     <color name="Back">#2A2E43</color>
     <color name="buttoColor1">#24C6DC</color>
     <color name="grayBlue">#78849E</color>
+    <color name="gobuttongreysecondary">#616161</color>
+    <color name="gobuttongreydark">#373737</color>
 </resources>
