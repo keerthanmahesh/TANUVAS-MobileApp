@@ -21,7 +21,10 @@
                 android:id="@+id/folding_cell"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:backSideColor="@color/Back"
+                app:backSideColor="#5773FF"
+                app:cameraHeight="30"
+                app:additionalFlipsCount="3"
+                app:animationDuration="1500"
 
                 >
 
@@ -52,14 +55,14 @@
 
 
 
-                                <ImageButton
+                                <de.hdodenhof.circleimageview.CircleImageView
                                     android:layout_width="100dp"
                                     android:layout_height="100dp"
                                     android:layout_centerVertical="true"
                                     android:layout_marginLeft="15dp"
                                     android:src="@drawable/profpic1"
                                     android:background="@drawable/circularbuttonprofpic"
-                                    android:scaleType="fitXY"
+                                    android:clickable="true"
                                     android:id="@+id/profPicImageButton"
                                     />
 
@@ -253,6 +256,19 @@
                                     android:id="@+id/ageTextView"
 
                                     />
+
+                                <Button
+                                    android:layout_width="match_parent"
+                                    android:layout_height="40dp"
+                                    android:text = "Done"
+                                    android:textAllCaps="false"
+                                    android:id="@+id/donebtn"
+                                    android:layout_below="@id/ageTextView"
+                                    android:layout_centerHorizontal="true"
+                                    android:layout_marginTop="25dp"
+                                    android:layout_marginHorizontal="50dp"
+                                    android:textColor="@color/colorPrimary"
+                                    android:background="@drawable/cardview1_roundedbtn"/>
                             </RelativeLayout>
 
                         </RelativeLayout>
@@ -281,20 +297,67 @@
                             android:layout_marginRight="12dp"
                             android:layout_marginTop="12dp"
                             />
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_marginLeft="24dp"
+                            android:id="@+id/cardViewProfileImage"
+                            android:layout_marginTop="24dp"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Profile"
                             android:layout_marginLeft="24dp"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="35dp"
+                            android:textSize="30dp"
                             android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="30dp"/>
+                            android:layout_marginBottom="30dp"
+                            android:id="@+id/nameTV"/>
+
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/colorPrimary" />
+                            android:textColor="@color/colorPrimary"
+                            android:layout_above="@+id/aadharTV"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="24dp"
+                            android:textSize="14dp"
+                            android:id="@+id/phoneTV123"
+                            android:alpha="0"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginLeft="24dp"
+                            android:textSize="14dp"
+                            android:id="@+id/aadharTV"
+                            android:alpha="0"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorPrimary"
+                            android:layout_below="@+id/nameTV"
+                            android:layout_marginTop="5dp"
+                            android:layout_marginLeft="24dp"
+                            android:textSize="14dp"
+                            android:id="@+id/genderandage"
+                            />
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_toRightOf="@+id/nameTV"
+                            android:layout_marginTop="82dp"
+                            android:src="@drawable/verified_icon"
+                            android:tint="@color/colorPrimary"
+                            android:layout_marginLeft="5dp"
+                            android:alpha="0"
+                            android:id="@+id/verified"/>
                     </RelativeLayout>
 
                 </FrameLayout>
@@ -356,7 +419,7 @@
                             android:text="Land Holding"
                             android:layout_marginLeft="24dp"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="35dp"
+                            android:textSize="30dp"
                             android:layout_alignParentBottom="true"
                             android:layout_marginBottom="30dp"/>
 
@@ -421,7 +484,7 @@
                             android:text="Others"
                             android:layout_marginLeft="24dp"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="35dp"
+                            android:textSize="30dp"
                             android:layout_alignParentBottom="true"
                             android:layout_marginBottom="30dp"/>
 

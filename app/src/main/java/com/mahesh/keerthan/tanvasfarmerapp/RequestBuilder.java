@@ -18,7 +18,7 @@ public class RequestBuilder {
     public static HttpUrl buildURL(String path, String[] names,String[] values) {
         HttpUrl.Builder builder =  new HttpUrl.Builder()
                 .scheme("http") //http
-                .host("192.168.43.17")
+                .host("192.168.1.45")
                 .addPathSegment("~vandit")
                 .addPathSegment(path)//adds "/pathSegment" at the end of hostname
                 .addQueryParameter(names[0], values[0]); //add query parameters to the URL

@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PixelFormat;
 import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -38,7 +39,9 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.Toolbar;
@@ -100,12 +103,16 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
     private static int id1;
     private Villages village_selected;
     private District district_selected;
-    private TextView aadharTV,phoneTV;
+    private EditText aadharTV,phoneTV;
     private String phone_number,aadhar_number;
-    private ImageButton imageButton;
+    private ImageView imageButton;
     public static final int PICK_IMAGE = 1;
-    private String realPath;
+    private String realPath,first_name,last_name,dob,address_1,address_2,gender = "Others";;
     private FoldingCell fc,fc1,fc2;
+    private EditText firstNameTV,lastNameTV,address1TV,address2TV;
+    private TextView dobTV,ageTV;
+    private RadioGroup radioGroup;
+    private boolean verified = true;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -116,9 +123,6 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
         calender_button.setOnClickListener(this);
         dateView = view.findViewById(R.id.DOBtextView);
         calendar = Calendar.getInstance();
-        year = calendar.get(Calendar.YEAR);
-        month = calendar.get(Calendar.MONTH);
-        day = calendar.get(Calendar.DAY_OF_MONTH);
         getActivity().invalidateOptionsMenu();
         village_selected = (Villages) getArguments().getSerializable("village");
         imageButton = view.findViewById(R.id.profPicImageButton);
@@ -127,6 +131,8 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
         TextView district_name = view.findViewById(R.id.districtName);
         village_name.setText("Village: "+village_selected.getEn_village_name());
         district_name.setText("District: " + district_selected.getEn_district_name());
+        Button donebtn = view.findViewById(R.id.donebtn);
+
         View.OnClickListener pickImageListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,6 +162,111 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
             }
         });
 
+        firstNameTV = (EditText) view.findViewById(R.id.firstName);
+        lastNameTV = (EditText) view.findViewById(R.id.lastName);
+
+        aadharTV = (EditText) view.findViewById(R.id.adhaarNumber);
+        phoneTV = (EditText) view.findViewById(R.id.mobileNumber);
+        address1TV = (EditText) view.findViewById(R.id.address1);
+
+        address2TV = (EditText) view.findViewById(R.id.address2);
+
+        dobTV = view.findViewById(R.id.DOBtextView);
+
+        donebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fc.fold(false);
+                if(!firstNameTV.getText().toString().isEmpty()&&!lastNameTV.getText().toString().isEmpty()){
+                    first_name = firstNameTV.getText().toString();
+                    last_name = lastNameTV.getText().toString();
+                    aadhar_number = aadharTV.getText().toString();
+                    phone_number = phoneTV.getText().toString();
+                    address_1 = address1TV.getText().toString();
+                    address_2 = address2TV.getText().toString();
+                    dob = dobTV.getText().toString();
+                    radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
+                    int selectedId = radioGroup.getCheckedRadioButtonId();
+                    switch (selectedId){
+                        case R.id.radiobuttonMale:
+                            gender="Male";
+                            verified = true;
+                            break;
+
+                        case R.id.radiobuttonFemale:
+                            gender = "Female";
+                            verified = true;
+                            break;
+
+                        case R.id.radiobuttonOthers:
+                            gender = "Others" ;
+                            verified = true;
+                            break;
+                            default: verified = false;
+                    }
+                    TextView nameTv = view.findViewById(R.id.nameTV);
+                    nameTv.setAlpha(0);
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                    float d = getActivity().getResources().getDisplayMetrics().density;
+                    int left = (int)(20 * d);
+                    int top = (int)(130 * d);
+                    layoutParams.setMargins(left,top,0,0);
+                    nameTv.setLayoutParams(layoutParams);
+                    nameTv.setText(firstNameTV.getText().toString()+" "+lastNameTV.getText().toString());
+                    TextView aadharCardTV = view.findViewById(R.id.aadharTV);
+                    aadharCardTV.setAlpha(0);
+                    TextView phoneCardTV = view.findViewById(R.id.phoneTV123);
+                    phoneCardTV.setAlpha(0);
+                    TextView genderandageTV = view.findViewById(R.id.genderandage);
+                    genderandageTV.setAlpha(0);
+                    if(!TextUtils.isEmpty(gender) && !dobTV.getText().toString().equals("Date Of Birth")){
+                        ageTV = view.findViewById(R.id.ageTextView);
+                        genderandageTV.setText(ageTV.getText().toString() + " yrs, "+ gender);
+                        genderandageTV.animate().translationY(-200).setDuration(2000).alpha(1).setStartDelay(100);
+                        verified = true;
+                    }else verified = false;
+
+                    if(TextUtils.isEmpty(phone_number)){
+                        phoneCardTV.setText("Phone Not Entered!");
+                        verified = false;
+                    }
+                    else {
+                        phoneCardTV.setText("Phone: +91 " + phone_number);
+                        verified = true;
+                    }
+
+                    if(TextUtils.isEmpty(aadhar_number)){
+                        aadharCardTV.setText("Aadhar Not Entered!");
+                        verified = false;
+                    }
+                    else {
+                        aadharCardTV.setText("Aadhar: " + aadhar_number);
+                        verified = true;
+                    }
+
+
+
+
+
+                    if(imageButton.getDrawable().getConstantState() != getActivity().getResources().getDrawable(R.drawable.profpic1).getConstantState()){
+                        ImageView profileImageCard = view.findViewById(R.id.cardViewProfileImage);
+                        profileImageCard.setImageDrawable(imageButton.getDrawable());
+                        verified = true;
+                    }else verified = false;
+
+                    if(TextUtils.isEmpty(address_1) || TextUtils.isEmpty(address_2)) verified = false; else verified = true;
+
+
+
+                    nameTv.animate().translationY(-200).setDuration(2000).alpha(1);
+                    aadharCardTV.animate().setDuration(2000).alpha(1).setStartDelay(100);
+                    phoneCardTV.animate().setDuration(2000).alpha(1).setStartDelay(100);
+
+                    if (verified) view.findViewById(R.id.verified).animate().alpha(1).setDuration(2000); else view.findViewById(R.id.verified).setAlpha(0);
+                }
+            }
+        });
 
         return view;
     }
@@ -207,21 +318,8 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_save ) {
-            EditText firstNameTV = (EditText) view.findViewById(R.id.firstName);
-            String first_name = firstNameTV.getText().toString();
-            EditText lastNameTV = (EditText) view.findViewById(R.id.lastName);
-            String last_name = lastNameTV.getText().toString();
-            aadharTV = (EditText) view.findViewById(R.id.adhaarNumber);
-            aadhar_number = aadharTV.getText().toString();
-            phoneTV = (EditText) view.findViewById(R.id.mobileNumber);
-            phone_number = phoneTV.getText().toString();
-            EditText address1TV = (EditText) view.findViewById(R.id.address1);
-            String address_1 = address1TV.getText().toString();
-            EditText address2TV = (EditText) view.findViewById(R.id.address2);
-            String address_2 = address2TV.getText().toString();
-            TextView dobTV = view.findViewById(R.id.DOBtextView);
+
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            String dob = dobTV.getText().toString();
             if(TextUtils.isEmpty(first_name)){
                 firstNameTV.setError("Please Enter The First Name");
                 return super.onOptionsItemSelected(item);
@@ -242,9 +340,13 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
                 address2TV.setError("Please Enter an Address");
                 return super.onOptionsItemSelected(item);
             }
-            RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
+
+            if(dob.equals("Date Of Birth")){
+                Snackbar.make(view, "Please Enter The Date", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                return super.onOptionsItemSelected(item);
+            }
             int selectedId = radioGroup.getCheckedRadioButtonId();
-            String gender = "Others";
             switch (selectedId){
                 case R.id.radiobuttonMale:
                     gender="Male";
@@ -262,11 +364,6 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
                     return super.onOptionsItemSelected(item);
             }
 
-            if(dob.equals("Date Of Birth")){
-                Snackbar.make(view, "Please Enter The Date", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                return super.onOptionsItemSelected(item);
-            }
             Date inputDate = formatter.parse(dob, new ParsePosition(0));
             formatter = new SimpleDateFormat("yyyy-MM-dd");
             String outputDate = formatter.format(inputDate);

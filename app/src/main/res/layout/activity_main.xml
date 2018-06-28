@@ -6,27 +6,28 @@
     xmlns:float="http://schemas.android.com/tools">
 
 
-    <RelativeLayout
+    <com.jgabrielfreitas.core.BlurImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/cardViewLayout"
-        android:layout_marginBottom="-65dp"
-        android:background="@drawable/gradient_home"
-        />
+        android:src="@drawable/background"
+        android:layout_centerInParent="true"
+        android:scaleType="centerCrop"
+        app:radius="20"/>
 
 
 
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Farmer Data Analysis App"
+        android:layout_height="wrap_content"
+        android:text="Welcome"
         android:textColor="@android:color/white"
-        android:textSize="25dp"
+        android:textSize="50dp"
         android:layout_marginHorizontal="55dp"
-        android:textAlignment="center"
         android:layout_above="@id/cardViewLayout"
         android:id="@+id/texttest"
+        android:fontFamily="@font/american_typewriter_semibold"
+        android:alpha="0"
 
         />
 
@@ -34,7 +35,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="50dp"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:id="@+id/layout1"
+        android:alpha="0">
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -69,31 +72,37 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="150dp"
         android:id="@+id/cardViewLayout"
+        android:background="@android:color/transparent"
         android:padding="5dp"
         >
-
-        <android.support.v7.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:layout_marginLeft="50dp"
-            android:layout_marginRight="50dp"
-            android:padding="5dp"
-            >
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:paddingTop="10dp">
+                android:layout_marginHorizontal="50dp"
+                android:paddingTop="10dp"
+                android:background="@drawable/round_edit_text"
+                android:foregroundTint="@color/colorPrimary"
+                style="@style/TextLabel"
+                android:alpha="0"
+                >
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:background="@drawable/edittext_border"
                     android:hint="Username"
+                    android:textColorHint="@color/colorPrimary"
+                    android:textColor="@color/colorPrimary"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:id="@+id/username"
+                    android:textAlignment="center"
+                    android:ellipsize="start"
+                    android:gravity="center_horizontal"
+                    android:background="@drawable/transparent"
+                    android:paddingTop="5dp"
+
                     />
 
             </android.support.design.widget.TextInputLayout>
@@ -102,25 +111,35 @@
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/text_input_layout2"
                 android:layout_width="match_parent"
+                android:layout_marginHorizontal="50dp"
                 android:layout_height="60dp"
-                android:layout_marginTop="55dp"
-                android:paddingTop="10dp">
+                android:layout_below="@+id/text_input_layout"
+                android:layout_marginTop="15dp"
+                android:paddingTop="10dp"
+                android:background="@drawable/round_edit_text"
+                android:gravity="center_horizontal"
+                style="@style/TextLabel"
+                android:alpha="0"
+                >
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:background="@android:color/white"
                     android:hint="Password"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
+                    android:paddingTop="5dp"
                     android:inputType="textPassword"
                     android:id="@+id/password"
+                    android:textColor="@color/colorPrimary"
+                    android:textAlignment="center"
+                    android:background="@drawable/transparent"
+                    android:ellipsize="middle"
+                    android:gravity="center_horizontal|top"
+
 
                     />
             </android.support.design.widget.TextInputLayout>
-
-
-        </android.support.v7.widget.CardView>
     </RelativeLayout>
     <Button
         android:layout_width="match_parent"
@@ -134,18 +153,19 @@
         android:textColor="@android:color/white"
         android:textAllCaps="false"
         android:id="@+id/signInButton"
+        android:alpha="0"
         />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
-
+        android:id="@+id/forgotPass"
         android:background="@android:color/transparent"
         android:text="Forgot Password? Click Here"
         android:fontFamily="@font/opensans_regular"
         android:textAllCaps="false"
         android:layout_centerInParent="true"
-        android:textColor="@color/grayBlue"/>
-
+        android:textColor="@color/grayBlue"
+        android:alpha="0"/>
 </RelativeLayout>
