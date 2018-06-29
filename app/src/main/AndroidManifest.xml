@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -22,14 +22,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".VillageSelect"
+            android:name=".Activities.VillageSelect"
             android:theme="@style/AppTheme.NoActionBar.FullScreen" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".Activities.HomeActivity"
             android:label="@string/title_activity_home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".EditFarmerDetailsActivity"
-            android:parentActivityName = ".HomeActivity">
+        <activity android:name=".Activities.EditFarmerDetailsActivity"
+            android:parentActivityName = ".Activities.HomeActivity">
         </activity>
 
         <meta-data

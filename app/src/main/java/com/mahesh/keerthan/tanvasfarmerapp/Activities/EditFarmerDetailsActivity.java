@@ -1,11 +1,8 @@
-package com.mahesh.keerthan.tanvasfarmerapp;
+package com.mahesh.keerthan.tanvasfarmerapp.Activities;
 
-import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,21 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toolbar;
-import android.support.v4.app.FragmentManager;
 
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FarmerClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
-import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.QuestionFragment;
+import com.mahesh.keerthan.tanvasfarmerapp.R;
 
 import java.io.IOException;
-import java.text.ParsePosition;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.UUID;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

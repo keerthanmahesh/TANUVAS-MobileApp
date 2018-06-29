@@ -1,25 +1,17 @@
-package com.mahesh.keerthan.tanvasfarmerapp;
+package com.mahesh.keerthan.tanvasfarmerapp.Activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableWrapper;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
-import android.view.View;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -28,24 +20,23 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.github.ppamorim.PrismPosition;
-import com.github.ppamorim.creator.FragmentViewItemAdapter;
-import com.github.ppamorim.creator.FragmentViewItems;
-import com.github.ppamorim.prismview.PrismActivity;
+import com.mahesh.keerthan.tanvasfarmerapp.APICall;
+import com.mahesh.keerthan.tanvasfarmerapp.Adapters.drawerAdapter;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
+import com.mahesh.keerthan.tanvasfarmerapp.DrawerItem;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddFarmerFragment;
-import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddFarmerFragment2;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddMultipleFarmersFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.EditFarmerFragment;
-import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.InputFarmersDialog;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.QuestionFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.ReportsFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.UpdateQuestionsFragment;
+import com.mahesh.keerthan.tanvasfarmerapp.R;
+import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
+import com.mahesh.keerthan.tanvasfarmerapp.SimpleItem;
 import com.yarolegovich.slidingrootnav.SlidingRootNav;
 import com.yarolegovich.slidingrootnav.SlidingRootNavBuilder;
-import com.yarolegovich.slidingrootnav.SlidingRootNavLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -55,8 +46,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class HomeActivity extends AppCompatActivity
         implements drawerAdapter.OnItemSelectedListener {
@@ -212,7 +201,7 @@ public class HomeActivity extends AppCompatActivity
             String district_id = integers[0].toString();
             OkHttpClient client = new OkHttpClient();
             try{
-                JSONArray array = new JSONArray(APICall.GET(client,RequestBuilder.buildURL("justtesting.php",new String[]{"district_id"},new String[]{district_id})));
+                JSONArray array = new JSONArray(APICall.GET(client, RequestBuilder.buildURL("justtesting.php",new String[]{"district_id"},new String[]{district_id})));
                 JSONObject object = array.getJSONObject(0);
                 return object;
             }catch (IOException e){

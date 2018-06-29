@@ -9,6 +9,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mahesh.keerthan.tanvasfarmerapp.Adapters.drawerAdapter;
+
 public class SimpleItem extends DrawerItem<SimpleItem.ViewHolder> {
 
     private int selectedItemIconTint;

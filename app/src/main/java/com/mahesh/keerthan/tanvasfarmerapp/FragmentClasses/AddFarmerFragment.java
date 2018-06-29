@@ -2,92 +2,57 @@ package com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.PixelFormat;
-import android.media.Image;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
-import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
-import com.mahesh.keerthan.tanvasfarmerapp.HomeActivity;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 import com.mahesh.keerthan.tanvasfarmerapp.RealPathUtil;
 import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
 import com.ramotion.foldingcell.FoldingCell;
-import com.yarolegovich.slidingrootnav.SlidingRootNav;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.Array;
-import java.sql.SQLClientInfoException;
-import java.sql.SQLException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
 import java.util.UUID;
-
-import javax.xml.transform.Result;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
-import okio.BufferedSink;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -244,11 +209,6 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
                         aadharCardTV.setText("Aadhar: " + aadhar_number);
                         verified = true;
                     }
-
-
-
-
-
                     if(imageButton.getDrawable().getConstantState() != getActivity().getResources().getDrawable(R.drawable.profpic1).getConstantState()){
                         ImageView profileImageCard = view.findViewById(R.id.cardViewProfileImage);
                         profileImageCard.setImageDrawable(imageButton.getDrawable());
@@ -256,9 +216,6 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
                     }else verified = false;
 
                     if(TextUtils.isEmpty(address_1) || TextUtils.isEmpty(address_2)) verified = false; else verified = true;
-
-
-
                     nameTv.animate().translationY(-200).setDuration(2000).alpha(1);
                     aadharCardTV.animate().setDuration(2000).alpha(1).setStartDelay(100);
                     phoneCardTV.animate().setDuration(2000).alpha(1).setStartDelay(100);
