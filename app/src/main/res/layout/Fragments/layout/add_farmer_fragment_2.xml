@@ -1,12 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="HAHAHA"
-        android:textSize="25dp"/>
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="10dp"
+        android:text="Is the farmer a member of any organised group?"
+        android:textSize="25dp"
+        android:id="@+id/question1"/>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/question1"
+        android:layout_alignLeft="@+id/question1"
+        android:layout_marginTop="10dp"
+        android:text="Yes"
+        android:textSize="25dp"
+        android:id="@+id/Q1radioyes"/>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/question1"
+        android:layout_toRightOf="@+id/Q1radioyes"
+        android:layout_marginTop="10dp"
+        android:text="No"
+        android:textSize="25dp"
+        android:id="@+id/Q1radiono"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Q1radioyes"
+        android:layout_alignLeft="@+id/question1"
+        android:layout_marginTop="10dp"
+        android:text="If yes, what is the name of the group?"
+        android:textSize="25dp"
+        android:id="@+id/question1sub"/>
+
+    <EditText
+        android:layout_width="500dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/question1sub"
+        android:layout_below="@+id/question1sub"
+        android:layout_marginTop="10dp"
+        android:id="@+id/Q1edittext"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/Q1edittext"
+        android:layout_alignLeft="@+id/Q1edittext"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:text="Is the farmer willing to provide training ti cofarmers at his farm premises?"
+        android:textSize="25dp"
+        android:id="@+id/question2"/>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/question2"
+        android:layout_alignLeft="@+id/question2"
+        android:layout_marginTop="10dp"
+        android:text="Yes"
+        android:textSize="25dp"
+        android:id="@+id/Q2radioyes"/>
+
+    <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/question2"
+        android:layout_toRightOf="@+id/Q2radioyes"
+        android:layout_marginTop="10dp"
+        android:text="No"
+        android:textSize="25dp"
+        android:id="@+id/Q2radiono"/>
+
+    <com.ramotion.foldingcell.FoldingCell
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/folding_cell"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/question2"
+        android:layout_below="@+id/Q2radioyes"
+        app:backSideColor="#5773FF"
+        app:cameraHeight="30"
+        app:additionalFlipsCount="3"
+        app:animationDuration="1500"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:visibility="gone"
+            android:id="@+id/Q3unfoldedcell">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:scrollbarStyle="insideOverlay">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
+
+                </RelativeLayout>
+            </ScrollView>
+
+
+
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/cardview_1"
+            android:id="@+id/Q3foldedcell">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Active Social Media Groups"
+                    android:textSize="25dp"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_centerInParent="true"
+                    android:id="@+id/question3"/>
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_downarrow"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginRight="10dp"
+                    android:id="@+id/Q3downarrow"
+                    />
+            </RelativeLayout>
+        </FrameLayout>
+
+    </com.ramotion.foldingcell.FoldingCell>
 
 </RelativeLayout>
