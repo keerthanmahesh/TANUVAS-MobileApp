@@ -456,15 +456,11 @@
                     android:background="@color/colorPrimary"
                     android:visibility="gone">
 
-                    <ScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="600dp"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:scrollbarStyle="insideOverlay">
 
-
-                    </ScrollView>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/list"
+                        android:layout_width="240dp"
+                        android:layout_height="wrap_content" />
 
                 </FrameLayout>
 
