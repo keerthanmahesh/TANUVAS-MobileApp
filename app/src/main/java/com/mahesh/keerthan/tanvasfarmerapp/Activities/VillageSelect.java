@@ -1,10 +1,8 @@
-package com.mahesh.keerthan.tanvasfarmerapp;
+package com.mahesh.keerthan.tanvasfarmerapp.Activities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,30 +10,31 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
 
+import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserVillagesClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
+import com.mahesh.keerthan.tanvasfarmerapp.R;
+import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
+import com.wonderkiln.blurkit.BlurLayout;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class VillageSelect extends AppCompatActivity {
 
     private UserClass user;
     private List<UserVillagesClass> villagesClass = new ArrayList<>();
     private List<Villages> villages = new ArrayList<>();
+    private BlurLayout layout;
 
     //private  JSONArray array;
     //private  JSONArray array1;
@@ -63,42 +62,16 @@ public class VillageSelect extends AppCompatActivity {
         Intent intent = getIntent();
         user = (UserClass) intent.getSerializableExtra("user");
         new getUserVillages().execute(user.getU_id());
+        layout = (BlurLayout) findViewById(R.id.cardView);
 
     }
-    /*private void getUserVillages(final int u_id){
-        AsyncTask<Integer,Void,JSONArray> asyncTask = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("http://192.168.1.45/~vandit/justtesting.php?u_id=" + u_id).build();
 
-                try{
-                    Response response = client.newCall(request).execute();
-
-                    array = new JSONArray(response.body().string());
-                    for(int i = 0; i<array.length();i++){
-                        JSONObject object = array.getJSONObject(i);
-                        UserVillagesClass uservillagesClass = new UserVillagesClass(object.getInt("s_no"), object.getInt("u_id"), object.getInt("district_id"), object.getInt("village_id"));
-                        VillageSelect.this.villagesClass.add(uservillagesClass);
-                    }
+    @Override
+    protected void onStart() {
+        super.onStart();
 
 
-                }catch( IOException e){
-                    e.printStackTrace();
-                }catch( JSONException e){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                    getVillages(user.getU_id());
-            }
-        };
-        asyncTask.execute(u_id);
-    }*/
+    }
 
     private class getUserVillages extends AsyncTask<Integer,Void,JSONArray>{
 
@@ -113,7 +86,7 @@ public class VillageSelect extends AppCompatActivity {
             String u_id = integers[0].toString();
             OkHttpClient client = new OkHttpClient();
             try{
-                JSONArray array = new JSONArray(APICall.GET(client,RequestBuilder.buildURL("justtesting.php",new String[]{"u_id"},new String[]{u_id})));
+                JSONArray array = new JSONArray(APICall.GET(client, RequestBuilder.buildURL("justtesting.php",new String[]{"u_id"},new String[]{u_id})));
                 for(int i=0;i<array.length();i++){
                     JSONObject object = array.getJSONObject(i);
                     UserVillagesClass uservillagesClass = new UserVillagesClass(object.getInt("s_no"), object.getInt("u_id"), object.getInt("district_id"), object.getInt("village_id"));
@@ -139,61 +112,6 @@ public class VillageSelect extends AppCompatActivity {
             }
         }
     }
-
-    /*private void getVillages(final int village_u_id){
-        AsyncTask<Integer,Void,JSONObject> asyncTask = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("http://192.168.0.102/~vandit/justtesting.php?village_u_id=" + village_u_id).build();
-
-                try{
-                    Response response = client.newCall(request).execute();
-
-                    array1 = new JSONArray(response.body().string());
-                    for(int i = 0; i<array1.length();i++){
-                        JSONObject object = array1.getJSONObject(i);
-                        Villages village = new Villages(object.getInt("village_id"), object.getInt("district_id"), object.getString("en_village_name"), object.getInt("allocated"),object.getInt("u_id"));
-                        VillageSelect.this.villages.add(village);
-                    }
-
-
-                }catch( IOException e){
-                    e.printStackTrace();
-                }catch( JSONException e){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                super.onPostExecute(o);
-                Spinner dropdown = findViewById(R.id.spinner1);
-                final List<String> items = new ArrayList<>();
-                for (int i =0;i<array1.length();i++){
-                    String village = villages.get(i).getEn_village_name();
-                    items.add(village);
-                }
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(instance,android.R.layout.simple_spinner_dropdown_item,items);
-                dropdown.setAdapter(adapter);
-                dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        selectedVillage = villages.get(position);
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-                        selectedVillage = villages.get(0);
-                    }
-                });
-
-
-            }
-        };
-        asyncTask.execute(village_u_id);
-    }*/
 
     private class getVillages extends AsyncTask<Integer,Void,JSONArray>{
         @Override

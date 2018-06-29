@@ -16,9 +16,8 @@ import android.widget.EditText;
 
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FarmerClass;
-import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
-import com.mahesh.keerthan.tanvasfarmerapp.EditFarmerDetailsActivity;
+import com.mahesh.keerthan.tanvasfarmerapp.Activities.EditFarmerDetailsActivity;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 
 import org.json.JSONArray;

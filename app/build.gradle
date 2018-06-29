@@ -11,6 +11,8 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        renderscriptTargetApi 27
+        renderscriptSupportModeEnabled true
     }
     buildTypes {
         release {
@@ -29,6 +31,7 @@ android {
                     ]
         }
     }
+
 }
 
 dependencies {
@@ -53,6 +56,7 @@ dependencies {
     implementation 'com.github.ppamorim:prismview:0.3'
     implementation 'com.ramotion.foldingcell:folding-cell:1.2.2'
     implementation 'com.github.ratty3697:android-smart-animation-library:1.6'
+    implementation 'com.wonderkiln:blurkit:1.0.0'
 
 
 }

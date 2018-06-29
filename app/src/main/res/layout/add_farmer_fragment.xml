@@ -6,6 +6,13 @@
     android:clipChildren="false"
     android:clipToPadding="false">
 
+    <com.jgabrielfreitas.core.BlurImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:src="@drawable/background"
+        android:scaleType="fitXY"
+        app:radius="20"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -26,7 +33,8 @@
                 app:cameraHeight="30"
                 app:additionalFlipsCount="3"
                 app:animationDuration="1500"
-
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
                 >
 
                 <FrameLayout
@@ -34,7 +42,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimary"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    >
 
                     <ScrollView
                         android:layout_width="match_parent"
@@ -284,7 +293,6 @@
                     android:id="@+id/cell_title_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
                     android:background="@drawable/cardview_1"
                     >
                     <RelativeLayout

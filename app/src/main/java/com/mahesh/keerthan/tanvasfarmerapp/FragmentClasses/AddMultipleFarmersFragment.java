@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -36,7 +35,6 @@ import android.widget.TextView;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
-import com.mahesh.keerthan.tanvasfarmerapp.HomeActivity;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 import com.mahesh.keerthan.tanvasfarmerapp.RealPathUtil;
 import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
@@ -52,9 +50,7 @@ import java.util.UUID;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
 

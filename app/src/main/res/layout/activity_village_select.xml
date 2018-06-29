@@ -6,88 +6,76 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:weightSum="1">
+    android:weightSum="1"
+    android:background="@drawable/background">
 
 
 
 
-    <com.jgabrielfreitas.core.BlurImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/cardView"
-        android:layout_marginBottom="0dp"
-        android:src="@drawable/unnamed"
-        android:scaleType="centerCrop"
-        app:radius="20"
-        />
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/logo"
+        android:layout_above="@+id/cardView"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="100dp"
         android:fontFamily="@font/gibson_regular"
-        android:text="Hey, Welcome!"
+        android:text="Welcome,"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="30dp" />
 
-    <RelativeLayout
+    <com.wonderkiln.blurkit.BlurLayout
         android:layout_width="match_parent"
-        android:layout_height="330dp"
-        android:gravity="center"
-        android:padding="5dp"
-        android:layout_alignParentBottom="true"
+        android:layout_height="wrap_content"
         android:id="@+id/cardView"
-        android:layout_alignParentEnd="true">
+        android:layout_marginHorizontal="20dp"
+        android:layout_centerVertical="true"
+        android:background="@drawable/round_edit_text">
 
-        <TextView
-            android:id="@+id/selectVillageDialog"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/spinner1"
-            android:layout_marginBottom="30dp"
-            android:fontFamily="@font/gibson_regular"
-            android:text="Please Select Village"
-            android:textAlignment="center"
-            android:textSize="25dp" />
-        <Spinner
-            android:id="@+id/spinner1"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"
-            android:layout_above="@+id/goButton"
-            android:layout_marginBottom="30dp"
-            android:defaultFocusHighlightEnabled="true">
+            android:padding="5dp">
 
-        </Spinner>
+            <TextView
+                android:id="@+id/selectVillageDialog"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:fontFamily="@font/gibson_regular"
+                android:textColor="@color/colorPrimary"
+                android:text="Please Select Village"
+                android:textAlignment="center"
+                android:textSize="25dp"/>
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown"
+                android:defaultFocusHighlightEnabled="true"
+                android:layout_centerInParent="true">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:background="@drawable/rounded_button"
-            android:text="Go"
-            android:textSize="19dp"
-            android:textColor="@android:color/white"
-            android:layout_centerHorizontal="true"
-            android:id="@+id/goButton"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
-            />
-    </RelativeLayout>
+            </Spinner>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:background="@drawable/rounded_button"
+                android:text="Go"
+                android:textSize="19dp"
+                android:textColor="@android:color/white"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/goButton"
+                android:layout_below="@+id/spinner1"
+                android:layout_marginTop="100dp"
+                android:layout_marginBottom="30dp"
+                />
+        </RelativeLayout>
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_above="@+id/cardView"
-        android:layout_centerHorizontal="true"
-        android:src="@drawable/logo"
-        android:layout_marginBottom="-50dp"
-        android:id="@+id/logo"/>
+    </com.wonderkiln.blurkit.BlurLayout>
+
 
 
 

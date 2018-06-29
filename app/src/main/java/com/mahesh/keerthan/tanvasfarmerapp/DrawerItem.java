@@ -2,6 +2,8 @@ package com.mahesh.keerthan.tanvasfarmerapp;
 
 import android.view.ViewGroup;
 
+import com.mahesh.keerthan.tanvasfarmerapp.Adapters.drawerAdapter;
+
 public abstract class DrawerItem<T extends drawerAdapter.ViewHolder> {
 
     protected boolean isChecked = false;

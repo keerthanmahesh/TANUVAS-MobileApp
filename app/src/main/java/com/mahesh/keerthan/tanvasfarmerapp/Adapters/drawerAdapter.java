@@ -1,10 +1,12 @@
-package com.mahesh.keerthan.tanvasfarmerapp;
+package com.mahesh.keerthan.tanvasfarmerapp.Adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.mahesh.keerthan.tanvasfarmerapp.DrawerItem;
 
 import java.util.HashMap;
 import java.util.List;
@@ -87,7 +89,7 @@ public class drawerAdapter extends RecyclerView.Adapter<drawerAdapter.ViewHolder
     public void setListener(OnItemSelectedListener listener) {
         this.listener = listener;
     }
-    static abstract class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static abstract class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private drawerAdapter adapter;
 

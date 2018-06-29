@@ -1,10 +1,8 @@
-package com.mahesh.keerthan.tanvasfarmerapp;
+package com.mahesh.keerthan.tanvasfarmerapp.Activities;
 
-import android.animation.Animator;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,20 +12,17 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
-import com.podcopic.animationlib.library.AnimationType;
-import com.podcopic.animationlib.library.StartSmartAnimation;
+import com.mahesh.keerthan.tanvasfarmerapp.R;
+import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.Serializable;
 
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -96,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             String username = strings[0];
             OkHttpClient client = new OkHttpClient();
             try {
-                JSONObject array = new JSONObject(APICall.GET(client,RequestBuilder.buildURL("username.php", new String[]{"username"},new String[]{username})));
+                JSONObject array = new JSONObject(APICall.GET(client, RequestBuilder.buildURL("username.php", new String[]{"username"},new String[]{username})));
                 return array;
             }catch (JSONException e){
                 e.printStackTrace();
