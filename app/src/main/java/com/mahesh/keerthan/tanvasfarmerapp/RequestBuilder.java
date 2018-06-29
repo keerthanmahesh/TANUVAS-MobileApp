@@ -20,12 +20,16 @@ public class RequestBuilder {
                 .scheme("http") //http
                 .host("192.168.43.17")
                 .addPathSegment("~vandit")
-                .addPathSegment(path)//adds "/pathSegment" at the end of hostname
-                .addQueryParameter(names[0], values[0]); //add query parameters to the URL
+                .addPathSegment(path);
 
-        for(int i = 1;i<names.length;i++)
-            builder.addEncodedQueryParameter(names[i], values[i]);
+        if (names != null) {
+            builder.addQueryParameter(names[0], values[0]); //add query parameters to the URL
+
+            for(int i = 1;i<names.length;i++)
+                builder.addEncodedQueryParameter(names[i], values[i]);
+            return builder.build();
+        }//adds "/pathSegment" at the end of hostname
+
         return builder.build();
-
     }
 }

@@ -18,6 +18,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -34,20 +36,29 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
+import com.mahesh.keerthan.tanvasfarmerapp.Adapters.questionAdapter;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 import com.mahesh.keerthan.tanvasfarmerapp.RealPathUtil;
 import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
 import com.ramotion.foldingcell.FoldingCell;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
+import java.util.zip.Inflater;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -57,7 +68,7 @@ import okhttp3.RequestBody;
 import static android.app.Activity.RESULT_OK;
 
 
-public class AddFarmerFragment extends Fragment implements View.OnClickListener{
+public class AddFarmerFragment extends Fragment implements View.OnClickListener, questionAdapter.ItemClickListener{
 
 
     private Calendar calendar;
@@ -78,6 +89,9 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
     private TextView dobTV,ageTV;
     private RadioGroup radioGroup;
     private boolean verified = true;
+    private List<QuestionClass> mainQuestions = new ArrayList<>();
+    private RecyclerView othersList;
+    private questionAdapter othersAdapter;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -225,7 +239,62 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
             }
         });
 
+        initialiseOthersCard(inflater);
+        new getOthersQuestions().execute();
         return view;
+    }
+
+    private void initialiseOthersCard(LayoutInflater inflater){
+        othersList = view.findViewById(R.id.list123);
+        othersList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        othersAdapter = new questionAdapter(mainQuestions,inflater);
+        othersList.setAdapter(othersAdapter);
+    }
+
+    private class getOthersQuestions extends AsyncTask<Void,Void,JSONArray>{
+
+        private ProgressDialog dialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog = ProgressDialog.show(getActivity(),"Loading....","We appreciate your patience",true,false);
+        }
+
+        @Override
+        protected JSONArray doInBackground(Void... voids) {
+            OkHttpClient client = new OkHttpClient();
+            try {
+                JSONArray array = new JSONArray(APICall.GET(client,RequestBuilder.buildURL("fetchQuestions.php",null,null)));
+                JSONObject object;
+                for (int i=0;i<array.length();i++){
+                    object = array.getJSONObject(i);
+                    QuestionClass question = new QuestionClass(
+                            object.getInt("question_id"),
+                            object.getString("question_content"),
+                            object.getString("question_type"),
+                            object.getInt("main_or_sub"),
+                            object.getInt("has_sub_ques"),
+                            object.getInt("main_ques_id"),
+                            object.getInt("sub_ques_id"));
+                    mainQuestions.add(question);
+                }
+
+                return array;
+            }catch (IOException e){
+                e.printStackTrace();
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray jsonArray) {
+            super.onPostExecute(jsonArray);
+            dialog.dismiss();
+            othersAdapter.notifyItemRangeInserted(0,mainQuestions.size());
+        }
     }
 
     @Override
@@ -500,6 +569,10 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
         }
     }
 
+    @Override
+    public void onItemClick(View view, int position) {
+
+    }
 }
 
 
