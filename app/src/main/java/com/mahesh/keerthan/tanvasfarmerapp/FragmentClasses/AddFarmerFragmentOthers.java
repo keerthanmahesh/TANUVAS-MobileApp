@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -31,7 +32,7 @@ import java.util.List;
 import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 import okhttp3.OkHttpClient;
 
-public class AddFarmerFragmentOthers extends AppCompatActivity {
+public class AddFarmerFragmentOthers extends AppCompatActivity implements questionAdapter.ItemClickListener {
 
     private ArrayList<QuestionClass> mainQuestions = new ArrayList<>();
     private RecyclerView othersList;
@@ -46,12 +47,15 @@ public class AddFarmerFragmentOthers extends AppCompatActivity {
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.Back));
         othersList = findViewById(R.id.list123);
-
+        othersList.setItemAnimator(new SlideInLeftAnimator());
+        othersList.getItemAnimator().setAddDuration(1000);
         Intent incomingIntent = getIntent();
         mainQuestions = (ArrayList<QuestionClass>) incomingIntent.getSerializableExtra("othersQuestions");
         initialiseOthersCard();
-        //othersList.setItemAnimator(new SlideInLeftAnimator());
-        //othersList.getItemAnimator().setAddDuration(1000);
+
+
+
+
 
 
     }
@@ -65,4 +69,8 @@ public class AddFarmerFragmentOthers extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemClick(View view, int position) {
+
+    }
 }
