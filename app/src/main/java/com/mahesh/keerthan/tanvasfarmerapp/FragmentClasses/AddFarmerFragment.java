@@ -78,27 +78,14 @@ import okhttp3.RequestBody;
 import static android.app.Activity.RESULT_OK;
 
 
-public class AddFarmerFragment extends Fragment implements View.OnClickListener, questionAdapter.ItemClickListener{
+public class AddFarmerFragment extends Fragment implements View.OnClickListener{
 
 
-    private Calendar calendar;
-    private TextView dateView;
-    private int year, month, day;
+
     private View view;
-    private Button calender_button;
-    private static int id1;
     private Villages village_selected;
     private District district_selected;
-    private EditText aadharTV,phoneTV;
-    private String phone_number,aadhar_number;
-    private ImageView imageButton;
-    public static final int PICK_IMAGE = 1;
-    private String realPath,first_name,last_name,dob,address_1,address_2,gender = "Others";;
     private FoldingCell fc,fc1,fc2;
-    private EditText firstNameTV,lastNameTV,address1TV,address2TV;
-    private TextView dobTV,ageTV;
-    private RadioGroup radioGroup;
-    private boolean verified = true;
     private ScrollView scrollView;
     private ArrayList<QuestionClass> mainQuestions = new ArrayList<>();
     @Nullable
@@ -119,16 +106,20 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
         //TextView district_name = view.findViewById(R.id.districtName);
         //village_name.setText("Village: "+village_selected.getEn_village_name());
         //district_name.setText("District: " + district_selected.getEn_district_name());
-        //Button donebtn = view.findViewById(R.id.donebtn);
+        //Button donebtn = view.findV//TextView village_name = view.findViewById(R.id.villageName);
+        //        //TextView district_name = view.findViewById(R.id.districtName);
+        //        //village_name.setText("Village: "+village_selected.getEn_village_name());
+        //        //district_name.setText("District: " + district_selected.getEn_district_name());
+        //        //Button donebtn = view.findViewById(R.id.donebtn);iewById(R.id.donebtn);
         scrollView = view.findViewById(R.id.scrollView123);
 
 
-        View.OnClickListener pickImageListener = new View.OnClickListener() {
+        /*View.OnClickListener pickImageListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFileChooser();
             }
-        };
+        };*/
         //imageButton.setOnClickListener(pickImageListener);
         //fc = (FoldingCell) view.findViewById(R.id.folding_cell);
         fc1 = (FoldingCell) view.findViewById(R.id.folding_cell1);
@@ -290,7 +281,7 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
 
 
 
-    @Override
+    /*@Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.getView().setFocusableInTouchMode(true);
@@ -314,14 +305,14 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
                 return false;
             }
         } );
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.DOBbuttonAddfarmer){
+        /*if(v.getId() == R.id.DOBbuttonAddfarmer){
             android.support.v4.app.DialogFragment newFragment = new SelectDateFragment();
             newFragment.show(getChildFragmentManager(), "DatePicker");
-        }
+        }*/
     }
 
 
@@ -333,9 +324,10 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
         newFarmer.setArguments(bundle);
         return newFarmer;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        /*int id = item.getItemId();
         if (id == R.id.action_save ) {
 
             SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
@@ -390,78 +382,13 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
 
             new updateFarmer().execute(UUID.randomUUID().toString(),first_name,last_name,aadhar_number,phone_number,address_1,address_2,gender,outputDate,Integer.toString(village_id),Integer.toString(district_id),realPath);
 
-        }
+        }*/
         return super.onOptionsItemSelected(item);
 
 
     }
 
-    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 123;
 
-    public boolean checkPermissionREAD_EXTERNAL_STORAGE(
-            final Context context) {
-        int currentAPIVersion = Build.VERSION.SDK_INT;
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(context,
-                    Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                if (ActivityCompat.shouldShowRequestPermissionRationale(
-                        (Activity) context,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    showDialog("External storage", context,
-                            Manifest.permission.READ_EXTERNAL_STORAGE);
-
-                } else {
-                    ActivityCompat
-                            .requestPermissions(
-                                    (Activity) context,
-                                    new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
-                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                }
-                return false;
-            } else {
-                return true;
-            }
-
-        } else {
-            return true;
-        }
-    }
-
-    public void showDialog(final String msg, final Context context,
-                           final String permission) {
-        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(context);
-        alertBuilder.setCancelable(true);
-        alertBuilder.setTitle("Permission necessary");
-        alertBuilder.setMessage(msg + " permission is necessary");
-        alertBuilder.setPositiveButton(android.R.string.yes,
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        ActivityCompat.requestPermissions((Activity) context,
-                                new String[] { permission },
-                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                    }
-                });
-        AlertDialog alert = alertBuilder.create();
-        alert.show();
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // do your stuff
-                } else {
-                    Toast.makeText(getActivity(), "GET_ACCOUNTS Denied",
-                            Toast.LENGTH_SHORT).show();
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions,
-                        grantResults);
-        }
-    }
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -471,31 +398,16 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
         settings_item.setVisible(false);
     }
 
-    private void showFileChooser() {
+    /*private void showFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent,PICK_IMAGE);
-    }
+    }*/
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
-            case PICK_IMAGE:
-                if(resultCode == RESULT_OK){
-                        final Uri ImageURI = data.getData();
-                        if(checkPermissionREAD_EXTERNAL_STORAGE(getActivity())){
-                            realPath = RealPathUtil.getRealPathFromURI_API19(getActivity(),data.getData());
-                        }
-                        realPath = RealPathUtil.getRealPathFromURI_API19(getActivity(),data.getData());
-                        imageButton.setImageURI(ImageURI);
 
-                }
-        }
-    }
 
-    private class updateFarmer extends AsyncTask<String,Integer,String>{
+    /*private class updateFarmer extends AsyncTask<String,Integer,String>{
 
 
         private ProgressDialog loading;
@@ -545,7 +457,6 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             loading.dismiss();
-            dateView.setText(s);
             if(s.equals("New record created successfully")){
                 Snackbar.make(view, "New Farmer Added Successfully", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
@@ -560,12 +471,8 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
             }
 
         }
-    }
+    }*/
 
-    @Override
-    public void onItemClick(View view, int position) {
-
-    }
 
 
 
