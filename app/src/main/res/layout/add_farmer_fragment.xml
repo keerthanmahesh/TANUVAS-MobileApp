@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:clipChildren="false"
     android:clipToPadding="false">
 
@@ -19,12 +20,102 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:scrollbarStyle="insideOverlay">
+        android:scrollbarStyle="insideOverlay"
+        android:id="@+id/scrollView123"
+        android:animateLayoutChanges="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <com.ramotion.foldingcell.FoldingCell
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:id="@+id/card_view"
+                android:transitionName="@string/transition_string"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@color/colorPrimary"
+                android:layout_marginHorizontal="10dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_downarrow"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginTop="12dp"
+                        android:tint="@color/cardview_1"
+                        />
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="24dp"
+                        android:id="@+id/cardViewProfileImage"
+                        android:src="@drawable/profpic1"
+                        android:layout_marginTop="24dp"
+                        android:transitionName="@string/profpic_transition"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Profile"
+                        android:layout_marginLeft="24dp"
+                        android:textColor="@color/cardview_1"
+                        android:textSize="30dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="30dp"
+                        android:id="@+id/nameTV"/>
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/cardview_1"
+                        android:layout_above="@+id/aadharTV"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="24dp"
+                        android:textSize="14dp"
+                        android:id="@+id/phoneTV123"
+                        android:alpha="0"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/cardview_1"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginLeft="24dp"
+                        android:textSize="14dp"
+                        android:id="@+id/aadharTV"
+                        android:alpha="0"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/cardview_1"
+                        android:layout_below="@+id/nameTV"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginLeft="24dp"
+                        android:textSize="14dp"
+                        android:id="@+id/genderandage"
+                        />
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_toRightOf="@+id/nameTV"
+                        android:layout_marginTop="82dp"
+                        android:src="@drawable/verified_icon"
+                        android:tint="@color/cardview_1"
+                        android:layout_marginLeft="5dp"
+                        android:alpha="0"
+                        android:id="@+id/verified"/>
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <!--<com.ramotion.foldingcell.FoldingCell
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/folding_cell"
                 android:layout_width="match_parent"
@@ -372,14 +463,14 @@
 
                 </FrameLayout>
 
-            </com.ramotion.foldingcell.FoldingCell>
+            </com.ramotion.foldingcell.FoldingCell>-->
 
             <com.ramotion.foldingcell.FoldingCell
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/folding_cell1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/folding_cell"
+                android:layout_below="@+id/card_view"
                 android:layout_marginTop="10dp"
 
                 >
@@ -438,29 +529,72 @@
                 </FrameLayout>
 
             </com.ramotion.foldingcell.FoldingCell>
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="20dp"
+                android:layout_below="@+id/folding_cell1"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:transitionName="@string/transition_string3"
+                android:id="@+id/cardViewOthers"
+                >
 
-            <com.ramotion.foldingcell.FoldingCell
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_downarrow"
+                        android:layout_alignParentRight="true"
+                        android:tint="@color/cardview_3"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginTop="12dp"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Others"
+                        android:layout_marginLeft="24dp"
+                        android:textColor="@color/cardview_3"
+                        android:textSize="30dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="30dp"/>
+
+
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+            <!--<com.ramotion.foldingcell.FoldingCell
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/folding_cell2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/folding_cell1"
                 android:layout_marginTop="10dp"
-
+                android:layout_marginHorizontal="10dp"
+                app:additionalFlipsCount="6"
+                app:animationDuration="1500"
+                app:backSideColor="#3ACCE1"
+                android:background="@android:color/transparent"
                 >
 
                 <FrameLayout
                     android:id="@+id/cell_content_view2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/colorPrimary"
-                    android:visibility="gone">
+                    android:background="@android:color/transparent"
+                    android:visibility="gone"
+                    >
 
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/list123"
                         android:layout_width="match_parent"
-                        android:layout_height="400dp" />
+                        android:layout_height="600dp"
+                        android:background="@android:color/transparent"/>
 
                 </FrameLayout>
 
@@ -468,7 +602,6 @@
                     android:id="@+id/cell_title_view2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
                     android:background="@drawable/cardview_3"
                     >
 
@@ -498,7 +631,7 @@
                     </RelativeLayout>
                 </FrameLayout>
 
-            </com.ramotion.foldingcell.FoldingCell>
+            </com.ramotion.foldingcell.FoldingCell>-->
 
         </RelativeLayout>
 

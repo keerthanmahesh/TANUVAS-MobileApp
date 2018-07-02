@@ -10,4 +10,6 @@
     <color name="grayBlue">#78849E</color>
     <color name="gobuttongreysecondary">#616161</color>
     <color name="gobuttongreydark">#373737</color>
+    <color name="cardview_1">#5773FF</color>
+    <color name="cardview_3">#3ACCE1</color>
 </resources>

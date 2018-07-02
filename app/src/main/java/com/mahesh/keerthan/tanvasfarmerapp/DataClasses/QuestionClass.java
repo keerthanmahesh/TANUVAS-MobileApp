@@ -1,6 +1,13 @@
 package com.mahesh.keerthan.tanvasfarmerapp.DataClasses;
 
-public class QuestionClass {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
+public class QuestionClass implements Serializable {
+
+
 
     private int question_id;
     private String question_content;
@@ -75,4 +82,5 @@ public class QuestionClass {
     public void setSub_ques_id(int sub_ques_id) {
         this.sub_ques_id = sub_ques_id;
     }
+
 }

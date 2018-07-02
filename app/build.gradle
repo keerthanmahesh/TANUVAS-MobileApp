@@ -57,6 +57,7 @@ dependencies {
     implementation 'com.ramotion.foldingcell:folding-cell:1.2.2'
     implementation 'com.github.ratty3697:android-smart-animation-library:1.6'
     implementation 'com.wonderkiln:blurkit:1.0.0'
+    implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
 
 
 }

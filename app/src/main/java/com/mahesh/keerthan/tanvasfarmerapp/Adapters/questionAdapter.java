@@ -13,17 +13,18 @@ import android.widget.TextView;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class questionAdapter extends RecyclerView.Adapter<questionAdapter.ViewHolder> {
 
-    private List<QuestionClass> questions;
+    private ArrayList<QuestionClass> questions;
     private LayoutInflater mInflater;
     private ItemClickListener itemClickListener;
 
-    public questionAdapter(List<QuestionClass> questions, LayoutInflater mInflater) {
+    public questionAdapter(ArrayList<QuestionClass> questions, LayoutInflater mInflater) {
         this.questions = questions;
         this.mInflater = mInflater;
     }

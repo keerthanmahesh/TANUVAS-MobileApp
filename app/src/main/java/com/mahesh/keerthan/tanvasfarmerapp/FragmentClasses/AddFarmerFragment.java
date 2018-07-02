@@ -2,11 +2,13 @@ package com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -15,27 +17,34 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
+import com.mahesh.keerthan.tanvasfarmerapp.Activities.AddFarmerFragment2Activity;
 import com.mahesh.keerthan.tanvasfarmerapp.Adapters.questionAdapter;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
@@ -51,6 +60,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -89,28 +99,29 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
     private TextView dobTV,ageTV;
     private RadioGroup radioGroup;
     private boolean verified = true;
-    private List<QuestionClass> mainQuestions = new ArrayList<>();
-    private RecyclerView othersList;
-    private questionAdapter othersAdapter;
+    private ScrollView scrollView;
+    private ArrayList<QuestionClass> mainQuestions = new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.add_farmer_fragment,container,false);
-        calender_button = (Button) view.findViewById(R.id.DOBbuttonAddfarmer);
+        /*calender_button = (Button) view.findViewById(R.id.DOBbuttonAddfarmer);
         calender_button.setOnClickListener(this);
         dateView = view.findViewById(R.id.DOBtextView);
-        calendar = Calendar.getInstance();
+        calendar = Calendar.getInstance();*/
         getActivity().invalidateOptionsMenu();
         village_selected = (Villages) getArguments().getSerializable("village");
-        imageButton = view.findViewById(R.id.profPicImageButton);
+        //imageButton = view.findViewById(R.id.profPicImageButton);
         district_selected = (District) getArguments().getSerializable("district");
-        TextView village_name = view.findViewById(R.id.villageName);
-        TextView district_name = view.findViewById(R.id.districtName);
-        village_name.setText("Village: "+village_selected.getEn_village_name());
-        district_name.setText("District: " + district_selected.getEn_district_name());
-        Button donebtn = view.findViewById(R.id.donebtn);
+        //TextView village_name = view.findViewById(R.id.villageName);
+        //TextView district_name = view.findViewById(R.id.districtName);
+        //village_name.setText("Village: "+village_selected.getEn_village_name());
+        //district_name.setText("District: " + district_selected.getEn_district_name());
+        //Button donebtn = view.findViewById(R.id.donebtn);
+        scrollView = view.findViewById(R.id.scrollView123);
+
 
         View.OnClickListener pickImageListener = new View.OnClickListener() {
             @Override
@@ -118,30 +129,55 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
                 showFileChooser();
             }
         };
-        imageButton.setOnClickListener(pickImageListener);
-        fc = (FoldingCell) view.findViewById(R.id.folding_cell);
+        //imageButton.setOnClickListener(pickImageListener);
+        //fc = (FoldingCell) view.findViewById(R.id.folding_cell);
         fc1 = (FoldingCell) view.findViewById(R.id.folding_cell1);
-        fc2 = (FoldingCell) view.findViewById(R.id.folding_cell2);
-        fc.setOnClickListener(new View.OnClickListener() {
+        //fc2 = (FoldingCell) view.findViewById(R.id.folding_cell2);
+        /*fc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fc.toggle(false);
             }
-        });
+        });*/
         fc1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fc1.toggle(false);
             }
         });
-        fc2.setOnClickListener(new View.OnClickListener() {
+        /*fc2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                fc2.toggle(false);
+                scrollView.setSmoothScrollingEnabled(true);
+                fc2.toggle(true);
+                scrollView.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                    }
+                });
+
+            }
+        });*/
+
+        new getOthersQuestions().execute();
+        CardView cardView = view.findViewById(R.id.card_view);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateIntent(v);
             }
         });
 
-        firstNameTV = (EditText) view.findViewById(R.id.firstName);
+        CardView cardView2 = view.findViewById(R.id.cardViewOthers);
+        cardView2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateIntentOthers(v);
+            }
+        });
+
+        /*firstNameTV = (EditText) view.findViewById(R.id.firstName);
         lastNameTV = (EditText) view.findViewById(R.id.lastName);
 
         aadharTV = (EditText) view.findViewById(R.id.adhaarNumber);
@@ -237,65 +273,22 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
                     if (verified) view.findViewById(R.id.verified).animate().alpha(1).setDuration(2000); else view.findViewById(R.id.verified).setAlpha(0);
                 }
             }
-        });
+        });*/
 
-        initialiseOthersCard(inflater);
-        new getOthersQuestions().execute();
+
         return view;
     }
 
-    private void initialiseOthersCard(LayoutInflater inflater){
-        othersList = view.findViewById(R.id.list123);
-        othersList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        othersAdapter = new questionAdapter(mainQuestions,inflater);
-        othersList.setAdapter(othersAdapter);
+    public static float convertDpToPixel(float dp, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
     }
 
-    private class getOthersQuestions extends AsyncTask<Void,Void,JSONArray>{
 
-        private ProgressDialog dialog;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog = ProgressDialog.show(getActivity(),"Loading....","We appreciate your patience",true,false);
-        }
 
-        @Override
-        protected JSONArray doInBackground(Void... voids) {
-            OkHttpClient client = new OkHttpClient();
-            try {
-                JSONArray array = new JSONArray(APICall.GET(client,RequestBuilder.buildURL("fetchQuestions.php",null,null)));
-                JSONObject object;
-                for (int i=0;i<array.length();i++){
-                    object = array.getJSONObject(i);
-                    QuestionClass question = new QuestionClass(
-                            object.getInt("question_id"),
-                            object.getString("question_content"),
-                            object.getString("question_type"),
-                            object.getInt("main_or_sub"),
-                            object.getInt("has_sub_ques"),
-                            object.getInt("main_ques_id"),
-                            object.getInt("sub_ques_id"));
-                    mainQuestions.add(question);
-                }
 
-                return array;
-            }catch (IOException e){
-                e.printStackTrace();
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray jsonArray) {
-            super.onPostExecute(jsonArray);
-            dialog.dismiss();
-            othersAdapter.notifyItemRangeInserted(0,mainQuestions.size());
-        }
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -572,6 +565,76 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onItemClick(View view, int position) {
 
+    }
+
+
+
+    public void animateIntent(View v){
+        Intent intent = new Intent(getActivity(), AddFarmerFragment2Activity.class);
+        String transitionName = getString(R.string.transition_string);
+        String transitionName1 = getString(R.string.profpic_transition);
+        View view_start = view.findViewById(R.id.card_view);
+        View profpic_start = view.findViewById(R.id.cardViewProfileImage);
+        android.support.v4.util.Pair<View, String> p1 = android.support.v4.util.Pair.create((View)view_start, transitionName);
+        android.support.v4.util.Pair<View, String> p2 = android.support.v4.util.Pair.create((View)profpic_start, transitionName1);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2);
+        ActivityCompat.startActivity(getActivity(),intent,optionsCompat.toBundle());
+    }
+
+    public void animateIntentOthers(View v){
+        Intent intent = new Intent(getActivity(),AddFarmerFragmentOthers.class);
+        String transitionName = getString(R.string.transition_string3);
+        View view_start = view.findViewById(R.id.cardViewOthers);
+        intent.putExtra("othersQuestions",  mainQuestions);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),view_start,transitionName);
+        ActivityCompat.startActivity(getActivity(),intent,optionsCompat.toBundle());
+    }
+
+    private class getOthersQuestions extends AsyncTask<Void,Void,JSONArray> {
+
+        private ProgressDialog dialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mainQuestions.clear();
+            dialog = ProgressDialog.show(getActivity(), "Loading....", "We appreciate your patience", true, false);
+        }
+
+        @Override
+        protected JSONArray doInBackground(Void... voids) {
+            OkHttpClient client = new OkHttpClient();
+            try {
+                JSONArray array = new JSONArray(APICall.GET(client, RequestBuilder.buildURL("fetchQuestions.php", null, null)));
+                JSONObject object;
+                for (int i = 0; i < array.length(); i++) {
+                    object = array.getJSONObject(i);
+                    QuestionClass question = new QuestionClass(
+                            object.getInt("question_id"),
+                            object.getString("question_content"),
+                            object.getString("question_type"),
+                            object.getInt("main_or_sub"),
+                            object.getInt("has_sub_ques"),
+                            object.getInt("main_ques_id"),
+                            object.getInt("sub_ques_id"));
+                    mainQuestions.add(question);
+                }
+
+                return array;
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray jsonArray) {
+            super.onPostExecute(jsonArray);
+            dialog.dismiss();
+        }
     }
 }
 

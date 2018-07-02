@@ -7,4 +7,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="transition_string">hello</string>
+    <string name="profpic_transition">welcome</string>
+    <string name="transition_string3">helloOnceAgain</string>
 </resources>
