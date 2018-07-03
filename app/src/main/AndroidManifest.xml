@@ -30,18 +30,20 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activities.EditFarmerDetailsActivity"
-            android:parentActivityName=".Activities.HomeActivity"></activity>
+            android:parentActivityName=".Activities.HomeActivity" />
         <activity
             android:name=".Activities.AddFarmerFragment2Activity"
             android:parentActivityName=".Activities.HomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".FragmentClasses.AddFarmerFragmentOthers"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".FragmentClasses.AddFarmerFragmentOthers"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".FragmentClasses.AddFarmerFragmentLandHolding"></activity>
     </application>
 
 </manifest>

@@ -52,12 +52,6 @@ public class AddFarmerFragmentOthers extends AppCompatActivity implements questi
         Intent incomingIntent = getIntent();
         mainQuestions = (ArrayList<QuestionClass>) incomingIntent.getSerializableExtra("othersQuestions");
         initialiseOthersCard();
-
-
-
-
-
-
     }
 
 
@@ -74,3 +68,4 @@ public class AddFarmerFragmentOthers extends AppCompatActivity implements questi
 
     }
 }
+

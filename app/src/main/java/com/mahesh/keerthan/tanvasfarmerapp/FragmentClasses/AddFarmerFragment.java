@@ -122,7 +122,7 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
         };*/
         //imageButton.setOnClickListener(pickImageListener);
         //fc = (FoldingCell) view.findViewById(R.id.folding_cell);
-        fc1 = (FoldingCell) view.findViewById(R.id.folding_cell1);
+        //fc1 = (FoldingCell) view.findViewById(R.id.folding_cell1);
         //fc2 = (FoldingCell) view.findViewById(R.id.folding_cell2);
         /*fc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -130,12 +130,12 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
                 fc.toggle(false);
             }
         });*/
-        fc1.setOnClickListener(new View.OnClickListener() {
+        /*fc1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fc1.toggle(false);
             }
-        });
+        });*/
         /*fc2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -165,6 +165,14 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View v) {
                 animateIntentOthers(v);
+            }
+        });
+
+        CardView cardView1 = view.findViewById(R.id.cardViewLandHolding);
+        cardView1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                animateIntentLandHolding(v);
             }
         });
 
@@ -485,6 +493,14 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
         android.support.v4.util.Pair<View, String> p1 = android.support.v4.util.Pair.create((View)view_start, transitionName);
         android.support.v4.util.Pair<View, String> p2 = android.support.v4.util.Pair.create((View)profpic_start, transitionName1);
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2);
+        ActivityCompat.startActivity(getActivity(),intent,optionsCompat.toBundle());
+    }
+
+    public void animateIntentLandHolding(View v){
+        Intent intent = new Intent(getActivity(), AddFarmerFragmentLandHolding.class);
+        String transitionName = "lololol";
+        View view_start = view.findViewById(R.id.cardViewLandHolding);
+        ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),view_start,transitionName);
         ActivityCompat.startActivity(getActivity(),intent,optionsCompat.toBundle());
     }
 

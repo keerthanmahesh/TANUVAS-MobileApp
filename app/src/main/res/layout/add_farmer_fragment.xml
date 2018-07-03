@@ -465,7 +465,49 @@
 
             </com.ramotion.foldingcell.FoldingCell>-->
 
-            <com.ramotion.foldingcell.FoldingCell
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="20dp"
+                android:layout_below="@+id/card_view"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:transitionName="@string/transition_string2"
+                android:id="@+id/cardViewLandHolding"
+                >
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_downarrow"
+                        android:layout_alignParentRight="true"
+                        android:tint="@color/cardview_2"
+                        android:layout_marginRight="12dp"
+                        android:layout_marginTop="12dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Land Holding"
+                        android:layout_marginLeft="24dp"
+                        android:textColor="@color/cardview_2"
+                        android:textSize="30dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="30dp"/>
+
+                </RelativeLayout>
+
+
+            </android.support.v7.widget.CardView>
+
+
+
+            <!--<com.ramotion.foldingcell.FoldingCell
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/folding_cell1"
                 android:layout_width="match_parent"
@@ -528,12 +570,13 @@
                     </RelativeLayout>
                 </FrameLayout>
 
-            </com.ramotion.foldingcell.FoldingCell>
+            </com.ramotion.foldingcell.FoldingCell>-->
+
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="20dp"
-                android:layout_below="@+id/folding_cell1"
+                android:layout_below="@+id/cardViewLandHolding"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="10dp"
                 android:clickable="true"
@@ -567,6 +610,8 @@
 
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
+
+
             <!--<com.ramotion.foldingcell.FoldingCell
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/folding_cell2"
