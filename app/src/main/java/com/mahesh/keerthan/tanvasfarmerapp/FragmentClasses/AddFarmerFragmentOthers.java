@@ -64,7 +64,7 @@ public class AddFarmerFragmentOthers extends AppCompatActivity implements questi
 
     private void initialiseOthersCard(){
         othersList.setLayoutManager(new LinearLayoutManager(this));
-        othersAdapter = new questionAdapter(mainQuestions,LayoutInflater.from(this));
+        othersAdapter = new questionAdapter(mainQuestions,this);
         othersList.setAdapter(othersAdapter);
     }
 
