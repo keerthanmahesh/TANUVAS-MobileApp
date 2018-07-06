@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-</android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/questionTV"
+        android:textColor="@color/Black"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:padding="5dp"
+        android:layout_alignParentTop="true"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/questionTV">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/listView1234">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/cardview_3"
+            android:text="Done"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/done_button"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/listView1234"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:background="@drawable/cardview_2"
+            android:text="Cancel"
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/cancel_button"
+            android:layout_toLeftOf="@+id/done_button"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/listView1234"/>
+        </RelativeLayout>
+    </ScrollView>
+
+
+
+
+</RelativeLayout>

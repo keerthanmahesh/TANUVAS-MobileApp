@@ -7,9 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Options;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Responses;
+import com.mahesh.keerthan.tanvasfarmerapp.PickOptionDialog;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 
 import java.util.ArrayList;
@@ -18,7 +21,9 @@ import java.util.zip.Inflater;
 public class optionsAdapter extends RecyclerView.Adapter<optionsAdapter.ViewHolder>{
 
     private ArrayList<Options> options;
+    private ArrayList<Options> selectedOptions = new ArrayList<>();
     private Context context;
+    private OnResult result;
 
     public optionsAdapter(ArrayList<Options> options, Context context) {
         this.options = options;
@@ -34,10 +39,36 @@ public class optionsAdapter extends RecyclerView.Adapter<optionsAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(@NonNull optionsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final optionsAdapter.ViewHolder holder, final int position) {
         holder.textView.setText(options.get(position).getOption_content());
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    selectedOptions.add(options.get(position));
+                    if(optionsAdapter.this.result!=null){
+                        result.finish(selectedOptions);
+                    }
+                }else {
+                    selectedOptions.remove(options.get(position));
+                    if(optionsAdapter.this.result!=null){
+                        result.finish(selectedOptions);
+                    }
+                }
+            }
+        });
 
     }
+
+    public void setResult(optionsAdapter.OnResult result){
+        this.result = result;
+    }
+
+
+    public interface OnResult{
+        void finish(ArrayList<Options> selectedOptions);
+    }
+
 
     @Override
     public int getItemCount() {

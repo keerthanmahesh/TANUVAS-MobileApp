@@ -37,16 +37,16 @@ public class AddFarmerFragmentLandHolding extends AppCompatActivity implements q
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.Back));
-        landholdingList = findViewById(R.id.landholdinglist);
-        landholdingList.setItemAnimator(new SlideInLeftAnimator());
-        landholdingList.getItemAnimator().setAddDuration(1000);
+
         questions.add(question1);
         questions.add(question2);
-
         initialiseLandHoldingCard();
      }
 
      private void initialiseLandHoldingCard(){
+        landholdingList = findViewById(R.id.landholdinglist);
+        landholdingList.setItemAnimator(new SlideInLeftAnimator());
+        landholdingList.getItemAnimator().setAddDuration(1000);
         landholdingList.setLayoutManager(new LinearLayoutManager(this));
         landholdingAdapter = new questionAdapter(questions,this);
         landholdingList.setAdapter(landholdingAdapter);

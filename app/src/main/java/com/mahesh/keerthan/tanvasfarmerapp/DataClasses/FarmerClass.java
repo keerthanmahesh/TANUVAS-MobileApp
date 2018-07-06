@@ -1,6 +1,10 @@
 package com.mahesh.keerthan.tanvasfarmerapp.DataClasses;
 
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+
 import java.io.Serializable;
+import java.net.URI;
 
 public class FarmerClass implements Serializable {
 
@@ -15,7 +19,25 @@ public class FarmerClass implements Serializable {
     private String dob;
     private int village_id;
     private int district_id;
+    private int age;
+    private byte[] profileImageDrawble;
 
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public byte[] getProfileImageDrawble() {
+        return profileImageDrawble;
+    }
+
+    public void setProfileImageDrawble(byte[] profileImageDrawble) {
+        this.profileImageDrawble = profileImageDrawble;
+    }
 
     public FarmerClass(String u_id, String first_name, String last_name, String phone_number, String aadhar_number, String address_1, String address_2, String gender, String dob, int village_id, int district_id) {
         this.u_id = u_id;
