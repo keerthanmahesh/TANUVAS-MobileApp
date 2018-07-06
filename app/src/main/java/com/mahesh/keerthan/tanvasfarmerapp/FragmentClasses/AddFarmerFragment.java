@@ -48,6 +48,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.inthecheesefactory.thecheeselibrary.fragment.support.v4.app.StatedFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.Activities.AddFarmerFragment2Activity;
@@ -55,6 +56,7 @@ import com.mahesh.keerthan.tanvasfarmerapp.Adapters.questionAdapter;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FarmerClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Responses;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 import com.mahesh.keerthan.tanvasfarmerapp.RealPathUtil;
@@ -100,6 +102,7 @@ public class AddFarmerFragment extends StatedFragment {
     public static int REQUESTLANDHOLDING = 2;
     public static int REQUESTOTHERS = 3;
     public static int UPDATEPROFILE = 4;
+    private ArrayList<Responses> othersResponses = null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -186,12 +189,18 @@ public class AddFarmerFragment extends StatedFragment {
                 farmer = (FarmerClass) data.getSerializableExtra("farmer");
                 setProfileCard();
             }
+        }else if(requestCode == REQUESTOTHERS){
+            if(resultCode == Activity.RESULT_OK){
+                String resp_json = data.getStringExtra("responses");
+                Gson gson = new Gson();
+                othersResponses = gson.fromJson(resp_json,new TypeToken<List<Responses>>(){}.getType());
+            }
         }
 
     }
 
 
-    private void setProfileCard(){  
+    private void setProfileCard(){
         TextView nameTv = view.findViewById(R.id.nameTV);
         nameTv.setAlpha(0);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -321,8 +330,12 @@ public class AddFarmerFragment extends StatedFragment {
         String transitionName = getString(R.string.transition_string3);
         View view_start = view.findViewById(R.id.cardViewOthers);
         intent.putExtra("othersQuestions",  mainQuestions);
+        if(othersResponses !=null){
+            Gson gson = new Gson();
+            intent.putExtra("previousResponses",gson.toJson(othersResponses));
+        }
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),view_start,transitionName);
-        ActivityCompat.startActivity(getActivity(),intent,optionsCompat.toBundle());
+        ActivityCompat.startActivityForResult(getActivity(),intent,REQUESTOTHERS,optionsCompat.toBundle());
     }
 
     private class getOthersQuestions extends AsyncTask<Void,Void,JSONArray> {

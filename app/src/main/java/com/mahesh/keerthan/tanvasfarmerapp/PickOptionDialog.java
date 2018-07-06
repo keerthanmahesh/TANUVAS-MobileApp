@@ -65,7 +65,7 @@ public class PickOptionDialog extends Dialog {
             case "Input": setContentView(R.layout.dialog_check_box);
                         questionType = QUESTION_TYPE_INPUT;
                         break;
-            case "Yesnoinput": setContentView(R.layout.dialog_check_box);
+            case "Yesnoinput": setContentView(R.layout.dialog_radio);
                         questionType = QUESTION_TYPE_YESNOINPUT;
                         break;
             default: setContentView(R.layout.dialog_check_box);
@@ -79,6 +79,7 @@ public class PickOptionDialog extends Dialog {
         switch (questionType){
             case QUESTION_TYPE_MCQ: MCQ();
                                     break;
+            case QUESTION_TYPE_YESNOINPUT:
             case QUESTION_TYPE_YESNO: yesno();
                                     break;
         }

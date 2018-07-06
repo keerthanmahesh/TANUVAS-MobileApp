@@ -119,7 +119,6 @@ public class EditFarmerFragment extends Fragment {
 
                     try{
                         Response response = client.newCall(request).execute();
-
                         JSONArray array = new JSONArray(response.body().string());
                         JSONObject object = array.getJSONObject(0);
                         farmer = new FarmerClass(object.getString("u_id"), object.getString("first_name"), object.getString("last_name"), object.getString("phone_number"), object.getString("aadhar_number"), object.getString("address_1"),object.getString("address_2"),object.getString("gender"),object.getString("dob"),object.getInt("village_id"),object.getInt("district_id"));

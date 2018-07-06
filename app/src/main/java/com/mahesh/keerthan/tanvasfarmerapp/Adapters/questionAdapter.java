@@ -45,6 +45,10 @@ public class questionAdapter extends RecyclerView.Adapter<questionAdapter.ViewHo
         this.context = context;
     }
 
+    public void setResponses(ArrayList<Responses> responses) {
+        this.responses = responses;
+    }
+
     void setClickListener(ItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }

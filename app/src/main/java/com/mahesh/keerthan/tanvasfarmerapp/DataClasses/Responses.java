@@ -1,8 +1,12 @@
 package com.mahesh.keerthan.tanvasfarmerapp.DataClasses;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Responses {
+public class Responses implements Serializable{
     private QuestionClass question;
     private ArrayList<Options> options = new ArrayList<>();
 
