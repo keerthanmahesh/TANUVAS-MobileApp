@@ -36,10 +36,10 @@ public class QuestionFragment3 extends AppCompatActivity implements questionAdap
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.Back));
         questions.add(question1);
         questions.add(question2);
-        initialiseLandHoldingCard();
+        initialiseLivestockHoldingCard();
     }
 
-    private void initialiseLandHoldingCard() {
+    private void initialiseLivestockHoldingCard() {
         livestockholdingList = findViewById(R.id.livestockholdinglist);
         livestockholdingList.setItemAnimator(new SlideInLeftAnimator());
         livestockholdingList.getItemAnimator().setAddDuration(1000);
