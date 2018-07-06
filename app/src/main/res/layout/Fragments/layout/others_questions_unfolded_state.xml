@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/othersquestionsunfoldedstate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="15dp"
+        android:fontFamily="@font/pt_sans_caption_bold"
+        android:text="abcdefgggggggg ndewnjfnfdjnfdnnkfj djdjf cfjk jdnjkf cndsjckdf kjcnfjkn"
+        android:textSize="25dp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/otherscheckboxlist"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/othersquestionsunfoldedstate"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/transparent"/>
+
+</RelativeLayout>
