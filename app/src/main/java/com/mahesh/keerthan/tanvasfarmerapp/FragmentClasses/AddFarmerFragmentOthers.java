@@ -17,7 +17,9 @@ import android.view.WindowManager;
 
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.Adapters.questionAdapter;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Options;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Responses;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
 
@@ -37,6 +39,7 @@ public class AddFarmerFragmentOthers extends AppCompatActivity implements questi
     private ArrayList<QuestionClass> mainQuestions = new ArrayList<>();
     private RecyclerView othersList;
     private questionAdapter othersAdapter;
+    private ArrayList<Responses> responses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +62,15 @@ public class AddFarmerFragmentOthers extends AppCompatActivity implements questi
     private void initialiseOthersCard(){
         othersList.setLayoutManager(new LinearLayoutManager(this));
         othersAdapter = new questionAdapter(mainQuestions,this);
+        othersAdapter.setResult(new questionAdapter.OnResult() {
+            @Override
+            public void finish(ArrayList<Responses> responses) {
+                AddFarmerFragmentOthers.this.responses = responses;
+            }
+        });
         othersList.setAdapter(othersAdapter);
     }
+
 
 
     @Override

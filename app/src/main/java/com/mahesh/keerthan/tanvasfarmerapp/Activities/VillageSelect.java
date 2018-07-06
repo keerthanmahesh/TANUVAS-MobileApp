@@ -1,7 +1,9 @@
 package com.mahesh.keerthan.tanvasfarmerapp.Activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.google.gson.Gson;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserVillagesClass;
@@ -56,6 +59,12 @@ public class VillageSelect extends AppCompatActivity {
                bundle.putSerializable("village",selectedVillage);
                villageSelected.putExtras(bundle);
                 startActivity(villageSelected);
+                SharedPreferences sharedPreferences = VillageSelect.this.getSharedPreferences("com.keerthan.tanuvas.selectedArea", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                Gson gson = new Gson();
+                String json = gson.toJson(selectedVillage);
+                editor.putString("selectedVillage",json);
+                editor.commit();
             }
         };
         goButton.setOnClickListener(goButtonPressed);

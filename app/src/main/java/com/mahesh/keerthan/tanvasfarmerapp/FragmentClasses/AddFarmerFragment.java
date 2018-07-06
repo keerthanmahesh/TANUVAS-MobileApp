@@ -7,8 +7,11 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -26,6 +29,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -43,10 +47,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.inthecheesefactory.thecheeselibrary.fragment.support.v4.app.StatedFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.Activities.AddFarmerFragment2Activity;
 import com.mahesh.keerthan.tanvasfarmerapp.Adapters.questionAdapter;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FarmerClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
@@ -78,7 +85,7 @@ import okhttp3.RequestBody;
 import static android.app.Activity.RESULT_OK;
 
 
-public class AddFarmerFragment extends Fragment implements View.OnClickListener{
+public class AddFarmerFragment extends StatedFragment {
 
 
 
@@ -88,69 +95,25 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
     private FoldingCell fc,fc1,fc2;
     private ScrollView scrollView;
     private ArrayList<QuestionClass> mainQuestions = new ArrayList<>();
+    private FarmerClass farmer = null;
+    public static int REQUESTPROFILE = 1;
+    public static int REQUESTLANDHOLDING = 2;
+    public static int REQUESTOTHERS = 3;
+    public static int UPDATEPROFILE = 4;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
         view = inflater.inflate(R.layout.add_farmer_fragment,container,false);
-        /*calender_button = (Button) view.findViewById(R.id.DOBbuttonAddfarmer);
-        calender_button.setOnClickListener(this);
-        dateView = view.findViewById(R.id.DOBtextView);
-        calendar = Calendar.getInstance();*/
+        Gson gson = new Gson();
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.keerthan.tanuvas.selectedArea",Context.MODE_PRIVATE);
+        String temp = sharedPreferences.getString("selectedVillage","");
+        village_selected = gson.fromJson(temp,Villages.class);
+        temp = sharedPreferences.getString("selectedDistrict","");
+        district_selected = gson.fromJson(temp,District.class);
         getActivity().invalidateOptionsMenu();
-        village_selected = (Villages) getArguments().getSerializable("village");
-        //imageButton = view.findViewById(R.id.profPicImageButton);
-        district_selected = (District) getArguments().getSerializable("district");
-        //TextView village_name = view.findViewById(R.id.villageName);
-        //TextView district_name = view.findViewById(R.id.districtName);
-        //village_name.setText("Village: "+village_selected.getEn_village_name());
-        //district_name.setText("District: " + district_selected.getEn_district_name());
-        //Button donebtn = view.findV//TextView village_name = view.findViewById(R.id.villageName);
-        //        //TextView district_name = view.findViewById(R.id.districtName);
-        //        //village_name.setText("Village: "+village_selected.getEn_village_name());
-        //        //district_name.setText("District: " + district_selected.getEn_district_name());
-        //        //Button donebtn = view.findViewById(R.id.donebtn);iewById(R.id.donebtn);
         scrollView = view.findViewById(R.id.scrollView123);
-
-
-        /*View.OnClickListener pickImageListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showFileChooser();
-            }
-        };*/
-        //imageButton.setOnClickListener(pickImageListener);
-        //fc = (FoldingCell) view.findViewById(R.id.folding_cell);
-        //fc1 = (FoldingCell) view.findViewById(R.id.folding_cell1);
-        //fc2 = (FoldingCell) view.findViewById(R.id.folding_cell2);
-        /*fc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fc.toggle(false);
-            }
-        });*/
-        /*fc1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fc1.toggle(false);
-            }
-        });*/
-        /*fc2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                scrollView.setSmoothScrollingEnabled(true);
-                fc2.toggle(true);
-                scrollView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        scrollView.fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                });
-
-            }
-        });*/
-
         new getOthersQuestions().execute();
         CardView cardView = view.findViewById(R.id.card_view);
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -176,104 +139,6 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
             }
         });
 
-        /*firstNameTV = (EditText) view.findViewById(R.id.firstName);
-        lastNameTV = (EditText) view.findViewById(R.id.lastName);
-
-        aadharTV = (EditText) view.findViewById(R.id.adhaarNumber);
-        phoneTV = (EditText) view.findViewById(R.id.mobileNumber);
-        address1TV = (EditText) view.findViewById(R.id.address1);
-
-        address2TV = (EditText) view.findViewById(R.id.address2);
-
-        dobTV = view.findViewById(R.id.DOBtextView);
-
-        donebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fc.fold(false);
-                if(!firstNameTV.getText().toString().isEmpty()&&!lastNameTV.getText().toString().isEmpty()){
-                    first_name = firstNameTV.getText().toString();
-                    last_name = lastNameTV.getText().toString();
-                    aadhar_number = aadharTV.getText().toString();
-                    phone_number = phoneTV.getText().toString();
-                    address_1 = address1TV.getText().toString();
-                    address_2 = address2TV.getText().toString();
-                    dob = dobTV.getText().toString();
-                    radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
-                    int selectedId = radioGroup.getCheckedRadioButtonId();
-                    switch (selectedId){
-                        case R.id.radiobuttonMale:
-                            gender="Male";
-                            verified = true;
-                            break;
-
-                        case R.id.radiobuttonFemale:
-                            gender = "Female";
-                            verified = true;
-                            break;
-
-                        case R.id.radiobuttonOthers:
-                            gender = "Others" ;
-                            verified = true;
-                            break;
-                            default: verified = false;
-                    }
-                    TextView nameTv = view.findViewById(R.id.nameTV);
-                    nameTv.setAlpha(0);
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-                    float d = getActivity().getResources().getDisplayMetrics().density;
-                    int left = (int)(20 * d);
-                    int top = (int)(130 * d);
-                    layoutParams.setMargins(left,top,0,0);
-                    nameTv.setLayoutParams(layoutParams);
-                    nameTv.setText(firstNameTV.getText().toString()+" "+lastNameTV.getText().toString());
-                    TextView aadharCardTV = view.findViewById(R.id.aadharTV);
-                    aadharCardTV.setAlpha(0);
-                    TextView phoneCardTV = view.findViewById(R.id.phoneTV123);
-                    phoneCardTV.setAlpha(0);
-                    TextView genderandageTV = view.findViewById(R.id.genderandage);
-                    genderandageTV.setAlpha(0);
-                    if(!TextUtils.isEmpty(gender) && !dobTV.getText().toString().equals("Date Of Birth")){
-                        ageTV = view.findViewById(R.id.ageTextView);
-                        genderandageTV.setText(ageTV.getText().toString() + " yrs, "+ gender);
-                        genderandageTV.animate().translationY(-200).setDuration(2000).alpha(1).setStartDelay(100);
-                        verified = true;
-                    }else verified = false;
-
-                    if(TextUtils.isEmpty(phone_number)){
-                        phoneCardTV.setText("Phone Not Entered!");
-                        verified = false;
-                    }
-                    else {
-                        phoneCardTV.setText("Phone: +91 " + phone_number);
-                        verified = true;
-                    }
-
-                    if(TextUtils.isEmpty(aadhar_number)){
-                        aadharCardTV.setText("Aadhar Not Entered!");
-                        verified = false;
-                    }
-                    else {
-                        aadharCardTV.setText("Aadhar: " + aadhar_number);
-                        verified = true;
-                    }
-                    if(imageButton.getDrawable().getConstantState() != getActivity().getResources().getDrawable(R.drawable.profpic1).getConstantState()){
-                        ImageView profileImageCard = view.findViewById(R.id.cardViewProfileImage);
-                        profileImageCard.setImageDrawable(imageButton.getDrawable());
-                        verified = true;
-                    }else verified = false;
-
-                    if(TextUtils.isEmpty(address_1) || TextUtils.isEmpty(address_2)) verified = false; else verified = true;
-                    nameTv.animate().translationY(-200).setDuration(2000).alpha(1);
-                    aadharCardTV.animate().setDuration(2000).alpha(1).setStartDelay(100);
-                    phoneCardTV.animate().setDuration(2000).alpha(1).setStartDelay(100);
-
-                    if (verified) view.findViewById(R.id.verified).animate().alpha(1).setDuration(2000); else view.findViewById(R.id.verified).setAlpha(0);
-                }
-            }
-        });*/
-
 
         return view;
     }
@@ -287,43 +152,6 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
 
 
 
-
-
-    /*@Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        this.getView().setFocusableInTouchMode(true);
-        this.getView().requestFocus();
-        this.getView().setOnKeyListener( new View.OnKeyListener()
-        {
-            @Override
-            public boolean onKey( View v, int keyCode, KeyEvent event )
-            {
-                if( keyCode == KeyEvent.KEYCODE_BACK )
-                {
-                    if(fc.isUnfolded())
-                        fc.fold(false);
-                    if(fc1.isUnfolded())
-                        fc1.fold(false);
-                    if(fc2.isUnfolded())
-                        fc2.fold(false);
-
-                    return true;
-                }
-                return false;
-            }
-        } );
-    }*/
-
-    @Override
-    public void onClick(View v) {
-        /*if(v.getId() == R.id.DOBbuttonAddfarmer){
-            android.support.v4.app.DialogFragment newFragment = new SelectDateFragment();
-            newFragment.show(getChildFragmentManager(), "DatePicker");
-        }*/
-    }
-
-
     public static AddFarmerFragment newInstance(Villages villageSelected, District districtSelected){
         AddFarmerFragment newFarmer = new AddFarmerFragment();
         Bundle bundle = new Bundle();
@@ -335,62 +163,6 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        /*int id = item.getItemId();
-        if (id == R.id.action_save ) {
-
-            SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-            if(TextUtils.isEmpty(first_name)){
-                firstNameTV.setError("Please Enter The First Name");
-                return super.onOptionsItemSelected(item);
-            }
-            if(TextUtils.isEmpty(last_name)){
-                lastNameTV.setError("Please Enter The Second Name");
-                return super.onOptionsItemSelected(item);
-            } if(phone_number.length() != 10){
-                phoneTV.setError("Invalid Phone");
-                return super.onOptionsItemSelected(item);
-            } if(aadhar_number.length() != 12){
-                aadharTV.setError("Invalid Aadhar Number");
-                return super.onOptionsItemSelected(item);
-            } if(TextUtils.isEmpty(address_1)){
-                address1TV.setError("Please Enter an Address");
-                return super.onOptionsItemSelected(item);
-            } if(TextUtils.isEmpty(address_2)){
-                address2TV.setError("Please Enter an Address");
-                return super.onOptionsItemSelected(item);
-            }
-
-            if(dob.equals("Date Of Birth")){
-                Snackbar.make(view, "Please Enter The Date", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                return super.onOptionsItemSelected(item);
-            }
-            int selectedId = radioGroup.getCheckedRadioButtonId();
-            switch (selectedId){
-                case R.id.radiobuttonMale:
-                    gender="Male";
-                    break;
-
-                case R.id.radiobuttonFemale:
-                    gender = "Female";
-                    break;
-
-                case R.id.radiobuttonOthers:
-                    gender = "Others" ;
-                    break;
-                default: Snackbar.make(view, "Please Enter The Gender", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                    return super.onOptionsItemSelected(item);
-            }
-
-            Date inputDate = formatter.parse(dob, new ParsePosition(0));
-            formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String outputDate = formatter.format(inputDate);
-            int village_id = village_selected.getVillage_id(),district_id = village_selected.getDistrict_id();
-
-            new updateFarmer().execute(UUID.randomUUID().toString(),first_name,last_name,aadhar_number,phone_number,address_1,address_2,gender,outputDate,Integer.toString(village_id),Integer.toString(district_id),realPath);
-
-        }*/
         return super.onOptionsItemSelected(item);
 
 
@@ -406,15 +178,48 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
         settings_item.setVisible(false);
     }
 
-    /*private void showFileChooser() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent,PICK_IMAGE);
-    }*/
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == REQUESTPROFILE || requestCode == UPDATEPROFILE){
+            if(resultCode == Activity.RESULT_OK){
+                farmer = (FarmerClass) data.getSerializableExtra("farmer");
+                setProfileCard();
+            }
+        }
+
+    }
 
 
-
-
+    private void setProfileCard(){  
+        TextView nameTv = view.findViewById(R.id.nameTV);
+        nameTv.setAlpha(0);
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,RelativeLayout.LayoutParams.WRAP_CONTENT);
+        float d = getActivity().getResources().getDisplayMetrics().density;
+        int left = (int)(20 * d);
+        int top = (int)(130 * d);
+        layoutParams.setMargins(left,top,0,0);
+        nameTv.setLayoutParams(layoutParams);
+        nameTv.setText(farmer.getFirst_name()+" "+farmer.getLast_name());
+        TextView aadharCardTV = view.findViewById(R.id.aadharTV);
+        aadharCardTV.setAlpha(0);
+        TextView phoneCardTV = view.findViewById(R.id.phoneTV123);
+        phoneCardTV.setAlpha(0);
+        TextView genderandageTV = view.findViewById(R.id.genderandage);
+        genderandageTV.setAlpha(0);
+        genderandageTV.setText(farmer.getAge() + " yrs, "+ farmer.getGender());
+        nameTv.animate().translationY(-200).setDuration(2000).alpha(1);
+        aadharCardTV.animate().setDuration(2000).alpha(1).setStartDelay(100);
+        phoneCardTV.animate().setDuration(2000).alpha(1).setStartDelay(100);
+        genderandageTV.animate().translationY(-200).setDuration(2000).alpha(1).setStartDelay(100);
+        view.findViewById(R.id.verified).animate().alpha(1).setDuration(2000);
+        ImageView profileImageCard = view.findViewById(R.id.cardViewProfileImage);
+        byte[] b = farmer.getProfileImageDrawble();
+        Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);
+        profileImageCard.setImageBitmap(bmp);
+        phoneCardTV.setText("Phone: +91 " + farmer.getPhone_number());
+        aadharCardTV.setText("Aadhar: " + farmer.getAadhar_number());
+    }
     /*private class updateFarmer extends AsyncTask<String,Integer,String>{
 
 
@@ -484,6 +289,7 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
 
 
 
+
     public void animateIntent(View v){
         Intent intent = new Intent(getActivity(), AddFarmerFragment2Activity.class);
         String transitionName = getString(R.string.transition_string);
@@ -493,7 +299,13 @@ public class AddFarmerFragment extends Fragment implements View.OnClickListener{
         android.support.v4.util.Pair<View, String> p1 = android.support.v4.util.Pair.create((View)view_start, transitionName);
         android.support.v4.util.Pair<View, String> p2 = android.support.v4.util.Pair.create((View)profpic_start, transitionName1);
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),p1,p2);
-        ActivityCompat.startActivity(getActivity(),intent,optionsCompat.toBundle());
+        if(farmer == null){
+            ActivityCompat.startActivityForResult(getActivity(),intent,REQUESTPROFILE,optionsCompat.toBundle());
+        }else{
+            intent.putExtra("farmer",farmer);
+            ActivityCompat.startActivityForResult(getActivity(),intent,UPDATEPROFILE,optionsCompat.toBundle());
+        }
+
     }
 
     public void animateIntentLandHolding(View v){

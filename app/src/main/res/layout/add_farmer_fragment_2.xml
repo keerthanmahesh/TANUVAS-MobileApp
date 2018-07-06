@@ -2,16 +2,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:transitionName="@string/transition_string"
+
     android:background="@color/colorPrimary"
+    android:focusableInTouchMode="true"
     >
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar123"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        android:layout_alignParentTop="true"
+        app:navigationIcon="?attr/homeAsUpIndicator"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:scrollbarStyle="insideOverlay">
+        android:scrollbarStyle="insideOverlay"
+        android:layout_below="@+id/toolbar123"
+        android:transitionName="@string/transition_string">
 
 
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"

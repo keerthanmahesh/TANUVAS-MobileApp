@@ -1,6 +1,8 @@
 package com.mahesh.keerthan.tanvasfarmerapp.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -20,6 +22,9 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.inthecheesefactory.thecheeselibrary.fragment.support.v4.app.bus.ActivityResultBus;
+import com.inthecheesefactory.thecheeselibrary.fragment.support.v4.app.bus.ActivityResultEvent;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.Adapters.drawerAdapter;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
@@ -156,6 +161,13 @@ public class HomeActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ActivityResultBus.getInstance().postQueue(
+                new ActivityResultEvent(requestCode, resultCode, data));
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -196,6 +208,8 @@ public class HomeActivity extends AppCompatActivity
 
     private class getUserDistrict extends AsyncTask<Integer,Void,JSONObject>{
 
+        SharedPreferences sharedPreferences = HomeActivity.this.getSharedPreferences("com.keerthan.tanuvas.selectedArea", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         @Override
         protected JSONObject doInBackground(Integer... integers) {
             String district_id = integers[0].toString();
@@ -219,10 +233,16 @@ public class HomeActivity extends AppCompatActivity
             if(jsonObject!=null){
                 try {
                     districtSelected = new District(jsonObject.getInt("district_id"), jsonObject.getString("en_district_name"));
+                    Gson gson = new Gson();
+                    String json = gson.toJson(districtSelected);
+                    editor.putString("selectedDistrict",json);
+                    editor.commit();
                 }catch (JSONException e){
                     e.printStackTrace();
                 }
             }else{
+                editor.putString("selectedDistrict",null);
+                editor.commit();
             }
         }
     }
