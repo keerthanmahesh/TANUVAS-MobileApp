@@ -14,10 +14,10 @@
             android:layout_height="wrap_content"
             app:cardCornerRadius="20dp"
             android:clickable="true"
-            android:transitionName="supguys"
+            android:transitionName="@string/transition_string4"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="10dp"
-            android:id="@+id/questioncardview"
+            android:id="@+id/livestockholdingcardview"
             >
 
             <RelativeLayout
