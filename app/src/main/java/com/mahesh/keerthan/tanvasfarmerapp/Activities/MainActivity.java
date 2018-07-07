@@ -1,11 +1,16 @@
 package com.mahesh.keerthan.tanvasfarmerapp.Activities;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -80,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     public class login extends AsyncTask<String,Void,JSONObject>{
 
         private ProgressDialog loading;
+        private boolean isConnectionError = false;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -88,15 +94,18 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected JSONObject doInBackground(String... strings) {
-            String username = strings[0];
+            String usernamex = strings[0];
             OkHttpClient client = new OkHttpClient();
             try {
-                JSONObject array = new JSONObject(APICall.GET(client, RequestBuilder.buildURL("username.php", new String[]{"username"},new String[]{username})));
+                String response = APICall.GET(client, RequestBuilder.buildURL("username.php", new String[]{"username"},new String[]{usernamex}));
+                if(response.equals("null"))
+                    return null;
+                JSONObject array = new JSONObject(response);
                 return array;
             }catch (JSONException e){
                 e.printStackTrace();
             }catch (IOException e){
-                e.printStackTrace();
+               isConnectionError = true;
             }
 
             return null;
@@ -106,10 +115,25 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(JSONObject object) {
             super.onPostExecute(object);
             loading.dismiss();
+            if(object==null){
+                if (isConnectionError){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                    builder.setTitle("Connection Error!").setMessage("Please check your internet connection and try again later.").setCancelable(true).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    }).show();
+                    return;
+                }
+
+                username.setError("Invalid Username");
+                return;
+            }
             try {
                 user = new UserClass(object.getInt("u_id"), object.getString("username"), object.getString("password"), object.getString("fullname"), object.getInt("district_id"), object.getString("phone_number"));
             }catch (JSONException e){
-                username.setError("Invalid Username");
+                e.printStackTrace();
             }
             if (user.getPassword().equals(passwordText)){
                 Intent signInSuccess = new Intent(MainActivity.this, VillageSelect.class);

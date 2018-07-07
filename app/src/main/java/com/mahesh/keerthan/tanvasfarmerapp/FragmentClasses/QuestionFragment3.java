@@ -1,5 +1,6 @@
 package com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses;
 
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +35,10 @@ public class QuestionFragment3 extends AppCompatActivity implements questionAdap
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(ContextCompat.getColor(this,R.color.Back));
+        Intent intent = getIntent();
+        /*if(intent.getIntExtra("whichQuestion",0)==QuestionFragment2.LIVESTOCKHOLDING){
+
+        }*/
         questions.add(question1);
         questions.add(question2);
         initialiseLivestockHoldingCard();

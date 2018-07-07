@@ -1,6 +1,9 @@
 package com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,10 +17,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FarmerClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
+import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +42,7 @@ public class QuestionFragment extends Fragment {
     private FarmerClass farmer;
     private Villages village_selected;
     private District district_selected;
+    private EditText aadhar,phone;
 
     @Nullable
     @Override
@@ -46,8 +53,8 @@ public class QuestionFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                EditText aadhar = view.findViewById(R.id.questionnaireAadharNumberSearch);
-                EditText phone = view.findViewById(R.id.questionnairePhoneNumberSearch);
+                aadhar = view.findViewById(R.id.questionnaireAadharNumberSearch);
+                phone = view.findViewById(R.id.questionnairePhoneNumberSearch);
 
                 if(TextUtils.isEmpty(phone.getText().toString()) && TextUtils.isEmpty(aadhar.getText().toString())){
                     Snackbar.make(view,"Error: Please Enter Any One Option",Snackbar.LENGTH_LONG).setAction("Action",null).show();
@@ -68,91 +75,88 @@ public class QuestionFragment extends Fragment {
         };
         questionnaireSearchButton.setOnClickListener(searchButtonListener);
 
-        village_selected = (Villages) getArguments().getSerializable("village");
-        district_selected = (District) getArguments().getSerializable("district");
 
         return view;
     }
 
     private void getFarmer(final String aadhar_number, final String phone_number){
-        /*if(TextUtils.isEmpty(aadhar_number)){
-            AsyncTask<String,Void,JSONArray> asyncTask = new AsyncTask<String, Void, JSONArray>() {
-                @Override
-                protected JSONArray doInBackground(String... strings) {
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder().url("http://192.168.1.45/~vandit/justTesting.php?phone_number=" + phone_number).build();
-
-                    try{
-                        Response response = client.newCall(request).execute();
-                        JSONArray array = new JSONArray(response.body().toString());
-                        JSONObject object = array.getJSONObject(0);
-                        farmer = new FarmerClass(object.getString("u_id"),object.getString("first_name"),object.getString("last_name"), object.getString("phone_number"), object.getString("aadhar_number"), object.getString("address_1"),object.getString("address_2"),object.getString("gender"),object.getString("dob"),object.getInt("village_id"),object.getInt("district_id"));
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(JSONArray jsonArray) {
-                    super.onPostExecute(jsonArray);
-
-                    Intent intent new Intent(getActivity(),);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("farmer",farmer);
-                    bundle.putSerializable("village",village_selected);
-                    bundle.putSerializable("district",district_selected);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
-            };
-            asyncTask.execute(phone_number);
+        if(TextUtils.isEmpty(aadhar_number)) {
+            new getFarmer().execute(phone_number,"phone");
+        }else {
+            new getFarmer().execute(aadhar_number,"aadhar");
         }
-        else{
-            AsyncTask<String,Void,JSONArray> asyncTask = new AsyncTask<String, Void, JSONArray>() {
-                @Override
-                protected JSONArray doInBackground(String... strings) {
-
-                    OkHttpClient client = new OkHttpClient();
-                    Request request = new Request.Builder().url("http://192.168.1.45/~vandit/justTesting.php?phone_number=" + aadhar_number).build();
-
-                    try{
-                        Response response = client.newCall(request).execute();
-                        JSONArray array = new JSONArray(response.body().toString());
-                        JSONObject object = array.getJSONObject(0);
-                        farmer = new FarmerClass(object.getString("u_id"),object.getString("first_name"),object.getString("last_name"), object.getString("phone_number"), object.getString("aadhar_number"), object.getString("address_1"),object.getString("address_2"),object.getString("gender"),object.getString("dob"),object.getInt("village_id"),object.getInt("district_id"));
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(JSONArray jsonArray) {
-                    super.onPostExecute(jsonArray);
-
-                    Intent intent = new Intent(getActivity(),);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("farmer",farmer);
-                    bundle.putSerializable("village",village_selected);
-                    bundle.putSerializable("district",district_selected);
-                    intent.putExtras(bundle);
-                    startActivity(intent);
-                }
-            };
-            asyncTask.execute(aadhar_number);
-        }*/
     }
 
 
+    private class getFarmer extends AsyncTask<String,Void,JSONArray>{
+
+
+        private ProgressDialog progressDialog;
+        @Override
+        protected JSONArray doInBackground(String... strings) {
+            if(strings[1].equals("aadhar")){
+                String aadhar = strings[0];
+                OkHttpClient client = new OkHttpClient();
+                try {
+                    String response = APICall.GET(client, RequestBuilder.buildURL("justTesting.php",new String[]{"aadhar_number"},new String[]{aadhar}));
+                    if(response.equals("null")){
+                        Snackbar.make(view, "Aadhar Number not found", Snackbar.LENGTH_LONG).show();
+                    }else{
+                        JSONArray array = new JSONArray(response);
+                        return array;
+                    }
+
+                }catch (IOException e){
+                    e.printStackTrace();
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }else{
+                String phone = strings[0];
+                OkHttpClient client = new OkHttpClient();
+                try {
+                    String response = APICall.GET(client, RequestBuilder.buildURL("justTesting.php",new String[]{"phone_number"},new String[]{phone}));
+                    if(response.equals("null")){
+                        Snackbar.make(view, "Phone Number not found", Snackbar.LENGTH_LONG).show();
+                    }else{
+                        JSONArray array = new JSONArray(response);
+                        return array;
+                    }
+
+                }catch (IOException e){
+                    e.printStackTrace();
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(getActivity(),"Loading...","We appreciate your patience");
+        }
+
+        @Override
+        protected void onPostExecute(JSONArray jsonArray) {
+            super.onPostExecute(jsonArray);
+            progressDialog.dismiss();
+            if(jsonArray != null){
+                try {
+                    JSONObject object = jsonArray.getJSONObject(0);
+                    String farmerJson = object.toString();
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.keerthan.tanuvas.tempFarmer",Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("farmer",farmerJson);
+                    editor.commit();
+                    Intent intent = new Intent(getActivity(),QuestionFragment2.class);
+                    startActivity(intent);
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+        }
+    }
 }
