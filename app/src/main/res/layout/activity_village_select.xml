@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:background="@drawable/rounded_button"
-                android:text="Go"
+                android:text="  Validate  "
                 android:textSize="19dp"
                 android:textColor="@android:color/white"
                 android:layout_centerHorizontal="true"
