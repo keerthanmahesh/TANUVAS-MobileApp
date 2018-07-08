@@ -8,6 +8,7 @@ public class Villages implements Serializable {
     private String en_village_name;
     private int allocated;
     private int u_id;
+    private double latitude,longitude;
 
     public Villages(int village_id, int district_id, String en_village_name, int allocated, int u_id) {
         this.village_id = village_id;
@@ -15,6 +16,22 @@ public class Villages implements Serializable {
         this.en_village_name = en_village_name;
         this.allocated = allocated;
         this.u_id = u_id;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public void setU_id(int u_id) {
