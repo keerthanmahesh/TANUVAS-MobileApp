@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -47,6 +48,13 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.model.GradientColor;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.inthecheesefactory.thecheeselibrary.fragment.support.v4.app.StatedFragment;
@@ -103,6 +111,10 @@ public class AddFarmerFragment extends StatedFragment {
     public static int REQUESTOTHERS = 3;
     public static int UPDATEPROFILE = 4;
     private ArrayList<Responses> othersResponses = null;
+    private int startcolor1;
+    private int endcolor1;
+    private int startcolor2;
+    private int endcolor2;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -194,6 +206,40 @@ public class AddFarmerFragment extends StatedFragment {
                 String resp_json = data.getStringExtra("responses");
                 Gson gson = new Gson();
                 othersResponses = gson.fromJson(resp_json,new TypeToken<List<Responses>>(){}.getType());
+                int totalquestions = mainQuestions.size();
+                int answeredquestions = 0;
+                for(int i =0; i< othersResponses.size();i++){
+                    if(othersResponses.get(i).getOptions().size() != 0){
+                        answeredquestions++;
+                    }
+                }
+                PieChart pieChart = view.findViewById(R.id.otherspiechart);
+                pieChart.setClickable(true);
+                List<PieEntry> entries = new ArrayList<>();
+                List<Color> colors = new ArrayList<>();
+
+                startcolor1 = getActivity().getResources().getColor(R.color.veryBlue);
+                endcolor1 = getActivity().getResources().getColor(R.color.veryBlue2);
+                startcolor2 = getActivity().getResources().getColor(R.color.blueLagoon);
+                endcolor2 = getActivity().getResources().getColor(R.color.blueLagoon2);
+
+                entries.add(new PieEntry(answeredquestions,"Answered Questions"));
+                entries.add(new PieEntry(totalquestions-answeredquestions, "Unanswered Questions"));
+
+
+
+                PieDataSet dataSet = new PieDataSet(entries,"");
+                dataSet.setColors(new int[] {ColorTemplate.rgb("#FFA84C"), ColorTemplate.rgb("#3ACCE1")}/*{ColorTemplate.rgb("#ffbe00"), ColorTemplate.rgb("#1c819e")}*/ );
+                dataSet.setValueTextColor(getResources().getColor(R.color.colorPrimary));
+                PieData data1 = new PieData(dataSet);
+                Description description = new Description();
+                description.setText("Statistics");
+                pieChart.setDescription(description);
+                pieChart.setDrawEntryLabels(false);
+                pieChart.setData(data1);
+                pieChart.invalidate();
+                pieChart.animate().alpha(1).start();
+
             }
         }
 

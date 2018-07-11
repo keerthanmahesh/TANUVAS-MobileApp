@@ -13,4 +13,8 @@
     <color name="cardview_1">#5773FF</color>
     <color name="cardview_3">#3ACCE1</color>
     <color name="cardview_2">#3497FD</color>
+    <color name="veryBlue">#0575E6</color>
+    <color name="veryBlue2">#021B79</color>
+    <color name="blueLagoon">#43C6AC</color>
+    <color name="blueLagoon2">#191654</color>
 </resources>

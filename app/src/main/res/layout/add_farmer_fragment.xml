@@ -588,6 +588,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp">
 
+                    <com.github.mikephil.charting.charts.PieChart
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toRightOf="@+id/othersTV"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginVertical="5dp"
+                        android:layout_below="@+id/downArrow"
+                        android:background="@android:color/transparent"
+                        android:id="@+id/otherspiechart"
+                        android:alpha="0">
+
+                    </com.github.mikephil.charting.charts.PieChart>
+
+
                     <ImageView
                         android:layout_width="24dp"
                         android:layout_height="24dp"
@@ -596,6 +611,7 @@
                         android:tint="@color/cardview_3"
                         android:layout_marginRight="12dp"
                         android:layout_marginTop="12dp"
+                        android:id="@+id/downArrow"
                         />
                     <TextView
                         android:layout_width="wrap_content"
@@ -604,6 +620,7 @@
                         android:layout_marginLeft="24dp"
                         android:textColor="@color/cardview_3"
                         android:textSize="30dp"
+                        android:id="@+id/othersTV"
                         android:layout_alignParentBottom="true"
                         android:layout_marginBottom="30dp"/>
 

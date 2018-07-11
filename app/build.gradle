@@ -60,6 +60,6 @@ dependencies {
     implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'com.inthecheesefactory.thecheeselibrary:stated-fragment-support-v4:0.9.3'
-
+    implementation 'com.github.oatrice:MPAndroidChart:3.0.5'
 
 }
