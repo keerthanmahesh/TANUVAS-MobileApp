@@ -21,14 +21,14 @@ public class QuestionFragment2 extends AppCompatActivity {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                animateIntentLivestockHolding(v);
+                animateIntentLivestockHolding();
             }
         });
     }
 
-    private void animateIntentLivestockHolding(View v) {
+    private void animateIntentLivestockHolding() {
         Intent intent = new Intent(QuestionFragment2.this,QuestionFragment3.class);
-        String transitionName = "supguys";
+        String transitionName = getString(R.string.transition_string4);
         View view_start = findViewById(R.id.livestockholdingcardview);
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(QuestionFragment2.this,view_start,transitionName);
         ActivityCompat.startActivity(QuestionFragment2.this,intent,optionsCompat.toBundle());
