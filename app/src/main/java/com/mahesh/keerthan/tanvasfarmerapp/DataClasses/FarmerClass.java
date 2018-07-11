@@ -21,6 +21,7 @@ public class FarmerClass implements Serializable {
     private int district_id;
     private int age;
     private byte[] profileImageDrawble;
+    private String realPath;
 
 
     public int getAge() {
@@ -139,5 +140,13 @@ public class FarmerClass implements Serializable {
 
     public void setDob(String dob) {
         this.dob = dob;
+    }
+
+    public String getRealPath() {
+        return realPath;
+    }
+
+    public void setRealPath(String realPath) {
+        this.realPath = realPath;
     }
 }

@@ -71,7 +71,7 @@ public class AddFarmerFragment2Activity extends AppCompatActivity implements Vie
     private FarmerClass farmerClass;
 
     public static final int PICK_IMAGE = 1;
-    private String realPath,first_name,last_name,dob,address_1,address_2,gender = "Others";
+    private String realPath = null,first_name,last_name,dob,address_1,address_2,gender = "Others";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,6 +185,7 @@ public class AddFarmerFragment2Activity extends AppCompatActivity implements Vie
                         Intent returnIntent = new Intent();
                         FarmerClass farmerClass = new FarmerClass(UUID.randomUUID().toString(),first_name,last_name,phone_number,aadhar_number,address_1,address_2,gender,outputDate,village_id,district_id);
                         farmerClass.setAge(age);
+                        farmerClass.setRealPath(realPath);
                         imageButton.setDrawingCacheEnabled(true);
                         Bitmap bitmap = imageButton.getDrawingCache();
                         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -242,6 +243,11 @@ public class AddFarmerFragment2Activity extends AppCompatActivity implements Vie
 
         if(dob.equals("Date Of Birth")){
             Snackbar.make(findViewById(android.R.id.content), "Please Enter The Date", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
+            return false;
+        }
+        if(realPath == null){
+            Snackbar.make(findViewById(android.R.id.content), "Please Add Profile Image", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             return false;
         }
