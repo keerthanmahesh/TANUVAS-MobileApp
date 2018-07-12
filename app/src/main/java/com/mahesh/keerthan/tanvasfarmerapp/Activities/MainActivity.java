@@ -153,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             try {
-                user = new UserClass(object.getInt("u_id"), object.getString("username"), object.getString("password"), object.getString("fullname"), object.getInt("district_id"), object.getString("phone_number"),object.getInt("isSuperAdmin"));
+                user = new UserClass(object.getString("u_id"), object.getString("username"), object.getString("password"), object.getString("fullname"), object.getInt("district_id"), object.getString("phone_number"),object.getInt("isSuperAdmin"));
             }catch (JSONException e){
                 e.printStackTrace();
             }

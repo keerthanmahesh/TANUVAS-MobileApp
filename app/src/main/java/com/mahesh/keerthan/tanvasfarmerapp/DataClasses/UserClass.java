@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class UserClass implements Serializable {
 
-    private int u_id;
+    private String u_id;
     private String username;
     private String password;
     private String fullname;
@@ -12,7 +12,7 @@ public class UserClass implements Serializable {
     private String phone_number;
     private int isSuperAdmin;
 
-    public UserClass(int u_id, String username, String password, String fullname, int district_id, String phone_number, int isSuperAdmin) {
+    public UserClass(String u_id, String username, String password, String fullname, int district_id, String phone_number, int isSuperAdmin) {
         this.u_id = u_id;
         this.username = username;
         this.password = password;
@@ -22,7 +22,7 @@ public class UserClass implements Serializable {
         this.isSuperAdmin = isSuperAdmin;
     }
 
-    public int getU_id(){
+    public String getU_id(){
         return u_id;
     }
 
@@ -62,7 +62,7 @@ public class UserClass implements Serializable {
         this.phone_number = phone_number;
     }
 
-    public void setU_id(int u_id) {
+    public void setU_id(String u_id) {
         this.u_id = u_id;
     }
 

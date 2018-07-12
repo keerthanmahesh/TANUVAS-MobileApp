@@ -33,6 +33,7 @@ import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.DrawerItem;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddFarmerFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddMultipleFarmersFragment;
+import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddOfficialFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.EditFarmerFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.QuestionFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.ReportsFragment;
@@ -309,6 +310,8 @@ public class HomeActivity extends AppCompatActivity
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         }else if(position == POS_ADDOFFICIAL){
+            toolbar.setTitle("Add OFficial");
+            manager.beginTransaction().replace(R.id.mainFragment,new AddOfficialFragment()).commit();
 
         }
 

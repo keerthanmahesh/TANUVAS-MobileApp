@@ -65,58 +65,90 @@
 
             </Spinner>
 
-            <EditText
-                android:layout_width="1080dp"
-                android:layout_height="40dp"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/spinnerVillageSelect"
-                android:layout_marginTop="40dp"
-                android:layout_marginHorizontal="30dp"
-                android:hint="Username"
-                android:textColorHint="@android:color/darker_gray"
-                android:id="@+id/addOfficialUsernameEditText"/>
+                android:id="@+id/containerView"
+                android:visibility="invisible">
 
-            <EditText
-                android:layout_width="1080dp"
-                android:layout_height="40dp"
-                android:layout_below="@+id/addOfficialUsernameEditText"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="30dp"
-                android:hint="Password"
-                android:textColorHint="@android:color/darker_gray"
-                android:id="@+id/addOfficialPasswordEditText"/>
 
-            <EditText
-                android:layout_width="1080dp"
-                android:layout_height="40dp"
-                android:layout_below="@+id/addOfficialPasswordEditText"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="30dp"
-                android:hint="Fullname"
-                android:textColorHint="@android:color/darker_gray"
-                android:id="@+id/addOfficialFullnameEditText"/>
+                <EditText
+                    android:layout_width="1080dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:hint="Username"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:id="@+id/addOfficialUsernameEditText"/>
 
-            <EditText
-                android:layout_width="1080dp"
-                android:layout_height="40dp"
-                android:layout_below="@+id/addOfficialFullnameEditText"
-                android:layout_marginTop="10dp"
-                android:layout_marginHorizontal="30dp"
-                android:hint="Phone Number"
-                android:textColorHint="@android:color/darker_gray"
-                android:id="@+id/addOfficialPhonenumberEditText"/>
+                <EditText
+                    android:layout_width="1080dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/addOfficialUsernameEditText"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:hint="Password"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:id="@+id/addOfficialPasswordEditText"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:background="@drawable/rounded_button"
-                android:text="Add"
-                android:textSize="20dp"
-                android:textAllCaps="false"
-                android:textColor="@color/colorPrimary"
-                android:layout_below="@+id/addOfficialPhonenumberEditText"
-                android:layout_marginTop="30dp"
-                android:layout_centerHorizontal="true"
-                />
+                <EditText
+                    android:layout_width="1080dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/addOfficialPasswordEditText"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:hint="Fullname"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:id="@+id/addOfficialFullnameEditText"/>
+
+                <EditText
+                    android:layout_width="1080dp"
+                    android:layout_height="40dp"
+                    android:layout_below="@+id/addOfficialFullnameEditText"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginHorizontal="30dp"
+                    android:hint="Phone Number"
+                    android:textColorHint="@android:color/darker_gray"
+                    android:id="@+id/addOfficialPhonenumberEditText"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Super Admin?"
+                    android:textSize="20dp"
+                    android:layout_below="@+id/addOfficialPhonenumberEditText"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="30dp"
+                    android:id="@+id/label1"
+                    android:padding="3dp"
+                    />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/label1"
+                    android:layout_below="@id/addOfficialPhonenumberEditText"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/superAdminCheckBox"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:background="@drawable/rounded_button"
+                    android:text="Add"
+                    android:textSize="20dp"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorPrimary"
+                    android:layout_below="@+id/label1"
+                    android:layout_marginTop="20dp"
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/goButton"
+                    />
+
+            </RelativeLayout>
+
 
         </RelativeLayout>
 
