@@ -46,7 +46,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".FragmentClasses.AddFarmerFragmentLandHolding" />
         <activity android:name=".FragmentClasses.QuestionFragment2" />
-        <activity android:name=".FragmentClasses.QuestionFragment3"></activity>
+        <activity android:name=".FragmentClasses.QuestionFragment3" />
+        <activity android:name=".Activities.AddNewQuestionActivity"></activity>
     </application>
 
 </manifest>

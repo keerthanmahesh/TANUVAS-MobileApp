@@ -97,6 +97,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/cardview_3"
                 android:text="GO"
+                android:id="@+id/goButton"
                 android:textColor="@color/colorPrimary"
                 android:layout_below="@id/actionSpinnerLayout"
                 android:layout_centerHorizontal="true"
