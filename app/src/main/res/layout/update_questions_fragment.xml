@@ -1,12 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please Select the category "
+                android:layout_marginTop="5dp"
+                android:id="@+id/label1"
+                android:layout_centerHorizontal="true"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:layout_below="@+id/label1"
+                android:layout_marginTop="5dp"
+                android:id="@+id/categorySpinnerLayout">
 
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Frag6"
-        android:textSize="30dp"
-        android:layout_centerInParent="true"/>
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:layout_centerInParent="true"
+                    android:layout_marginHorizontal="50dp"
+                    android:id="@+id/categorySpinner"
+                    ></Spinner>
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please Select the Module "
+                android:layout_marginTop="20dp"
+                android:id="@+id/label2"
+                android:layout_below="@id/categorySpinnerLayout"
+                android:layout_centerHorizontal="true"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:layout_below="@+id/label2"
+                android:layout_marginTop="5dp"
+                android:id="@+id/moduleSpinnerLayout">
+
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:layout_centerInParent="true"
+                    android:layout_marginHorizontal="50dp"
+                    android:id="@+id/moduleSpinner"
+                    ></Spinner>
+
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please Select the Action"
+                android:layout_marginTop="20dp"
+                android:id="@+id/label3"
+                android:layout_below="@id/moduleSpinnerLayout"
+                android:layout_centerHorizontal="true"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:layout_below="@+id/label3"
+                android:layout_marginTop="5dp"
+                android:id="@+id/actionSpinnerLayout">
+
+
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@android:drawable/btn_dropdown"
+                    android:layout_centerInParent="true"
+                    android:layout_marginHorizontal="50dp"
+                    android:id="@+id/actionSpinner"
+                    ></Spinner>
+
+            </RelativeLayout>
+
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cardview_3"
+                android:text="GO"
+                android:textColor="@color/colorPrimary"
+                android:layout_below="@id/actionSpinnerLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"/>
+
+        </RelativeLayout>
 </RelativeLayout>

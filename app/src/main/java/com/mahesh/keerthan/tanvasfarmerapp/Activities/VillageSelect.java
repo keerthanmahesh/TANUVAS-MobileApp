@@ -85,6 +85,11 @@ public class VillageSelect extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_village_select);
         instance = this;
+        SharedPreferences sharedPreferences = getSharedPreferences("com.keerthan.tanuvas.loggedInUser",Context.MODE_PRIVATE);
+        String isLoggedIn = sharedPreferences.getString("isLoggedIn","false");
+        if(isLoggedIn.equals("false")){
+            finish();
+        }
         Button goButton = findViewById(R.id.goButton);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -155,8 +160,9 @@ public class VillageSelect extends AppCompatActivity {
             }
         };
         goButton.setOnClickListener(goButtonPressed);
-        Intent intent = getIntent();
-        user = (UserClass) intent.getSerializableExtra("user");
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("user","");
+        user = gson.fromJson(json,UserClass.class);
         new getUserVillages().execute(user.getU_id());
         layout = (BlurLayout) findViewById(R.id.cardView);
 
@@ -175,10 +181,6 @@ public class VillageSelect extends AppCompatActivity {
     }
     private void proceed(){
         Intent villageSelected = new Intent(VillageSelect.this, HomeActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", user);
-        bundle.putSerializable("village", selectedVillage);
-        villageSelected.putExtras(bundle);
         SharedPreferences sharedPreferences = VillageSelect.this.getSharedPreferences("com.keerthan.tanuvas.selectedArea", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();

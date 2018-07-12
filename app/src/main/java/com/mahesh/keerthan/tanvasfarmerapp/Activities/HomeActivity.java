@@ -70,6 +70,9 @@ public class HomeActivity extends AppCompatActivity
     public static final int POS_ADDMULTIPLEFARMERS = 3;
     public static final int POS_UPDATEQUESTIONS = 4;
     public static final int POS_REPORTS = 5;
+    public static final int POS_LOGOUT = 6;
+    public static final int POS_ADDOFFICIAL = 7;
+    public static final int POS_EDITOFFICIAL = 8;
     public drawerAdapter adapter;
 
 
@@ -85,12 +88,20 @@ public class HomeActivity extends AppCompatActivity
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextAppearance(this,R.style.AmericanTypewriterSemibold);
         toolbar.setTitle("TANUVAS");
+        SharedPreferences sharedPreferences = getSharedPreferences("com.keerthan.tanuvas.selectedArea", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences1 = getSharedPreferences("com.keerthan.tanuvas.loggedInUser",Context.MODE_PRIVATE);
+        String isLoggedIn = sharedPreferences1.getString("isLoggedIn","false");
+        if(isLoggedIn.equals("false")){
+            finish();
+        }
 
         setSupportActionBar(toolbar);
         manager = getSupportFragmentManager();
-        Intent incomingIntent = getIntent();
-        user = (UserClass) incomingIntent.getExtras().getSerializable("user");
-        villageSelected = (Villages) incomingIntent.getExtras().getSerializable("village");
+        Gson gson = new Gson();
+        String json = sharedPreferences1.getString("user","");
+        user = gson.fromJson(json,UserClass.class);
+        String temp = sharedPreferences.getString("selectedVillage","");
+        villageSelected = gson.fromJson(temp,Villages.class);
 
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -122,13 +133,28 @@ public class HomeActivity extends AppCompatActivity
         screenIcons = loadScreenIcons();
         screenTitles = loadScreenTitles();
 
-        adapter = new drawerAdapter(Arrays.asList(
-                createItemFor(POS_QUESTIONNAIRE).setChecked(true),
-                createItemFor(POS_ADDNNEWFARMER),
-                createItemFor(POS_EDITFARMERDETAILS),
-                createItemFor(POS_ADDMULTIPLEFARMERS),
-                createItemFor(POS_UPDATEQUESTIONS),
-                createItemFor(POS_REPORTS)));
+        if(user.getIsSuperAdmin() == 0){
+            adapter = new drawerAdapter(Arrays.asList(
+                    createItemFor(POS_QUESTIONNAIRE).setChecked(true),
+                    createItemFor(POS_ADDNNEWFARMER),
+                    createItemFor(POS_EDITFARMERDETAILS),
+                    createItemFor(POS_ADDMULTIPLEFARMERS),
+                    createItemFor(POS_UPDATEQUESTIONS),
+                    createItemFor(POS_REPORTS),
+                    createItemFor(POS_LOGOUT)));
+        }else {
+            adapter = new drawerAdapter(Arrays.asList(
+                    createItemFor(POS_QUESTIONNAIRE).setChecked(true),
+                    createItemFor(POS_ADDNNEWFARMER),
+                    createItemFor(POS_EDITFARMERDETAILS),
+                    createItemFor(POS_ADDMULTIPLEFARMERS),
+                    createItemFor(POS_UPDATEQUESTIONS),
+                    createItemFor(POS_REPORTS),
+                    createItemFor(POS_LOGOUT),
+                    createItemFor(POS_ADDOFFICIAL),
+                    createItemFor(POS_EDITOFFICIAL)));
+        }
+
         adapter.setListener(this);
 
         RecyclerView list = findViewById(R.id.list);
@@ -183,30 +209,6 @@ public class HomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
-    /*private void getUserDistrict(final int district_id){
-        AsyncTask<Integer,Void,JSONObject> asyncTask = new AsyncTask<Integer, Void, JSONObject>() {
-            @Override
-            protected JSONObject doInBackground(Integer... integers) {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder().url("http://192.168.0.103/~vandit/justtesting.php?district_id=" + district_id).build();
-                try{
-                    Response response = client.newCall(request).execute();
-
-                    JSONArray array = new JSONArray(response.body().string());
-                    JSONObject object = array.getJSONObject(0);
-                    districtSelected = new District(object.getInt("district_id"), object.getString("en_district_name"));
-                }catch( IOException e){
-                    e.printStackTrace();
-                }catch( JSONException e){
-                    e.printStackTrace();
-                }
-                return null;
-            }
-        };
-        asyncTask.execute(district_id);
-    }*/
-
     private class getUserDistrict extends AsyncTask<Integer,Void,JSONObject>{
 
         SharedPreferences sharedPreferences = HomeActivity.this.getSharedPreferences("com.keerthan.tanuvas.selectedArea", Context.MODE_PRIVATE);
@@ -251,11 +253,11 @@ public class HomeActivity extends AppCompatActivity
 
 
     private String[] loadScreenTitles() {
-        return new String[]{"Questionnaire","New Farmer","Edit Farmer Bio","Multiple Farmers","Update Questions","Reports"};
+        return new String[]{"Questionnaire","New Farmer","Edit Farmer Bio","Multiple Farmers","Update Questions","Reports","Logout","Add Offical","Edit Official"};
 
     }
     private Drawable[] loadScreenIcons(){
-        return new Drawable[]{getDrawable(R.drawable.ic_questionnaire),getDrawable(R.drawable.ic_addfarmer),getDrawable(R.drawable.ic_editfarmer),getDrawable(R.drawable.ic_addmulfarmers),getDrawable(R.drawable.ic_updatequestions),getDrawable(R.drawable.ic_reports)};
+        return new Drawable[]{getDrawable(R.drawable.ic_questionnaire),getDrawable(R.drawable.ic_addfarmer),getDrawable(R.drawable.ic_editfarmer),getDrawable(R.drawable.ic_addmulfarmers),getDrawable(R.drawable.ic_updatequestions),getDrawable(R.drawable.ic_reports),getDrawable(R.drawable.ic_logout),getDrawable(R.drawable.ic_addoffical),getDrawable(R.drawable.ic_editoffical)};
     }
 
 
@@ -296,6 +298,17 @@ public class HomeActivity extends AppCompatActivity
         } else if (position == POS_UPDATEQUESTIONS) {
             toolbar.setTitle("UPDATE QUESTIONS");
             manager.beginTransaction().replace(R.id.mainFragment,new UpdateQuestionsFragment()).commit();
+
+        }else if(position == POS_LOGOUT){
+            SharedPreferences sharedPreferences = getSharedPreferences("com.keerthan.tanuvas.loggedInUser",Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.remove("user");
+            editor.putString("isLoggedIn","false");
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }else if(position == POS_ADDOFFICIAL){
 
         }
 
