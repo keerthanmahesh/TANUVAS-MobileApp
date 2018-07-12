@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private String passwordText;
     private TextView textTest;
+    private login login;
 
     @Override
     protected void onStart() {
@@ -47,6 +48,11 @@ public class MainActivity extends AppCompatActivity {
         //StartSmartAnimation.startAnimation(findViewById(R.id.text_input_layout2),AnimationType.FadeIn,500,50,true);
        // StartSmartAnimation.startAnimation(findViewById(R.id.signInButton),AnimationType.FadeIn,500,100,true);
        //StartSmartAnimation.startAnimation(findViewById(R.id.forgotPass),AnimationType.FadeIn,500,150,true);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -62,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 passwordText = password.getText().toString();
-                new login().execute(username.getText().toString());
+                login = new login();
+                login.execute(username.getText().toString());
             }
         };
         SignInButton.setOnClickListener(SignInPressed);

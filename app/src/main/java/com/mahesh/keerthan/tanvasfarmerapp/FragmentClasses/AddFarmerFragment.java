@@ -60,6 +60,7 @@ import com.google.gson.reflect.TypeToken;
 import com.inthecheesefactory.thecheeselibrary.fragment.support.v4.app.StatedFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.Activities.AddFarmerFragment2Activity;
+import com.mahesh.keerthan.tanvasfarmerapp.Activities.HomeActivity;
 import com.mahesh.keerthan.tanvasfarmerapp.Adapters.questionAdapter;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FarmerClass;
@@ -115,6 +116,7 @@ public class AddFarmerFragment extends StatedFragment {
     private int endcolor1;
     private int startcolor2;
     private int endcolor2;
+    private ArrayList<Responses> landholdingResponses = null;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -178,9 +180,32 @@ public class AddFarmerFragment extends StatedFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        if(item.getItemId() == R.id.action_save){
+            if(farmer==null){
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Error!").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).setCancelable(true).setMessage("Please fill in the profile details.").show();
+            }else if(othersResponses == null){
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Error!").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).setCancelable(true).setMessage("Please fill in the responses of others category.").show();
+            }else{
+                new updateFarmer().execute(farmer.getU_id(),farmer.getFirst_name(),farmer.getLast_name(),farmer.getAadhar_number(),
+                        farmer.getPhone_number(),farmer.getAddress_1(),farmer.getAddress_2(),farmer.getGender(),farmer.getDob(),
+                        Integer.toString(farmer.getVillage_id()),Integer.toString(farmer.getDistrict_id()),farmer.getRealPath());
+            }
+
+        }
         return super.onOptionsItemSelected(item);
-
-
     }
 
 
@@ -204,6 +229,7 @@ public class AddFarmerFragment extends StatedFragment {
         }else if(requestCode == REQUESTOTHERS){
             if(resultCode == Activity.RESULT_OK){
                 String resp_json = data.getStringExtra("responses");
+                Log.d("tag",resp_json);
                 Gson gson = new Gson();
                 othersResponses = gson.fromJson(resp_json,new TypeToken<List<Responses>>(){}.getType());
                 int totalquestions = mainQuestions.size();
@@ -275,7 +301,7 @@ public class AddFarmerFragment extends StatedFragment {
         phoneCardTV.setText("Phone: +91 " + farmer.getPhone_number());
         aadharCardTV.setText("Aadhar: " + farmer.getAadhar_number());
     }
-    /*private class updateFarmer extends AsyncTask<String,Integer,String>{
+    private class updateFarmer extends AsyncTask<String,Integer,String>{
 
 
         private ProgressDialog loading;
@@ -305,14 +331,28 @@ public class AddFarmerFragment extends StatedFragment {
                 File sourceFile = new File(imagePath);
                 final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/jpg");
                 String filename = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+                Gson gson = new Gson();
                 RequestBody requestBody = new MultipartBody.Builder()
                         .setType(MultipartBody.FORM)
                         .addFormDataPart("image",filename,RequestBody.create(MEDIA_TYPE_JPG,sourceFile))
+                        .addFormDataPart("u_id",u_id)
+                        .addFormDataPart("first_name",first_name)
+                        .addFormDataPart("last_name",last_name)
+                        .addFormDataPart("aadhar_number",aadhar)
+                        .addFormDataPart("phone_number",phone)
+                        .addFormDataPart("address_1",address_1)
+                        .addFormDataPart("address_2",address_2)
+                        .addFormDataPart("gender",gender)
+                        .addFormDataPart("dob",dob)
+                        .addFormDataPart("village_id",village_id)
+                        .addFormDataPart("district_id",dirstrict_id)
+                        .addFormDataPart("othersResponses",gson.toJson(othersResponses))
+                        .addFormDataPart("u_id",u_id)
                         .build();
                 OkHttpClient client = new OkHttpClient();
-                res = APICall.POST(client,RequestBuilder.buildURL("saveFarmer.php",
-                        new String[]{"u_id","first_name","last_name","aadhar_number","phone_number","address_1","address_2","gender","dob","village_id","district_id"},
-                        new String[]{u_id,first_name,last_name,aadhar,phone,address_1,address_2,gender,dob,village_id,dirstrict_id}),requestBody);
+                res = APICall.POST(client,RequestBuilder.buildURL("saveProfileResponses.php", null,null),requestBody);
+                        //new String[]{"u_id","first_name","last_name","aadhar_number","phone_number","address_1","address_2","gender","dob","village_id","district_id"},
+                        //new String[]{u_id,first_name,last_name,aadhar,phone,address_1,address_2,gender,dob,village_id,dirstrict_id}),requestBody);
 
             }catch (IOException e){
                 e.printStackTrace();
@@ -325,21 +365,45 @@ public class AddFarmerFragment extends StatedFragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             loading.dismiss();
-            if(s.equals("New record created successfully")){
-                Snackbar.make(view, "New Farmer Added Successfully", Snackbar.LENGTH_LONG)
+
+            if(s.contains("New Farmer created successfully") && !s.contains("Error")){
+                Snackbar.make(view, "Farmer Added Successfully", Snackbar.LENGTH_INDEFINITE)
                         .setAction("Action", null).show();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
-                //NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
-                //navigationView.setCheckedItem(R.id.Questions);
-            }else if(s.contains("Duplicate entry")){
-                if(s.contains("aadhar_number"))
-                    aadharTV.setError("Aadhar Number Already Exists");
-                else if(s.contains("phone_number"))
-                    phoneTV.setError("Mobile Already Exists");
+                HomeActivity.instance.adapter.setSelected(HomeActivity.POS_QUESTIONNAIRE);
+                HomeActivity.instance.adapter.notifyDataSetChanged();
+            }else if(s.contains("Duplicate entry")) {
+                if (s.contains("aadhar_number")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("Error!").setCancelable(false)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).setMessage("Aadhar Number already exists");
+                    builder.show();
+                } else if (s.contains("phone_number")) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("Error!").setCancelable(false)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).setMessage("Mobile Number already exists");
+                    builder.show();
+                }
+            }else{
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setTitle("Error!").setCancelable(false)
+                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            }).setMessage("There seems to have been an error, please try again!" + s);
+                    builder.show();
             }
-
         }
-    }*/
+    }
 
 
 

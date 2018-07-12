@@ -64,12 +64,13 @@ public class HomeActivity extends AppCompatActivity
     private Toolbar toolbar;
 
 
-    private static final int POS_QUESTIONNAIRE = 0;
-    private static final int POS_ADDNNEWFARMER = 1;
-    private static final int POS_EDITFARMERDETAILS = 2;
-    private static final int POS_ADDMULTIPLEFARMERS = 3;
-    private static final int POS_UPDATEQUESTIONS = 4;
-    private static final int POS_REPORTS = 5;
+    public static final int POS_QUESTIONNAIRE = 0;
+    public static final int POS_ADDNNEWFARMER = 1;
+    public static final int POS_EDITFARMERDETAILS = 2;
+    public static final int POS_ADDMULTIPLEFARMERS = 3;
+    public static final int POS_UPDATEQUESTIONS = 4;
+    public static final int POS_REPORTS = 5;
+    public drawerAdapter adapter;
 
 
     private String[] screenTitles;
@@ -121,7 +122,7 @@ public class HomeActivity extends AppCompatActivity
         screenIcons = loadScreenIcons();
         screenTitles = loadScreenTitles();
 
-        drawerAdapter adapter = new drawerAdapter(Arrays.asList(
+        adapter = new drawerAdapter(Arrays.asList(
                 createItemFor(POS_QUESTIONNAIRE).setChecked(true),
                 createItemFor(POS_ADDNNEWFARMER),
                 createItemFor(POS_EDITFARMERDETAILS),
