@@ -3,10 +3,12 @@ package com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -53,6 +55,7 @@ public class AddOfficialFragment extends Fragment {
     private Spinner villageSpinner;
     private Boolean isSuperAdmin = false;
     private UserClass user;
+    private ProgressDialog progressDialog ;
 
     @Nullable
     @Override
@@ -94,6 +97,8 @@ public class AddOfficialFragment extends Fragment {
                 user = new UserClass(UUID.randomUUID().toString(),usernameET.getText().toString(),passwordET.getText().toString(),
                         fullnameET.getText().toString(),districts.get(districtSpinner.getSelectedItemPosition()).getDistrict_id(),
                         mobileET.getText().toString(),isSuperAdmin? 1:0);
+
+                new uploadUser().execute();
 
             }
         });
@@ -152,7 +157,7 @@ public class AddOfficialFragment extends Fragment {
                 for(int i=0; i<jsonArray.length();i++){
                     try {
                         object = jsonArray.getJSONObject(i);
-                        villages.add(new Villages(object.getInt("village_id"),object.getInt("district_id"),object.getString("en_village_name"),0,0));
+                        villages.add(new Villages(object.getInt("village_id"),object.getInt("district_id"),object.getString("en_village_name"),0,null));
                         villageNames.add(villages.get(i).getEn_village_name());
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -212,44 +217,83 @@ public class AddOfficialFragment extends Fragment {
                 }
             }
         }
+    }
 
-        private final class uploadUser extends AsyncTask<Void,Void,String>{
+    private final class uploadUser extends AsyncTask<Void,Void,String>{
 
-            ProgressDialog progressDialog ;
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                progressDialog = ProgressDialog.show(getActivity(),"Loading...","We appreciate your patience");
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(getActivity(),"Loading...","We appreciate your patience");
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            OkHttpClient client = new OkHttpClient();
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("u_id",user.getU_id())
+                    .addFormDataPart("fullname",user.getFullname())
+                    .addFormDataPart("username",user.getUsername())
+                    .addFormDataPart("password",user.getPassword())
+                    .addFormDataPart("district_id",Integer.toString(user.getDistrict_id()))
+                    .addFormDataPart("phone_number",user.getPhone_number())
+                    .addFormDataPart("isSuperAdmin",Integer.toString(user.getIsSuperAdmin())).build();
+
+            try {
+                String resp = APICall.POST(client,RequestBuilder.buildURL("insertUser.php",null,null),requestBody);
+                Log.d("resp",resp);
+                return resp;
+            }catch (IOException e){
+                e.printStackTrace();
             }
+            return null;
+        }
 
-            @Override
-            protected String doInBackground(Void... voids) {
-                OkHttpClient client = new OkHttpClient();
-                RequestBody requestBody = new MultipartBody.Builder()
-                        .addFormDataPart("u_id",user.getU_id())
-                        .addFormDataPart("fullname",user.getFullname())
-                        .addFormDataPart("username",user.getUsername())
-                        .addFormDataPart("password",user.getPassword())
-                        .addFormDataPart("district_id",Integer.toString(user.getDistrict_id()))
-                        .addFormDataPart("phone_number",user.getPhone_number())
-                        .addFormDataPart("isSuperAdmin",Integer.toString(user.getIsSuperAdmin())).build();
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
 
-                try {
-                    String resp = APICall.POST(client,RequestBuilder.buildURL("insertUser.php",null,null),requestBody);
-                    return resp;
-                }catch (IOException e){
-                    e.printStackTrace();
-                }
-                return null;
+            if(s.equals("New Record Created Successfully")){
+                new updateVillages().execute();
             }
+        }
+    }
 
-            @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                progressDialog.dismiss();
-                if(s.equals("New Record Created Successfully")){
-                }
+    private class updateVillages extends AsyncTask<Void,Void,String>{
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            OkHttpClient client = new OkHttpClient();
+            RequestBody requestBody = new MultipartBody.Builder()
+                    .setType(MultipartBody.FORM)
+                    .addFormDataPart("u_id",user.getU_id())
+                    .addFormDataPart("village_id",Integer.toString(villages.get(villageSpinner.getSelectedItemPosition()).getVillage_id()))
+                    .addFormDataPart("district_id",Integer.toString(user.getDistrict_id()))
+                    .build();
+            try {
+                String response = APICall.POST(client,RequestBuilder.buildURL("updateVillage.php",null,null),requestBody);
+                return response;
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progressDialog.dismiss();
+            if(s.equals("Record Updated Successfully")){
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Success").setMessage(s).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).setCancelable(true).show();
             }
         }
     }

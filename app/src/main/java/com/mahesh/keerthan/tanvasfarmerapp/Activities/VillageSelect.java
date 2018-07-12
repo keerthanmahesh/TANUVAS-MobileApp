@@ -56,7 +56,7 @@ public class VillageSelect extends AppCompatActivity {
     //private  JSONArray array;
     //private  JSONArray array1;
     private static VillageSelect instance = null;
-    private Villages selectedVillage = new Villages(0, 0, null, 0, 0);
+    private Villages selectedVillage = new Villages(0, 0, null, 0, null);
     private ProgressDialog dialog;
     private double latitude, longitude;
     final int LOCATION_PERMISSION_REQUEST_CODE = 121;
@@ -90,6 +90,8 @@ public class VillageSelect extends AppCompatActivity {
         if(isLoggedIn.equals("false")){
             finish();
         }
+        progressDialog = ProgressDialog.show(VillageSelect.this,"Getting Location...","We appreciate your patience");
+        progressDialog.dismiss();
         Button goButton = findViewById(R.id.goButton);
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
@@ -221,7 +223,7 @@ public class VillageSelect extends AppCompatActivity {
 
     }
 
-    private class getUserVillages extends AsyncTask<Integer,Void,JSONArray>{
+    private class getUserVillages extends AsyncTask<String,Void,JSONArray>{
 
         @Override
         protected void onPreExecute() {
@@ -230,14 +232,16 @@ public class VillageSelect extends AppCompatActivity {
         }
 
         @Override
-        protected JSONArray doInBackground(Integer... integers) {
-            String u_id = integers[0].toString();
+        protected JSONArray doInBackground(String... integers) {
+            String u_id = integers[0];
             OkHttpClient client = new OkHttpClient();
             try{
-                JSONArray array = new JSONArray(APICall.GET(client, RequestBuilder.buildURL("justtesting.php",new String[]{"u_id"},new String[]{u_id})));
+                String resp = APICall.GET(client, RequestBuilder.buildURL("justtesting.php",new String[]{"u_id"},new String[]{u_id}));
+                Log.d("hey",resp);
+                JSONArray array = new JSONArray(resp);
                 for(int i=0;i<array.length();i++){
                     JSONObject object = array.getJSONObject(i);
-                    UserVillagesClass uservillagesClass = new UserVillagesClass(object.getInt("s_no"), object.getInt("u_id"), object.getInt("district_id"), object.getInt("village_id"));
+                    UserVillagesClass uservillagesClass = new UserVillagesClass(object.getInt("s_no"), object.getString("u_id"), object.getInt("district_id"), object.getInt("village_id"));
                     VillageSelect.this.villagesClass.add(uservillagesClass);
                 }
                 return array;
@@ -261,7 +265,7 @@ public class VillageSelect extends AppCompatActivity {
         }
     }
 
-    private class getVillages extends AsyncTask<Integer,Void,JSONArray>{
+    private class getVillages extends AsyncTask<String,Void,JSONArray>{
         @Override
         protected void onPostExecute(JSONArray jsonArray) {
             super.onPostExecute(jsonArray);
@@ -288,14 +292,14 @@ public class VillageSelect extends AppCompatActivity {
         }
 
         @Override
-        protected JSONArray doInBackground(Integer... integers) {
-            String village_u_id = integers[0].toString();
+        protected JSONArray doInBackground(String... integers) {
+            String village_u_id = integers[0];
             OkHttpClient client = new OkHttpClient();
             try{
                 JSONArray array = new JSONArray(APICall.GET(client,RequestBuilder.buildURL("justtesting.php",new String[]{"village_u_id"}, new String[]{village_u_id})));
                 for(int i = 0; i<array.length();i++){
                     JSONObject object = array.getJSONObject(i);
-                    Villages village = new Villages(object.getInt("village_id"), object.getInt("district_id"), object.getString("en_village_name"), object.getInt("allocated"),object.getInt("u_id"));
+                    Villages village = new Villages(object.getInt("village_id"), object.getInt("district_id"), object.getString("en_village_name"), object.getInt("allocated"),object.getString("u_id"));
                     village.setLatitude(object.getDouble("latitude"));
                     village.setLongitude(object.getDouble("longitude"));
                     VillageSelect.this.villages.add(village);

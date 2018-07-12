@@ -80,7 +80,9 @@
                     android:layout_marginHorizontal="30dp"
                     android:hint="Username"
                     android:textColorHint="@android:color/darker_gray"
-                    android:id="@+id/addOfficialUsernameEditText"/>
+                    android:id="@+id/addOfficialUsernameEditText"
+                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_@"
+                    android:inputType="textFilter"/>
 
                 <EditText
                     android:layout_width="1080dp"
@@ -90,7 +92,8 @@
                     android:layout_marginHorizontal="30dp"
                     android:hint="Password"
                     android:textColorHint="@android:color/darker_gray"
-                    android:id="@+id/addOfficialPasswordEditText"/>
+                    android:id="@+id/addOfficialPasswordEditText"
+                    android:inputType="textPassword"/>
 
                 <EditText
                     android:layout_width="1080dp"
@@ -100,7 +103,8 @@
                     android:layout_marginHorizontal="30dp"
                     android:hint="Fullname"
                     android:textColorHint="@android:color/darker_gray"
-                    android:id="@+id/addOfficialFullnameEditText"/>
+                    android:id="@+id/addOfficialFullnameEditText"
+                    android:inputType="textPersonName"/>
 
                 <EditText
                     android:layout_width="1080dp"
@@ -110,7 +114,9 @@
                     android:layout_marginHorizontal="30dp"
                     android:hint="Phone Number"
                     android:textColorHint="@android:color/darker_gray"
-                    android:id="@+id/addOfficialPhonenumberEditText"/>
+                    android:id="@+id/addOfficialPhonenumberEditText"
+                    android:inputType="number"
+                    android:maxLength="10"/>
 
                 <TextView
                     android:layout_width="wrap_content"
