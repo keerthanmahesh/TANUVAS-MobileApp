@@ -3,8 +3,10 @@ package com.mahesh.keerthan.tanvasfarmerapp.Activities;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
@@ -118,6 +121,18 @@ public class MainActivity extends AppCompatActivity {
             return null;
         }
 
+
+        private void doLogin(){
+            Intent signInSuccess = new Intent(MainActivity.this, VillageSelect.class);
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+            SharedPreferences sharedPreferences = getSharedPreferences("com.keerthan.tanuvas.loggedInUser", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("isLoggedIn","true");
+            editor.putString("user",json);
+            editor.commit();
+            startActivity(signInSuccess);
+        }
         @Override
         protected void onPostExecute(JSONObject object) {
             super.onPostExecute(object);
@@ -138,14 +153,12 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             try {
-                user = new UserClass(object.getInt("u_id"), object.getString("username"), object.getString("password"), object.getString("fullname"), object.getInt("district_id"), object.getString("phone_number"));
+                user = new UserClass(object.getInt("u_id"), object.getString("username"), object.getString("password"), object.getString("fullname"), object.getInt("district_id"), object.getString("phone_number"),object.getInt("isSuperAdmin"));
             }catch (JSONException e){
                 e.printStackTrace();
             }
             if (user.getPassword().equals(passwordText)){
-                Intent signInSuccess = new Intent(MainActivity.this, VillageSelect.class);
-                signInSuccess.putExtra("user",user);
-                startActivity(signInSuccess);
+               doLogin();
             }else{
                 password.setError("Incorrect Password");
             }
