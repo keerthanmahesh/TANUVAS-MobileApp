@@ -11,6 +11,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.mahesh.keerthan.tanvasfarmerapp.Adapters.questionAdapter;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseQuestion;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 
@@ -20,12 +21,10 @@ import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
 
 public class QuestionFragment3 extends AppCompatActivity implements questionAdapter.ItemClickListener {
 
-    private ArrayList<QuestionClass> questions = new ArrayList<>();
+    private ArrayList<FirebaseQuestion> questions = new ArrayList<>();
     private RecyclerView livestockholdingList;
     private questionAdapter livestockholdingAdapter;
 
-    QuestionClass question1 = new QuestionClass(1,"what is your name","multiple choice",1,0,1,0);
-    QuestionClass question2 = new QuestionClass(2,"what are your names","multiple choice",1,0,2,0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +38,6 @@ public class QuestionFragment3 extends AppCompatActivity implements questionAdap
         /*if(intent.getIntExtra("whichQuestion",0)==QuestionFragment2.LIVESTOCKHOLDING){
 
         }*/
-        questions.add(question1);
-        questions.add(question2);
         initialiseLivestockHoldingCard();
     }
 

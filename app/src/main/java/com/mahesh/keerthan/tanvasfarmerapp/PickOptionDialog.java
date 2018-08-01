@@ -16,7 +16,13 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.mahesh.keerthan.tanvasfarmerapp.Adapters.optionsAdapter;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseQuestion;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Options;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Responses;
@@ -34,9 +40,10 @@ public class PickOptionDialog extends Dialog {
 
 
     private ArrayList<Options> options = new ArrayList<>();
-    private QuestionClass selectedQuestion;
+    private FirebaseQuestion selectedQuestion;
     private ArrayList<Options> selectedOptions = new ArrayList<>();
     private OnResult result;
+    private ProgressDialog progressDialog;
     private int questionType;
 
     private static final int QUESTION_TYPE_MCQ = 0;
@@ -48,7 +55,7 @@ public class PickOptionDialog extends Dialog {
         super(context);
     }
 
-    public void setSelectedQuestion(QuestionClass selectedQuestion) {
+    public void setSelectedQuestion(FirebaseQuestion selectedQuestion) {
         this.selectedQuestion = selectedQuestion;
     }
 
@@ -71,10 +78,38 @@ public class PickOptionDialog extends Dialog {
             default: setContentView(R.layout.dialog_check_box);
                     questionType = QUESTION_TYPE_MCQ;
         }
-        new fetchOptions().execute(selectedQuestion.getQuestion_id());
+        progressDialog = ProgressDialog.show(getContext(),"Loading...","We appreciate your patience");
+        fetchOptions();
+        //new fetchOptions().execute(selectedQuestion.getKey());
 
     }
 
+    private void fetchOptions(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Questions").child(selectedQuestion.getKey()).child("Options").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                progressDialog.dismiss();
+                for(DataSnapshot singleSnapshot: dataSnapshot.getChildren()){
+                    for(DataSnapshot snapshot : singleSnapshot.getChildren()){
+                        Options option = new Options();
+                        option.setOption_content(snapshot.getValue(String.class));
+                        option.setQuestion_id(Integer.parseInt(selectedQuestion.getKey()));
+                        option.setOption_id(Integer.parseInt(singleSnapshot.getKey()));
+                        options.add(option);
+                    }
+
+
+                }
+                setFunc();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     private void setFunc(){
         switch (questionType){
             case QUESTION_TYPE_MCQ: MCQ();
@@ -162,7 +197,7 @@ public class PickOptionDialog extends Dialog {
         });
     }
 
-    private class fetchOptions extends AsyncTask<Integer,Void,JSONArray> {
+    /*private class fetchOptions extends AsyncTask<Integer,Void,JSONArray> {
 
         private ProgressDialog progressDialog;
         @Override
@@ -200,7 +235,7 @@ public class PickOptionDialog extends Dialog {
             progressDialog.dismiss();
             setFunc();
         }
-    }
+    }*/
 
 
 

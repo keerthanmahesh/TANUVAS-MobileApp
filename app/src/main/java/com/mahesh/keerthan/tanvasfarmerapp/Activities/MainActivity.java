@@ -8,10 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,8 +21,21 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseQuestion;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseVillage;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
 import com.mahesh.keerthan.tanvasfarmerapp.RequestBuilder;
@@ -40,17 +55,13 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private String passwordText;
     private TextView textTest;
-    private login login;
+    private FirebaseAuth mAuth;
+    private DatabaseReference databaseReference;
+    private com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseUser firebaseUser;
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        //StartSmartAnimation.startAnimation(layout, AnimationType.FadeIn,2000,0,false);
-        //StartSmartAnimation.startAnimation(findViewById(R.id.text_input_layout),AnimationType.FadeIn,500,0,true);
-        //StartSmartAnimation.startAnimation(findViewById(R.id.text_input_layout2),AnimationType.FadeIn,500,50,true);
-       // StartSmartAnimation.startAnimation(findViewById(R.id.signInButton),AnimationType.FadeIn,500,100,true);
-       //StartSmartAnimation.startAnimation(findViewById(R.id.forgotPass),AnimationType.FadeIn,500,150,true);
     }
 
     @Override
@@ -62,17 +73,57 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
+        mAuth = FirebaseAuth.getInstance();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         Button SignInButton = findViewById(R.id.signInButton),forgotPass = findViewById(R.id.forgotPass);
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
         View.OnClickListener SignInPressed = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                passwordText = password.getText().toString();
-                login = new login();
-                login.execute(username.getText().toString());
+                if(isETFilled()){
+                    final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this,"Loading...","We appreciate your patience");
+                    passwordText = password.getText().toString();
+                    mAuth.signInWithEmailAndPassword(username.getText().toString(),passwordText)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    progressDialog.dismiss();
+                                    if(task.isSuccessful()){
+                                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                        databaseReference.child("Users/"+user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                firebaseUser = dataSnapshot.getValue(com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseUser.class);
+                                                Gson gson = new Gson();
+                                                String json;
+                                                SharedPreferences sharedPreferences = getSharedPreferences("com.keerthan.tanuvas.loggedInUser", Context.MODE_PRIVATE);
+                                                SharedPreferences.Editor editor = sharedPreferences.edit();
+                                                json = gson.toJson(firebaseUser);
+                                                editor.putString("firebaseUser",json);
+                                                editor.commit();
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                            }
+                                        });
+                                        doLogin();
+                                    }else {
+                                        Exception e = task.getException();
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                        builder.setTitle("Error!").setMessage(e.getMessage()).
+                                                setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.cancel();
+                                                    }
+                                                }).setCancelable(true).show();
+                                    }
+                                }
+                            });
+                }
             }
         };
         SignInButton.setOnClickListener(SignInPressed);
@@ -89,10 +140,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    private Boolean isETFilled(){
+        if(TextUtils.isEmpty(username.getText().toString())){
+            username.setError("Please Enter the Email");
+            return false;
+        }else if(TextUtils.isEmpty(password.getText().toString())){
+            password.setError("Please enter the Password");
+            return false;
+        }
+        return true;
+    }
 
+    private void doLogin(){
+        Intent signInSuccess = new Intent(MainActivity.this, VillageSelect.class);
+        startActivity(signInSuccess);
+    }
 
-
-    public class login extends AsyncTask<String,Void,JSONObject>{
+    /*public class login extends AsyncTask<String,Void,JSONObject>{
 
         private ProgressDialog loading;
         private boolean isConnectionError = false;
@@ -122,17 +186,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        private void doLogin(){
-            Intent signInSuccess = new Intent(MainActivity.this, VillageSelect.class);
-            Gson gson = new Gson();
-            String json = gson.toJson(user);
-            SharedPreferences sharedPreferences = getSharedPreferences("com.keerthan.tanuvas.loggedInUser", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("isLoggedIn","true");
-            editor.putString("user",json);
-            editor.commit();
-            startActivity(signInSuccess);
-        }
         @Override
         protected void onPostExecute(JSONObject object) {
             super.onPostExecute(object);
@@ -164,7 +217,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-    }
+    }*/
 }
 
 

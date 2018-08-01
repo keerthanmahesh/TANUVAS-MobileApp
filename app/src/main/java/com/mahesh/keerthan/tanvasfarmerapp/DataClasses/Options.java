@@ -9,6 +9,7 @@ public class Options {
         this.option_id = option_id;
         this.question_id = question_id;
     }
+    public Options(){}
 
     public String getOption_content() {
         return option_content;

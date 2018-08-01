@@ -23,9 +23,22 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.JsonArray;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseUser;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseVillage;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.R;
@@ -37,7 +50,11 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import okhttp3.MultipartBody;
@@ -48,14 +65,15 @@ public class AddOfficialFragment extends Fragment {
 
     private View view;
     private ArrayList<District> districts = new ArrayList<>();
-    private ArrayList<Villages> villages = new ArrayList<>();
+    private ArrayList<FirebaseVillage> villages = new ArrayList<>();
     private List<String> districtNames = new ArrayList<>();
     private List<String> villageNames = new ArrayList<>();
     private Spinner districtSpinner;
     private Spinner villageSpinner;
     private Boolean isSuperAdmin = false;
-    private UserClass user;
+    private FirebaseUser user;
     private ProgressDialog progressDialog ;
+    private ProgressDialog progressDialogSecondary;
 
     @Nullable
     @Override
@@ -63,19 +81,21 @@ public class AddOfficialFragment extends Fragment {
         view = inflater.inflate(R.layout.add_official_fragment,container,false);
         districtSpinner = view.findViewById(R.id.spinnerDistrictSelect);
         villageSpinner = view.findViewById(R.id.spinnerVillageSelect);
+        progressDialog = ProgressDialog.show(getActivity(),"Loading...","We appreciate your patience");
         final RelativeLayout containerView = view.findViewById(R.id.containerView);
-        new getDistricts().execute();
+        getDistricts();
         districtSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                new getVillages().execute(districts.get(position).getDistrict_id());
+                getVillages(districts.get(position).getDistrict_id());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                new getVillages().execute(districts.get(0).getDistrict_id());
+                getVillages(districts.get(0).getDistrict_id());
             }
         });
+
 
         final EditText usernameET = view.findViewById(R.id.addOfficialUsernameEditText), passwordET = view.findViewById(R.id.addOfficialPasswordEditText),
                 mobileET = view.findViewById(R.id.addOfficialPhonenumberEditText), fullnameET = view.findViewById(R.id.addOfficialFullnameEditText);
@@ -94,11 +114,11 @@ public class AddOfficialFragment extends Fragment {
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user = new UserClass(UUID.randomUUID().toString(),usernameET.getText().toString(),passwordET.getText().toString(),
-                        fullnameET.getText().toString(),districts.get(districtSpinner.getSelectedItemPosition()).getDistrict_id(),
-                        mobileET.getText().toString(),isSuperAdmin? 1:0);
+                user = new FirebaseUser(fullnameET.getText().toString(),districts.get(districtSpinner.getSelectedItemPosition()).getDistrict_id(),
+                        Long.parseLong(mobileET.getText().toString()),isSuperAdmin? 1:0);
 
-                new uploadUser().execute();
+                createUser(usernameET.getText().toString(),passwordET.getText().toString(),user);
+
 
             }
         });
@@ -117,184 +137,141 @@ public class AddOfficialFragment extends Fragment {
         return view;
     }
 
-    private class getVillages extends AsyncTask<Integer, Void, JSONArray>{
 
-        ProgressDialog progressDialog;
+    /** Gets the district names from Firebase */
+    private void getDistricts(){
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = ProgressDialog.show(getActivity(),"Loading...","We appreciate your patience");
 
-        }
-
-        @Override
-        protected JSONArray doInBackground(Integer... integers) {
-
-            String district_id = integers[0].toString();
-            OkHttpClient client = new OkHttpClient();
-            //RequestBody requestBody = new MultipartBody.Builder()
-                    //.addFormDataPart("district_id",district_id).build();
-            try {
-                JSONArray array = new JSONArray(APICall.GET(client,RequestBuilder.buildURL("getVillages.php",new String[]{"district_id"},new String[]{district_id})));
-                return array;
-            }catch (IOException e){
-                e.printStackTrace();
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(JSONArray jsonArray) {
-            super.onPostExecute(jsonArray);
-            progressDialog.dismiss();
-            villages.clear();
-            villageNames.clear();
-            if(jsonArray != null){
-                JSONObject object;
-                for(int i=0; i<jsonArray.length();i++){
-                    try {
-                        object = jsonArray.getJSONObject(i);
-                        villages.add(new Villages(object.getInt("village_id"),object.getInt("district_id"),object.getString("en_village_name"),0,null));
-                        villageNames.add(villages.get(i).getEn_village_name());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
+        DatabaseReference mReference = FirebaseDatabase.getInstance().getReference();
+        mReference.child("Districts").orderByValue().addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                progressDialog.dismiss();
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    District district = new District(Integer.parseInt(singleSnapshot.getKey()),singleSnapshot.getValue(String.class));
+                    districtNames.add(district.getEn_district_name());
+                    districts.add(district);
                 }
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item,villageNames);
-            villageSpinner.setAdapter(adapter);
-        }
-    }
-
-    private class getDistricts extends AsyncTask<Void,Void,JSONArray>{
-
-        ProgressDialog progressDialog;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = ProgressDialog.show(getActivity(),"Loading...","We appreciate your patience");
-        }
-
-        @Override
-        protected JSONArray doInBackground(Void... voids) {
-            OkHttpClient client = new OkHttpClient();
-            try {
-                JSONArray array = new JSONArray(APICall.GET(client, RequestBuilder.buildURL("getDistricts.php",null,null)));
-                return array;
-            }catch (IOException e){
-                e.printStackTrace();
-            }catch (JSONException e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(JSONArray jsonArray) {
-            super.onPostExecute(jsonArray);
-            progressDialog.dismiss();
-
-            if(jsonArray != null){
-                try{
-                    JSONObject object;
-                    for(int i = 0; i < jsonArray.length();i++){
-                        object = jsonArray.getJSONObject(i);
-                        districts.add(new District(object.getInt("district_id"),object.getString("en_district_name")));
-                        districtNames.add(districts.get(i).getEn_district_name());
-                    }
-
-                    ArrayAdapter<String> districtAdapter = new ArrayAdapter<>(AddOfficialFragment.this.getActivity(),android.R.layout.simple_spinner_dropdown_item,districtNames);
-                    districtSpinner.setAdapter(districtAdapter);
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private final class uploadUser extends AsyncTask<Void,Void,String>{
-
-
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = ProgressDialog.show(getActivity(),"Loading...","We appreciate your patience");
-        }
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            OkHttpClient client = new OkHttpClient();
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("u_id",user.getU_id())
-                    .addFormDataPart("fullname",user.getFullname())
-                    .addFormDataPart("username",user.getUsername())
-                    .addFormDataPart("password",user.getPassword())
-                    .addFormDataPart("district_id",Integer.toString(user.getDistrict_id()))
-                    .addFormDataPart("phone_number",user.getPhone_number())
-                    .addFormDataPart("isSuperAdmin",Integer.toString(user.getIsSuperAdmin())).build();
-
-            try {
-                String resp = APICall.POST(client,RequestBuilder.buildURL("insertUser.php",null,null),requestBody);
-                Log.d("resp",resp);
-                return resp;
-            }catch (IOException e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-
-            if(s.equals("New Record Created Successfully")){
-                new updateVillages().execute();
-            }
-        }
-    }
-
-    private class updateVillages extends AsyncTask<Void,Void,String>{
-
-        @Override
-        protected String doInBackground(Void... voids) {
-            OkHttpClient client = new OkHttpClient();
-            RequestBody requestBody = new MultipartBody.Builder()
-                    .setType(MultipartBody.FORM)
-                    .addFormDataPart("u_id",user.getU_id())
-                    .addFormDataPart("village_id",Integer.toString(villages.get(villageSpinner.getSelectedItemPosition()).getVillage_id()))
-                    .addFormDataPart("district_id",Integer.toString(user.getDistrict_id()))
-                    .build();
-            try {
-                String response = APICall.POST(client,RequestBuilder.buildURL("updateVillage.php",null,null),requestBody);
-                return response;
-            }catch (IOException e){
-                e.printStackTrace();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            progressDialog.dismiss();
-            if(s.equals("Record Updated Successfully")){
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                builder.setTitle("Success").setMessage(s).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                Collections.sort(districtNames, new Comparator<String>() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
+                    public int compare(String s1, String s2) {
+                        return s1.compareToIgnoreCase(s2);
                     }
-                }).setCancelable(true).show();
+                });
+                Collections.sort(districts, new Comparator<District>() {
+                    @Override
+                    public int compare(District o1, District o2) {
+                        return o1.getEn_district_name().compareToIgnoreCase(o2.getEn_district_name());
+                    }
+                });
+
+                ArrayAdapter<String> districtAdapter = new ArrayAdapter<>(AddOfficialFragment.this.getActivity(),android.R.layout.simple_spinner_dropdown_item,districtNames);
+                districtSpinner.setAdapter(districtAdapter);
             }
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /** Gets the villages from the database corresponding to the district
+     * selected in the first spinner*.
+     * @param district_id equals district for which villages are to be fetched
+     */
+    private void getVillages(int district_id){
+        final ProgressDialog progressDialogAlpha = ProgressDialog.show(getActivity(),"Loading...","We appreciate your patience");
+        DatabaseReference mReference = FirebaseDatabase.getInstance().getReference();
+        mReference.child("Villages").child("0").orderByChild("district_id").equalTo(district_id).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                progressDialogAlpha.dismiss();
+                villageNames.clear();
+                villages.clear();
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    FirebaseVillage village = singleSnapshot.getValue(FirebaseVillage.class);
+                    villages.add(village);
+                    villageNames.add(village.getEn_village_name());
+                }
+                Collections.sort(villageNames, new Comparator<String>() {
+                    @Override
+                    public int compare(String s1, String s2) {
+                        return s1.compareToIgnoreCase(s2);
+                    }
+                });
+                Collections.sort(villages, new Comparator<FirebaseVillage>() {
+                    @Override
+                    public int compare(FirebaseVillage o1, FirebaseVillage o2) {
+                        return o1.getEn_village_name().compareToIgnoreCase(o2.getEn_village_name());
+                    }
+                });
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_dropdown_item,villageNames);
+                villageSpinner.setAdapter(adapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                progressDialogAlpha.dismiss();
+            }
+        });
+    }
+
+    private void createUser(String email, String password, final FirebaseUser user){
+        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()){
+                    final DatabaseReference mRef = FirebaseDatabase.getInstance().getReference();
+                    final Map<String,Object> map = new HashMap<>();
+                    map.put("Users/"+mAuth.getUid(),user);
+                    final String[] key = {null};
+                    FirebaseDatabase.getInstance().getReference().child("Villages").child("0").orderByChild("en_village_name").equalTo(villages.get(villageSpinner.getSelectedItemPosition()).getEn_village_name()).addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for(DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                key[0] = snapshot.getKey();
+                            }
+                            map.put("Villages/0/"+ key[0] +"/allocated",1);
+                            map.put("Villages/0/"+ key[0] +"/u_id",mAuth.getUid());
+                            mRef.updateChildren(map).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("Successfull").setMessage("User added Successfully").setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).setCancelable(false).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("Error").setMessage(e.getMessage()).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).setCancelable(false).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }else{
+                    AlertDialog dialog = new AlertDialog.Builder(getActivity()).setTitle("Error").setMessage(task.getException().getMessage()).setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    }).setCancelable(false).show();
+                }
+            }
+        });
     }
 }

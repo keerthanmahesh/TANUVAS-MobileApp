@@ -7,10 +7,20 @@
     tools:context=".FragmentClasses.AddFarmerFragmentLandHolding"
     android:transitionName="@string/transition_string2">
 
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:id="@+id/toolbar"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        android:layout_alignParentTop="true"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        >
+    </android.support.v7.widget.Toolbar>
     <android.support.v7.widget.RecyclerView
         android:id="@+id/landholdinglist"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
         android:background="@android:color/transparent">
 
     </android.support.v7.widget.RecyclerView>

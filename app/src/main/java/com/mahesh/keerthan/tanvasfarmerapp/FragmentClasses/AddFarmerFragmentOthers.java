@@ -23,6 +23,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.Adapters.questionAdapter;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseQuestion;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Options;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Responses;
@@ -42,7 +43,7 @@ import okhttp3.OkHttpClient;
 
 public class AddFarmerFragmentOthers extends AppCompatActivity implements questionAdapter.ItemClickListener {
 
-    private ArrayList<QuestionClass> mainQuestions = new ArrayList<>();
+    private ArrayList<FirebaseQuestion> mainQuestions = new ArrayList<>();
     private RecyclerView othersList;
     private questionAdapter othersAdapter;
     private ArrayList<Responses> responses = null;
@@ -60,7 +61,6 @@ public class AddFarmerFragmentOthers extends AppCompatActivity implements questi
         window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.Back));
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-
         toolbar.setTitleTextAppearance(this,R.style.AmericanTypewriterSemibold);
         toolbar.setTitle("Questionnaire");
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -92,7 +92,7 @@ public class AddFarmerFragmentOthers extends AppCompatActivity implements questi
         othersList.setItemAnimator(new SlideInLeftAnimator());
         othersList.getItemAnimator().setAddDuration(1000);
         incomingIntent = getIntent();
-        mainQuestions = (ArrayList<QuestionClass>) incomingIntent.getSerializableExtra("othersQuestions");
+        mainQuestions = (ArrayList<FirebaseQuestion>) incomingIntent.getSerializableExtra("othersQuestions");
         initialiseOthersCard();
     }
 

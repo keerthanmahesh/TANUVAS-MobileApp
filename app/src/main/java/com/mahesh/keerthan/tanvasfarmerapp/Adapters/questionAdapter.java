@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseQuestion;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Options;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Responses;
@@ -32,7 +33,7 @@ import okhttp3.OkHttpClient;
 
 public class questionAdapter extends RecyclerView.Adapter<questionAdapter.ViewHolder> {
 
-    private ArrayList<QuestionClass> questions;
+    private ArrayList<FirebaseQuestion> questions;
     private Context context;
     private ItemClickListener itemClickListener;
     private ArrayList<Options> options = new ArrayList<>();
@@ -40,7 +41,7 @@ public class questionAdapter extends RecyclerView.Adapter<questionAdapter.ViewHo
     private OnResult result;
 
     private ViewHolder mHolder;
-    public questionAdapter(ArrayList<QuestionClass> questions, Context context) {
+    public questionAdapter(ArrayList<FirebaseQuestion> questions, Context context) {
         this.questions = questions;
         this.context = context;
     }
@@ -63,7 +64,7 @@ public class questionAdapter extends RecyclerView.Adapter<questionAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
-        final QuestionClass selectedQuestion = questions.get(position);
+        final FirebaseQuestion selectedQuestion = questions.get(position);
 
         if(responses.size() <= position){
             Responses response = new Responses();
@@ -118,7 +119,7 @@ public class questionAdapter extends RecyclerView.Adapter<questionAdapter.ViewHo
                         }else {
                             responses.remove(position);
                             Responses response = new Responses();
-                            response.setQuestion(selectedQuestion);
+                            //response.setQuestion(selectedQuestion);
                             response.clearOptions();
                             responses.add(position,response);
                             if(result!=null){
@@ -143,7 +144,7 @@ public class questionAdapter extends RecyclerView.Adapter<questionAdapter.ViewHo
     }
 
 
-    public QuestionClass getQuestion(int id) {
+    public FirebaseQuestion getQuestion(int id) {
         return questions.get(id);
     }
 

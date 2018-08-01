@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Responses implements Serializable{
-    private QuestionClass question;
+    private FirebaseQuestion question;
     private ArrayList<Options> options = new ArrayList<>();
 
 
@@ -19,11 +19,11 @@ public class Responses implements Serializable{
         this.options.addAll(options);
     }
 
-    public QuestionClass getQuestion() {
+    public FirebaseQuestion getQuestion() {
         return question;
     }
 
-    public void setQuestion(QuestionClass question) {
+    public void setQuestion(FirebaseQuestion question) {
         this.question = question;
     }
 

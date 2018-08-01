@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -22,12 +23,20 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.inthecheesefactory.thecheeselibrary.fragment.support.v4.app.bus.ActivityResultBus;
 import com.inthecheesefactory.thecheeselibrary.fragment.support.v4.app.bus.ActivityResultEvent;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
 import com.mahesh.keerthan.tanvasfarmerapp.Adapters.drawerAdapter;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseUser;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseVillage;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.DrawerItem;
@@ -57,9 +66,9 @@ public class HomeActivity extends AppCompatActivity
         implements drawerAdapter.OnItemSelectedListener {
 
     private  NavigationView navigationView;
-    private UserClass user;
-    private Villages villageSelected;
-    private District districtSelected;
+    private FirebaseUser user;
+    private FirebaseVillage villageSelected;
+    private String districtSelected;
     public static HomeActivity instance;
     private FragmentManager manager;
     private Toolbar toolbar;
@@ -75,6 +84,7 @@ public class HomeActivity extends AppCompatActivity
     public static final int POS_ADDOFFICIAL = 7;
     public static final int POS_EDITOFFICIAL = 8;
     public drawerAdapter adapter;
+    private FirebaseAuth mAuth;
 
 
     private String[] screenTitles;
@@ -86,6 +96,13 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         instance = this;
         setContentView(R.layout.activity_home);
+        mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser() == null){
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitleTextAppearance(this,R.style.AmericanTypewriterSemibold);
         toolbar.setTitle("TANUVAS");
@@ -99,10 +116,10 @@ public class HomeActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         manager = getSupportFragmentManager();
         Gson gson = new Gson();
-        String json = sharedPreferences1.getString("user","");
-        user = gson.fromJson(json,UserClass.class);
-        String temp = sharedPreferences.getString("selectedVillage","");
-        villageSelected = gson.fromJson(temp,Villages.class);
+        String json = sharedPreferences1.getString("firebaseUser","");
+        user = gson.fromJson(json,FirebaseUser.class);
+        String temp = sharedPreferences.getString("selectedFirebaseVillage","");
+        villageSelected = gson.fromJson(temp,FirebaseVillage.class);
 
         Window window = this.getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -111,7 +128,7 @@ public class HomeActivity extends AppCompatActivity
         Drawable dr = getResources().getDrawable(R.drawable.hamburger_icon);
         Bitmap bitmap = ((BitmapDrawable) dr).getBitmap();
         final Drawable d = new BitmapDrawable(getResources(),Bitmap.createScaledBitmap(bitmap,80,80,true));
-        new getUserDistrict().execute(villageSelected.getDistrict_id());
+        getDistrict();
 
 
 
@@ -130,7 +147,7 @@ public class HomeActivity extends AppCompatActivity
         TextView name = slidingRootNav.getLayout().findViewById(R.id.fullname);
         TextView username = slidingRootNav.getLayout().findViewById(R.id.username);
         name.setText(user.getFullname());
-        username.setText(user.getUsername());
+        username.setText(mAuth.getCurrentUser().getEmail());
         screenIcons = loadScreenIcons();
         screenTitles = loadScreenTitles();
 
@@ -210,7 +227,27 @@ public class HomeActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private class getUserDistrict extends AsyncTask<Integer,Void,JSONObject>{
+    private void getDistrict(){
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        SharedPreferences sharedPreferences = HomeActivity.this.getSharedPreferences("com.keerthan.tanuvas.selectedArea", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPreferences.edit();
+        databaseReference.child("Districts").child(Integer.toString(villageSelected.getDistrict_id())).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                districtSelected = dataSnapshot.getValue(String.class);
+                editor.putString("selectedDistrict",districtSelected);
+                editor.commit();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+
+    /*private class getUserDistrict extends AsyncTask<Integer,Void,JSONObject>{
 
         SharedPreferences sharedPreferences = HomeActivity.this.getSharedPreferences("com.keerthan.tanuvas.selectedArea", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -249,7 +286,7 @@ public class HomeActivity extends AppCompatActivity
                 editor.commit();
             }
         }
-    }
+    }*/
 
 
 
@@ -277,19 +314,17 @@ public class HomeActivity extends AppCompatActivity
 
         if (position == POS_ADDNNEWFARMER) {
             toolbar.setTitle("NEW FARMER");
-            android.support.v4.app.FragmentTransaction ft1 = manager.beginTransaction();
-            Fragment newFarmer = AddFarmerFragment.newInstance(villageSelected,districtSelected);
-            ft1.replace(R.id.mainFragment,newFarmer).addToBackStack( "tag" ).commit();
+            manager.beginTransaction().replace(R.id.mainFragment,new AddFarmerFragment()).commit();
         } else if (position == POS_ADDMULTIPLEFARMERS) {
             toolbar.setTitle("NEW FARMER");
             android.support.v4.app.FragmentTransaction ft = manager.beginTransaction();
-            Fragment newFarmers = AddMultipleFarmersFragment.newInstance(villageSelected,districtSelected);
-            ft.replace(R.id.mainFragment,newFarmers).commit();
+            //Fragment newFarmers = AddMultipleFarmersFragment.newInstance(villageSelected,districtSelected);
+            //t.replace(R.id.mainFragment,newFarmers).commit();
         } else if (position == POS_EDITFARMERDETAILS) {
             toolbar.setTitle("EDIT FARMER");
             android.support.v4.app.FragmentTransaction newTransaction = manager.beginTransaction();
-            Fragment editFarmer = EditFarmerFragment.newInstance(villageSelected,districtSelected);
-            newTransaction.replace(R.id.mainFragment,editFarmer).commit();
+            //Fragment editFarmer = EditFarmerFragment.newInstance(villageSelected,districtSelected);
+            //newTransaction.replace(R.id.mainFragment,editFarmer).commit();
         } else if (position == POS_QUESTIONNAIRE) {
             toolbar.setTitle("TANUVAS");
             manager.beginTransaction().replace(R.id.mainFragment,new QuestionFragment()).commit();
@@ -303,8 +338,9 @@ public class HomeActivity extends AppCompatActivity
         }else if(position == POS_LOGOUT){
             SharedPreferences sharedPreferences = getSharedPreferences("com.keerthan.tanuvas.loggedInUser",Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.remove("user");
+            editor.remove("firebaseUser");
             editor.putString("isLoggedIn","false");
+            mAuth.signOut();
             Intent intent = new Intent(this, MainActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

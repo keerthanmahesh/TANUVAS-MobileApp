@@ -81,8 +81,8 @@
                     android:hint="Username"
                     android:textColorHint="@android:color/darker_gray"
                     android:id="@+id/addOfficialUsernameEditText"
-                    android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_@"
-                    android:inputType="textFilter"/>
+
+                    android:inputType="textEmailAddress"/>
 
                 <EditText
                     android:layout_width="1080dp"

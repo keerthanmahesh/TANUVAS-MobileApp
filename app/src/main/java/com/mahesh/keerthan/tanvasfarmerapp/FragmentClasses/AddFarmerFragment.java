@@ -55,6 +55,11 @@ import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.model.GradientColor;
 import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.inthecheesefactory.thecheeselibrary.fragment.support.v4.app.StatedFragment;
@@ -64,6 +69,9 @@ import com.mahesh.keerthan.tanvasfarmerapp.Activities.HomeActivity;
 import com.mahesh.keerthan.tanvasfarmerapp.Adapters.questionAdapter;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FarmerClass;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseFarmer;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseQuestion;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseVillage;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.QuestionClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Responses;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
@@ -101,11 +109,11 @@ public class AddFarmerFragment extends StatedFragment {
 
 
     private View view;
-    private Villages village_selected;
-    private District district_selected;
+    private FirebaseVillage village_selected;
+    private String district_selected;
     private FoldingCell fc,fc1,fc2;
     private ScrollView scrollView;
-    private ArrayList<QuestionClass> mainQuestions = new ArrayList<>();
+    private ArrayList<FirebaseQuestion> mainOthersQuestions = new ArrayList<>(),mainLandHoldingQuestions = new ArrayList<>();
     private FarmerClass farmer = null;
     public static int REQUESTPROFILE = 1;
     public static int REQUESTLANDHOLDING = 2;
@@ -117,6 +125,7 @@ public class AddFarmerFragment extends StatedFragment {
     private int startcolor2;
     private int endcolor2;
     private ArrayList<Responses> landholdingResponses = null;
+    private ProgressDialog dialog;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -125,13 +134,12 @@ public class AddFarmerFragment extends StatedFragment {
         view = inflater.inflate(R.layout.add_farmer_fragment,container,false);
         Gson gson = new Gson();
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("com.keerthan.tanuvas.selectedArea",Context.MODE_PRIVATE);
-        String temp = sharedPreferences.getString("selectedVillage","");
-        village_selected = gson.fromJson(temp,Villages.class);
-        temp = sharedPreferences.getString("selectedDistrict","");
-        district_selected = gson.fromJson(temp,District.class);
+        String temp = sharedPreferences.getString("selectedFirebaseVillage","");
+        village_selected = gson.fromJson(temp,FirebaseVillage.class);
+        district_selected = sharedPreferences.getString("selectedDistrict","");
         getActivity().invalidateOptionsMenu();
         scrollView = view.findViewById(R.id.scrollView123);
-        new getOthersQuestions().execute();
+        getQuestions();
         CardView cardView = view.findViewById(R.id.card_view);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,6 +164,7 @@ public class AddFarmerFragment extends StatedFragment {
             }
         });
 
+        dialog = ProgressDialog.show(getActivity(), "Loading....", "We appreciate your patience", true, false);
 
         return view;
     }
@@ -169,14 +178,7 @@ public class AddFarmerFragment extends StatedFragment {
 
 
 
-    public static AddFarmerFragment newInstance(Villages villageSelected, District districtSelected){
-        AddFarmerFragment newFarmer = new AddFarmerFragment();
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("village",villageSelected);
-        bundle.putSerializable("district",districtSelected);
-        newFarmer.setArguments(bundle);
-        return newFarmer;
-    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -199,9 +201,9 @@ public class AddFarmerFragment extends StatedFragment {
                     }
                 }).setCancelable(true).setMessage("Please fill in the responses of others category.").show();
             }else{
-                new updateFarmer().execute(farmer.getU_id(),farmer.getFirst_name(),farmer.getLast_name(),farmer.getAadhar_number(),
+                /*new updateFarmer().execute(farmer.getU_id(),farmer.getFirst_name(),farmer.getLast_name(),farmer.getAadhar_number(),
                         farmer.getPhone_number(),farmer.getAddress_1(),farmer.getAddress_2(),farmer.getGender(),farmer.getDob(),
-                        Integer.toString(farmer.getVillage_id()),Integer.toString(farmer.getDistrict_id()),farmer.getRealPath());
+                        Integer.toString(farmer.getVillage_id()),Integer.toString(farmer.getDistrict_id()),farmer.getRealPath());*/
             }
 
         }
@@ -229,10 +231,9 @@ public class AddFarmerFragment extends StatedFragment {
         }else if(requestCode == REQUESTOTHERS){
             if(resultCode == Activity.RESULT_OK){
                 String resp_json = data.getStringExtra("responses");
-                Log.d("tag",resp_json);
                 Gson gson = new Gson();
                 othersResponses = gson.fromJson(resp_json,new TypeToken<List<Responses>>(){}.getType());
-                int totalquestions = mainQuestions.size();
+                int totalquestions = mainOthersQuestions.size();
                 int answeredquestions = 0;
                 for(int i =0; i< othersResponses.size();i++){
                     if(othersResponses.get(i).getOptions().size() != 0){
@@ -266,6 +267,12 @@ public class AddFarmerFragment extends StatedFragment {
                 pieChart.invalidate();
                 pieChart.animate().alpha(1).start();
 
+            }
+        }else if(requestCode == REQUESTLANDHOLDING){
+            if(resultCode == RESULT_OK){
+                String resp_json = data.getStringExtra("responses");
+                Gson gson = new Gson();
+                landholdingResponses = gson.fromJson(resp_json,new TypeToken<List<Responses>>(){}.getType());
             }
         }
 
@@ -301,7 +308,7 @@ public class AddFarmerFragment extends StatedFragment {
         phoneCardTV.setText("Phone: +91 " + farmer.getPhone_number());
         aadharCardTV.setText("Aadhar: " + farmer.getAadhar_number());
     }
-    private class updateFarmer extends AsyncTask<String,Integer,String>{
+    /*private class updateFarmer extends AsyncTask<String,Integer,String>{
 
 
         private ProgressDialog loading;
@@ -403,12 +410,7 @@ public class AddFarmerFragment extends StatedFragment {
                     builder.show();
             }
         }
-    }
-
-
-
-
-
+    }*/
     public void animateIntent(View v){
         Intent intent = new Intent(getActivity(), AddFarmerFragment2Activity.class);
         String transitionName = getString(R.string.transition_string);
@@ -431,15 +433,20 @@ public class AddFarmerFragment extends StatedFragment {
         Intent intent = new Intent(getActivity(), AddFarmerFragmentLandHolding.class);
         String transitionName = "lololol";
         View view_start = view.findViewById(R.id.cardViewLandHolding);
+        intent.putExtra("landHoldingQuestions",  mainLandHoldingQuestions);
+        if(landholdingResponses !=null){
+            Gson gson = new Gson();
+            intent.putExtra("previousResponses",gson.toJson(landholdingResponses));
+        }
         ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(),view_start,transitionName);
-        ActivityCompat.startActivity(getActivity(),intent,optionsCompat.toBundle());
+        ActivityCompat.startActivityForResult(getActivity(),intent,REQUESTLANDHOLDING,optionsCompat.toBundle());
     }
 
     public void animateIntentOthers(View v){
         Intent intent = new Intent(getActivity(),AddFarmerFragmentOthers.class);
         String transitionName = getString(R.string.transition_string3);
         View view_start = view.findViewById(R.id.cardViewOthers);
-        intent.putExtra("othersQuestions",  mainQuestions);
+        intent.putExtra("othersQuestions",  mainOthersQuestions);
         if(othersResponses !=null){
             Gson gson = new Gson();
             intent.putExtra("previousResponses",gson.toJson(othersResponses));
@@ -448,7 +455,35 @@ public class AddFarmerFragment extends StatedFragment {
         ActivityCompat.startActivityForResult(getActivity(),intent,REQUESTOTHERS,optionsCompat.toBundle());
     }
 
-    private class getOthersQuestions extends AsyncTask<Void,Void,JSONArray> {
+
+    private void getQuestions(){
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        databaseReference.child("Questions").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                dialog.dismiss();
+                for(DataSnapshot singleSnap : dataSnapshot.getChildren()){
+                    FirebaseQuestion question = singleSnap.getValue(FirebaseQuestion.class);
+                    question.setKey(singleSnap.getKey());
+                    if(question.getQuestion_module().equals("Others"))
+                        mainOthersQuestions.add(question);
+                    else
+                        mainLandHoldingQuestions.add(question);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+
+
+    /*private class getOthersQuestions extends AsyncTask<Void,Void,JSONArray> {
 
         private ProgressDialog dialog;
 
@@ -493,7 +528,7 @@ public class AddFarmerFragment extends StatedFragment {
             super.onPostExecute(jsonArray);
             dialog.dismiss();
         }
-    }
+    }*/
 }
 
 

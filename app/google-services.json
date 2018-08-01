@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "4855807550",
+    "firebase_url": "https://tanuvas-e414a.firebaseio.com",
+    "project_id": "tanuvas-e414a",
+    "storage_bucket": "tanuvas-e414a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:4855807550:android:bd0133e07c992f8a",
+        "android_client_info": {
+          "package_name": "com.mahesh.keerthan.tanvasfarmerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "4855807550-qhgfvbjoagemjanf3sdg5oq3rgb8ijqg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mahesh.keerthan.tanvasfarmerapp",
+            "certificate_hash": "94d0ab25bf0b5fd30b8ad3ed3ea408584eaf3902"
+          }
+        },
+        {
+          "client_id": "4855807550-9vg63jn9dg5n961r0tc542jndi966krs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_f_BK5TbFcEYUA2dI6MvniZrwE8_TGJA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "4855807550-9vg63jn9dg5n961r0tc542jndi966krs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -35,6 +35,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.District;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FarmerClass;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseFarmer;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseVillage;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.AddFarmerFragment;
 import com.mahesh.keerthan.tanvasfarmerapp.FragmentClasses.SelectDateFragment;
@@ -65,10 +67,10 @@ public class AddFarmerFragment2Activity extends AppCompatActivity implements Vie
     private TextView dobTV,ageTV;
     private RadioGroup radioGroup;
     private boolean verified = true;
-    private Villages village_selected;
-    private District district_selected;
+    private FirebaseVillage village_selected;
+    private String district_selected;
     private Uri ImageURI;
-    private FarmerClass farmerClass;
+    private FirebaseFarmer farmerClass;
 
     public static final int PICK_IMAGE = 1;
     private String realPath = null,first_name,last_name,dob,address_1,address_2,gender = "Others";
@@ -84,7 +86,7 @@ public class AddFarmerFragment2Activity extends AppCompatActivity implements Vie
         bindViews();
         Intent intent = getIntent();
         if(intent.hasExtra("farmer")){
-            farmerClass = (FarmerClass) intent.getSerializableExtra("farmer");
+            farmerClass = (FirebaseFarmer) intent.getSerializableExtra("farmer");
             setViews();
         }
     }
@@ -107,9 +109,9 @@ public class AddFarmerFragment2Activity extends AppCompatActivity implements Vie
             radioGroup.check(R.id.radiobuttonFemale);
         else
             radioGroup.check(R.id.radiobuttonOthers);
-        byte[] b = farmerClass.getProfileImageDrawble();
-        Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);
-        imageButton.setImageBitmap(bmp);
+        //byte[] b = farmerClass.getProfileImageDrawble();
+        //Bitmap bmp = BitmapFactory.decodeByteArray(b, 0, b.length);
+        //imageButton.setImageBitmap(bmp);
     }
 
     public void bindViews(){
@@ -126,11 +128,11 @@ public class AddFarmerFragment2Activity extends AppCompatActivity implements Vie
         //setSupportActionBar(toolbar);
         Gson gson = new Gson();
         SharedPreferences sharedPreferences = AddFarmerFragment2Activity.this.getSharedPreferences("com.keerthan.tanuvas.selectedArea",Context.MODE_PRIVATE);
-        String temp = sharedPreferences.getString("selectedVillage","");
-        village_selected = gson.fromJson(temp,Villages.class);
+        String temp = sharedPreferences.getString("selectedFirebaseVillage","");
+        village_selected = gson.fromJson(temp,FirebaseVillage.class);
 
-        temp = sharedPreferences.getString("selectedDistrict","");
-        district_selected = gson.fromJson(temp,District.class);
+        district_selected = sharedPreferences.getString("selectedDistrict","");
+
         calender_button = (Button) findViewById(R.id.DOBbuttonAddfarmer);
         calender_button.setOnClickListener(this);
         dateView = findViewById(R.id.DOBtextView);
@@ -139,7 +141,7 @@ public class AddFarmerFragment2Activity extends AppCompatActivity implements Vie
         TextView village_name = findViewById(R.id.villageName);
         TextView district_name = findViewById(R.id.districtName);
         village_name.setText("Village: "+village_selected.getEn_village_name());
-        district_name.setText("District: " + district_selected.getEn_district_name());
+        district_name.setText("District: " + district_selected);
         Button donebtn = findViewById(R.id.donebtn);
         firstNameTV = (EditText) findViewById(R.id.firstName);
         lastNameTV = (EditText) findViewById(R.id.lastName);
@@ -274,7 +276,7 @@ public class AddFarmerFragment2Activity extends AppCompatActivity implements Vie
         Date inputDate = formatter.parse(dob, new ParsePosition(0));
         formatter = new SimpleDateFormat("yyyy-MM-dd");
         outputDate = formatter.format(inputDate);
-        village_id = village_selected.getVillage_id();
+        //village_id = village_selected.getVillage_id();
         district_id = village_selected.getDistrict_id();
         return true;
 

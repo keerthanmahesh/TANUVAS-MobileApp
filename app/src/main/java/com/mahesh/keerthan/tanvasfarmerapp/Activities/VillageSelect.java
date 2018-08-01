@@ -26,8 +26,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.mahesh.keerthan.tanvasfarmerapp.APICall;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseUser;
+import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.FirebaseVillage;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.UserVillagesClass;
 import com.mahesh.keerthan.tanvasfarmerapp.DataClasses.Villages;
@@ -50,12 +58,12 @@ public class VillageSelect extends AppCompatActivity {
     private UserClass user;
     private List<UserVillagesClass> villagesClass = new ArrayList<>();
     private List<Villages> villages = new ArrayList<>();
+    private List<FirebaseVillage> firebaseVillages = new ArrayList<>();
     private BlurLayout layout;
     private Boolean isLocationSet = false;
-
-    //private  JSONArray array;
-    //private  JSONArray array1;
+    private FirebaseAuth mAuth;
     private static VillageSelect instance = null;
+    private FirebaseVillage selectedFirebaseVillage;
     private Villages selectedVillage = new Villages(0, 0, null, 0, null);
     private ProgressDialog dialog;
     private double latitude, longitude;
@@ -66,12 +74,15 @@ public class VillageSelect extends AppCompatActivity {
     private Location location;
     private final int timeLimit = 4000;
     private Handler handler = new Handler();
+    private FirebaseUser firebaseUser;
+    private SharedPreferences sharedPreferences;
+    private ProgressDialog loadingProgressDialog;
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
-            if(progressDialog.isShowing()){
+            if(progressDialog.isShowing() && isLocationSet){
                 progressDialog.dismiss();
-                if(measure(latitude,longitude,selectedVillage.getLatitude(),selectedVillage.getLongitude()) > 5000){
+                if(measure(latitude,longitude,selectedFirebaseVillage.getLatitude(),selectedFirebaseVillage.getLongitude()) > 5000){
                     showError();
                 }else{
                     proceed();
@@ -85,14 +96,24 @@ public class VillageSelect extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_village_select);
         instance = this;
-        SharedPreferences sharedPreferences = getSharedPreferences("com.keerthan.tanuvas.loggedInUser",Context.MODE_PRIVATE);
-        String isLoggedIn = sharedPreferences.getString("isLoggedIn","false");
-        if(isLoggedIn.equals("false")){
-            finish();
-        }
+        getUserSharedPrefs();
         progressDialog = ProgressDialog.show(VillageSelect.this,"Getting Location...","We appreciate your patience");
         progressDialog.dismiss();
-        Button goButton = findViewById(R.id.goButton);
+        loadingProgressDialog = ProgressDialog.show(VillageSelect.this,"Getting Villages...","We appreciate your patience");
+
+        initialiseLocation();
+        initialiseGoButton();
+        getFirebaseUserFromSharedPref();
+        getVillages();
+        layout = (BlurLayout) findViewById(R.id.cardView);
+
+    }
+    private void getUserSharedPrefs(){
+        sharedPreferences = getSharedPreferences("com.keerthan.tanuvas.loggedInUser",Context.MODE_PRIVATE);
+        mAuth = FirebaseAuth.getInstance();
+    }
+    private void initialiseLocation(){
+
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListener() {
             @Override
@@ -106,7 +127,7 @@ public class VillageSelect extends AppCompatActivity {
                     isLocationSet = true;
                     if(progressDialog.isShowing()){
                         progressDialog.dismiss();
-                        if(measure(latitude,longitude,selectedVillage.getLatitude(),selectedVillage.getLongitude()) > 5000){
+                        if(measure(latitude,longitude,selectedFirebaseVillage.getLatitude(),selectedFirebaseVillage.getLongitude()) > 5000){
                             showError();
                         }else{
                             proceed();
@@ -142,34 +163,89 @@ public class VillageSelect extends AppCompatActivity {
         }
 
         location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
+        if(location==null){
+            isLocationSet = false;
+            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+            if(location!=null){
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                isLocationSet = true;
+            }
+
+        }else {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+            isLocationSet = true;
+        }
+    }
+    private void getFirebaseUserFromSharedPref(){
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("user","");
+        user = gson.fromJson(json,UserClass.class);
+        json = sharedPreferences.getString("firebaseUser","");
+        firebaseUser = gson.fromJson(json,FirebaseUser.class);
+    }
+    private void initialiseGoButton(){
+        Button goButton = findViewById(R.id.goButton);
         View.OnClickListener goButtonPressed = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                if(isLocationSet){
-                    if(measure(latitude,longitude,selectedVillage.getLatitude(),selectedVillage.getLongitude()) > 5000){
+                proceed();
+                /*if(isLocationSet){
+                    if(measure(latitude,longitude,selectedFirebaseVillage.getLatitude(),selectedFirebaseVillage.getLongitude()) > 5000){
                         showError();
                     }else
                         proceed();
                 }else{
                     progressDialog = ProgressDialog.show(VillageSelect.this,"Getting Location...","We appreciate your patience");
                     handler.postDelayed(runnable,timeLimit);
-                }
-
-                //startActivity(villageSelected);
+                }*/
             }
         };
         goButton.setOnClickListener(goButtonPressed);
-        Gson gson = new Gson();
-        String json = sharedPreferences.getString("user","");
-        user = gson.fromJson(json,UserClass.class);
-        new getUserVillages().execute(user.getU_id());
-        layout = (BlurLayout) findViewById(R.id.cardView);
-
     }
 
+    /** Get the villages allocated
+     * for the particular nodal person*/
+
+    private void getVillages(){
+       DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        com.google.firebase.auth.FirebaseUser user = mAuth.getCurrentUser();
+        final List<String> villageNames = new ArrayList<>();
+        final Spinner dropdown = findViewById(R.id.spinner1);
+        databaseReference.child("Villages").child("0").orderByChild("u_id").equalTo(user.getUid()).addValueEventListener(new ValueEventListener(){
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                loadingProgressDialog.dismiss();
+                Log.d("heya",dataSnapshot.toString());
+                for(DataSnapshot singleSnapshot : dataSnapshot.getChildren()){
+                    FirebaseVillage village = singleSnapshot.getValue(FirebaseVillage.class);
+                    firebaseVillages.add(village);
+                    villageNames.add(village.getEn_village_name());
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(VillageSelect.this,android.R.layout.simple_spinner_dropdown_item,villageNames);
+                    dropdown.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedFirebaseVillage = firebaseVillages.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                selectedFirebaseVillage = firebaseVillages.get(0);
+            }
+        });
+
+    }
 
     private void showError(){
         AlertDialog.Builder builder = new AlertDialog.Builder(VillageSelect.this);
@@ -188,6 +264,8 @@ public class VillageSelect extends AppCompatActivity {
         Gson gson = new Gson();
         String json = gson.toJson(selectedVillage);
         editor.putString("selectedVillage", json);
+        json = gson.toJson(selectedFirebaseVillage);
+        editor.putString("selectedFirebaseVillage",json);
         editor.commit();
         startActivity(villageSelected);
     }
@@ -219,11 +297,14 @@ public class VillageSelect extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        mAuth = FirebaseAuth.getInstance();
+        if(mAuth.getCurrentUser() == null){
+            finish();
+        }
 
     }
 
-    private class getUserVillages extends AsyncTask<String,Void,JSONArray>{
+    /*private class getUserVillages extends AsyncTask<String,Void,JSONArray>{
 
         @Override
         protected void onPreExecute() {
@@ -312,7 +393,7 @@ public class VillageSelect extends AppCompatActivity {
             }
             return null;
         }
-    }
+    }*/
 
     private double measure(double lat1, double lon1, double lat2, double lon2){  // generally used geo measurement function
         double R = 6378.137; // Radius of earth in KM

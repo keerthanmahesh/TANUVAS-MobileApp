@@ -70,7 +70,7 @@ public class UpdateQuestionsFragment extends Fragment {
                 if(actionPostion == 0){
                     Intent intent = new Intent(getActivity(), AddNewQuestionActivity.class);
                     intent.putExtra("Category",categories.get(categoryPostion));
-                    intent.putExtra("Module",categories.get(modulePosition));
+                    intent.putExtra("Module",categoryPostion == 0? profileModules.get(modulePosition) : questionnaireModules.get(modulePosition));
                     startActivity(intent);
                 }
             }
